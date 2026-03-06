@@ -119,13 +119,72 @@ Use-as para descoberta, organização e triagem de literatura.
 
 # Descrição do _dataset_ selecionado
 
-Nesta seção, apresente uma visão clara e objetiva do dataset selecionado, incluindo:
-* Identificação e origem – Nome, link de acesso, fonte (instituição, repositório, API etc.) e licença de uso.
-* Visão geral – Total de registros e atributos, período coberto e breve contextualização.
-* Atributos – Tabela com nome, descrição, tipo, unidade de medida (se aplicável) e exemplos de valores.
-* Qualidade dos dados – Presença de valores faltantes, inconsistências, duplicatas ou outliers.
+## Descrição do Conjunto de Dados
 
-**Dica:** Seja objetivo, mas inclua detalhes suficientes para que outra pessoa possa entender e reutilizar o conjunto de dados sem buscar informações extras.
+O presente estudo utiliza o conjunto de dados intitulado *European Football Injuries 2020–2025*,
+disponibilizado publicamente na plataforma Kaggle pelo autor Sanan Muzaffarov (2024). O dataset
+consolida registros detalhados de lesões e indisponibilidades de atletas profissionais de futebol
+que atuam nas cinco principais ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e
+Serie A), cobrindo o período compreendido entre as temporadas 2020/2021 e 2024/2025.
+
+Os dados estão licenciados sob a **Creative Commons Attribution-ShareAlike 4.0 International
+(CC BY-SA 4.0)**, o que permite o uso e a adaptação para fins acadêmicos, mediante a devida
+atribuição de autoria e compartilhamento sob a mesma licença.
+
+---
+
+### Estrutura e Atributos
+
+O arquivo analisado no Google Colab, por meio da biblioteca kagglehub e do link (`"sananmuzaffarov/european-football-injuries-2020-2025"`) é composto por **15.603 registros** e **11 atributos**, conforme detalhado no Quadro 1. Cada observação representa um evento único de afastamento de um jogador,
+permitindo análises longitudinais e transversais sobre a incidência e a gravidade das lesões.
+
+**Quadro 1 – Dicionário de Variáveis do Dataset**
+
+| Variável               | Descrição                                          | Tipo de Dado    | Unidade / Formato          | Exemplos                          |
+|------------------------|----------------------------------------------------|-----------------|----------------------------|-----------------------------------|
+| `Season`               | Temporada da ocorrência                            | Categórico      | Texto                      | `20/21`, `24/25`                  |
+| `Injury`               | Diagnóstico ou natureza da lesão                   | Categórico      | Texto                      | `Hamstring injury`, `Knee injury` |
+| `Days`                 | Período total de afastamento informado             | Texto/Numérico  | Dias                       | `43 days`, `8 days`               |
+| `Games missed`         | Quantidade de partidas oficiais perdidas           | Numérico        | Inteiro (jogos)            | `9`, `2`, `145`                   |
+| `injury_from_parsed`   | Data de início da indisponibilidade                | Temporal        | MM/DD/AAAA                 | `1/28/2021`, `11/6/2020`          |
+| `injury_until_parsed`  | Data de retorno às atividades                      | Temporal        | MM/DD/AAAA                 | `3/11/2021`, `11/13/2020`         |
+| `player_name`          | Identificação do atleta                            | Categórico      | Texto                      | `Benjamin Pavard`                 |
+| `player_age`           | Idade do atleta no momento do evento               | Numérico        | Anos (inteiro)             | `19`, `25`, `43`                  |
+| `player_position`      | Posição tática principal do jogador                | Categórico      | Texto                      | `Goalkeeper`, `Centre-Back`       |
+| `club`                 | Clube de vínculo do atleta                         | Categórico      | Texto                      | `Bayern Munich`                   |
+| `league`               | Liga nacional correspondente ao clube              | Categórico      | Texto                      | `Bundesliga`, `Serie A`           |
+
+---
+
+### Qualidade e Tratamento dos Dados
+
+A análise preliminar de qualidade revelou um conjunto de dados robusto, conforme sintetizado
+no Quadro 2.
+
+**Quadro 2 – Resumo da Qualidade dos Dados**
+
+| Dimensão                          | Resultado                                                                 |
+|-----------------------------------|---------------------------------------------------------------------------|
+| Valores faltantes (*missing*)     | **0** em todas as 11 variáveis (0% *missing data*)                        |
+| Duplicatas exatas                 | **0** linhas duplicadas                                                   |
+| Inconsistências temporais         | **0** casos com data de retorno anterior à data de início                 |
+| Coerência `Days` vs. intervalo    | **0** divergências superiores a 3 dias entre duração textual e datas      |
+| Outliers — `Games missed`         | **1.367** registros acima do limite IQR (~13,5 jogos); máx. **145**       |
+| Outliers — `Days` (numérico)      | **1.497** registros acima do limite IQR (~84 dias); máx. **1.013 dias**   |
+
+Os valores extremos identificados foram mantidos na análise inicial por representarem casos
+reais de lesões de longa duração — como rupturas de ligamento cruzado anterior —, típicas
+do contexto do futebol profissional de alto rendimento. Recomenda-se, contudo, o uso de
+medidas robustas (mediana e percentis) em análises descritivas, e a avaliação de técnicas
+de *winsorização* ou segmentação por tipo de lesão em modelos preditivos.
+
+---
+
+### Referência
+
+MUZAFFAROV, S. **European Football Injuries 2020–2025**. Kaggle, 2024. Disponível em:
+https://www.kaggle.com/datasets/sananmuzaffarov/european-football-injuries-2020-2025.
+Acesso em: 06 mar. 2026. Licença: CC BY-SA 4.0.
 
 # Canvas analítico
 
