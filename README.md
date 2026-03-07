@@ -6,20 +6,24 @@
 
 `SEMESTRE: 7º`
 
-Descrever resumidamente, em um ou dois parágrafos, o projeto que está sendo desenvolvido.
+Este é um projeto que realiza a análise, extração e treinamento de IA de um conjunto de dados intitulado European Football Injuries 2020–2025, disponibilizado publicamente na plataforma Kaggle pelo autor Sanan Muzaffarov (2024).  O dataset consolida registros detalhados de lesões e indisponibilidades de atletas profissionais de futebol que atuam nas cinco principais ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e Serie A), cobrindo o período compreendido entre as temporadas 2020/2021 e 2024/2025. 
+
+O objetivo principal do projeto é de conseguir prever a probabilidade da ocorrência de lesões em jogadores das principais ligas européias de futebol.   
+
 
 ## Integrantes
 
-* Nome completo do aluno 1
+* Lucas Henrique Oliveira Prado
 * Beatriz Fontainha de Castro
-* Nome completo do aluno 3
-* Nome completo do aluno 4
-* Nome completo do aluno 5
-* Nome completo do aluno 6
+* André Fabiano de Andrade Lima
+* Felipe Paiva dos Santos
+* Lucas Peres Dias Costa
+* Ramir Aguiar Ribeiro Junior
+* Ricardo de Andrade
 
 ## Orientador
 
-* Nome completo do professor 1
+* Neil Paiva Tizzo
 
 # Planejamento
 
