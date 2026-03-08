@@ -4,28 +4,13 @@ Texto descritivo introdutório apresentando a visão geral do projeto a ser dese
 
 ## Problema
 
-Nesta seção, você deve apresentar o problema que a sua investigação/experimentação busca resolver. Por exemplo, caso o _dataset_ selecionado, seja um _dataset_ que contenha uma série temporal com o preço de diversas ações da bolsa de valores, o problema pode estar relacionado a dificuldade em saber a melhor hora (hora certa??) de comprar ou então, de executar a venda de uma determinada ação.
+Lesões em jogadores profissionais de futebol são eventos comuns e multifatoriais. Elas dependem de características individuais (idade, posição, condição física e histórico), do contexto competitivo (calendário, intensidade e viagens) e da forma como o atleta é exposto a jogos e treinos, o que torna o risco de lesão difícil de prever e controlar.
 
-Descreva ainda o contexto em que essa aplicação será usada, se houver: empresa parceira, tecnologias etc. Novamente, descreva apenas o que de fato existir, pois ainda não é a hora de apresentar requisitos  detalhados ou projetos.
-
-**Atenção:** Nesta etapa, apresente apenas informações reais e já confirmadas. Não antecipe requisitos técnicos detalhados, funcionalidades específicas ou desenhos de projeto — essa parte será desenvolvida posteriormente.
-
-> **Links Úteis**:
-> - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-> - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
-> - [Brainstorming](https://www.euax.com.br/2018/09/brainstorming/)
+No cenário de clubes e ligas, antecipar situações de maior risco pode contribuir para decisões mais informadas sobre prevenção, preparação física e gestão do elenco. Assim, investigar padrões históricos de lesões e aplicar técnicas de aprendizado de máquina para apoiar a análise do risco de lesão em jogadores representa um problema relevante dentro do esporte de alto rendimento.
 
 ## Questão de pesquisa
 
-A questão de pesquisa é o ponto de partida e a base orientadora de todo o trabalho a ser desenvolvido. Ela deve estar diretamente alinhada ao problema identificado e expressar, de forma clara, o que se deseja investigar ou comprovar.
-
-O papel da questão de pesquisa é guiar todas as etapas do projeto — desde a definição da metodologia até a análise e interpretação dos resultados. Ao término da investigação ou experimentação, o objetivo é que seja possível responder a essa questão de forma fundamentada, utilizando evidências obtidas ao longo do processo.
-
-**Dica:** Formule a questão de pesquisa de forma específica e objetiva, evitando perguntas muito amplas ou genéricas. Pergunte-se: "Ao final do trabalho, minha pesquisa terá condições de responder claramente a essa pergunta?"
-
-> **Links Úteis**:
-> - [Questão de pesquisa](https://www.enago.com.br/academy/how-to-develop-good-research-question-types-examples/)
-> - [Problema de pesquisa](https://blog.even3.com.br/problema-de-pesquisa/)
+O problema central deste estudo é aplicar técnicas de aprendizado de máquina em dados históricos das principais ligas europeias para identificar padrões e prever o risco de lesões em jogadores profissionais de futebol.
 
 ## Objetivos preliminares
 
@@ -48,20 +33,19 @@ Objetivo específico 2: Estimar o valor exato da ação ao final do período ana
 
 ## Justificativa
 
-Nesta seção, apresente a importância e a motivação para trabalhar com o conjunto de dados escolhido. Explique por que esse dataset é relevante e como ele se conecta ao problema identificado anteriormente.
+A ocorrência de lesões em jogadores profissionais de futebol representa um problema recorrente e relevante para clubes de alto rendimento. Estudos indicam que a incidência média de lesões no futebol profissional é de, em média, 8,1 lesões por 1000 horas de exposição (LÓPEZ-VALENCIANO et al., 2029). Segundo Lópes-Valenciano et al. (2019), durante jogos, esse risco é significativamente maior, podendo chegar a cerca de 36 lesões por 1000 horas, valor muito superior ao observado em sessões de treinamento, 3,7 lesões por 1000 horas. Além disso, estima-se que uma equipe profissional com aproximadamente 25 jogadores registre aproximadamente 50 lesões por temporada, evidenciando que esse fenômeno é frequente e tem impacto direto na rotina esportiva das equipes (LÓPEZ-VALENCIANO et al., 2029).
 
-Indique:
-* Razões para a escolha dos objetivos específicos – Justifique por que decidiu aprofundar sua investigação nessas metas, relacionando-as ao potencial de solução ou melhoria para o problema.
-* Relevância do estudo do problema – Mostre a importância de compreender e tratar a questão apresentada, tanto no contexto acadêmico quanto no profissional.
-* Impacto social, econômico ou ambiental – Descreva como o problema afeta a sociedade ou um setor específico, buscando sempre quantificar o impacto por meio de dados reais.
+Nesse sentido, as lesões comprometem diretamente a disponibilidade dos atletas durante a temporada de jogos e podem influenciar o desempenho coletivo das equipes. Ainda segundo Lópes-Valenciano et al. (2019), a disponibilidade de jogadores para participar das partidas apresenta uma forte correlação com o sucesso das equipes de futebol, indicando que times com maior número de atletas aptos a jogar tendem a alcançar melhores resultados esportivos, como melhor posição no ranking, maior número de vitórias, mais gols marcados e maior pontuação total ao longo da temporada.
 
-**Importante:**
-* Apresente números, estatísticas e informações concretas, citando as fontes (relatórios, artigos científicos, portais oficiais etc.).
-* Mantenha a objetividade e a clareza, evitando argumentos genéricos.
-* Construa um texto coeso que conecte o problema, os objetivos e a relevância do trabalho.
+Além do impacto esportivo, as lesões também geram consequências econômicas relevantes, podendo gerar custos médios de aproximadamente €500.000 por mês de afastamento de um jogador em equipes de alto nível. Esses valores demonstram que a indisponibilidade de atletas não afeta apenas o desempenho em campo, mas também representa um custo financeiro significativo para as equipes esportivas(EKSTRAND, J., 2013 apud LÓPEZ-VALENCIANO et al., 2019). Por isso, esses fatores evidenciam a relevância de estratégias de prevenção e monitoramento de lesões no futebol profissional.
 
-> **Links Úteis**:
-> - [Como montar a justificativa](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
+Outro aspecto importante é a diversidade dos tipos de lesões esportivas. Elas são consideradas eventos multifatoriais, influenciados por variáveis como idade do atleta, posição em campo, carga de treinamento, número de partidas disputadas e histórico prévio de lesões. Estudos apontam que a maioria das lesões ocorrem em membros inferiores, principalmente em regiões como coxa, joelho e tornozelo. A presença de múltiplos fatores interdependentes dificulta a identificação de padrões apenas por observação humana ou análises simples, o que reforça a necessidade de abordagens baseadas em análise de dados (LÓPEZ-VALENCIANO et al., 2029).
+
+Diante desse cenário, o uso de técnicas de Inteligência Artificial e aprendizado de máquina é uma alternativa interessante para analisar grandes volumes de dados esportivos e identificar padrões associados à ocorrência de lesões. Modelos computacionais podem ser utilizados para estimar riscos de lesão, prever períodos de afastamento ou identificar fatores que aumentam a probabilidade de lesões em determinados contextos.
+
+Dessa forma, a análise do conjunto de dados escolhido neste trabalho busca contribuir para o desenvolvimento de modelos de apoio à decisão que possam auxiliar departamentos médicos, preparadores físicos e comissões técnicas na gestão da saúde e da performance dos atletas. Além de contribuir para o avanço acadêmico na aplicação de ciência de dados ao esporte, esse tipo de abordagem possui potencial de impacto prático na prevenção de lesões, na otimização do planejamento esportivo e na redução de custos associados ao afastamento de jogadores. 
+
+Por fim, modelos preditivos podem também auxiliar processos de contratação de atletas, permitindo avaliar o histórico de lesões e o risco de afastamento futuro, o que pode contribuir para decisões mais estratégicas sobre a viabilidade e o retorno esperado de um investimento em determinado jogador.
 
 ## Público-Alvo
 
@@ -119,13 +103,66 @@ Use-as para descoberta, organização e triagem de literatura.
 
 # Descrição do _dataset_ selecionado
 
-Nesta seção, apresente uma visão clara e objetiva do dataset selecionado, incluindo:
-* Identificação e origem – Nome, link de acesso, fonte (instituição, repositório, API etc.) e licença de uso.
-* Visão geral – Total de registros e atributos, período coberto e breve contextualização.
-* Atributos – Tabela com nome, descrição, tipo, unidade de medida (se aplicável) e exemplos de valores.
-* Qualidade dos dados – Presença de valores faltantes, inconsistências, duplicatas ou outliers.
+## Descrição do Conjunto de Dados
 
-**Dica:** Seja objetivo, mas inclua detalhes suficientes para que outra pessoa possa entender e reutilizar o conjunto de dados sem buscar informações extras.
+O presente estudo utiliza o conjunto de dados intitulado *European Football Injuries 2020–2025*,
+disponibilizado publicamente na plataforma Kaggle pelo autor Sanan Muzaffarov (2024). O dataset
+consolida registros detalhados de lesões e indisponibilidades de atletas profissionais de futebol
+que atuam nas cinco principais ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e
+Serie A), cobrindo o período compreendido entre as temporadas 2020/2021 e 2024/2025.
+
+Os dados estão licenciados sob a **Creative Commons Attribution-ShareAlike 4.0 International
+(CC BY-SA 4.0)**, o que permite o uso e a adaptação para fins acadêmicos, mediante a devida
+atribuição de autoria e compartilhamento sob a mesma licença.
+
+---
+
+### Estrutura e Atributos
+
+O arquivo analisado no Google Colab, por meio da biblioteca kagglehub e do link (`"sananmuzaffarov/european-football-injuries-2020-2025"`) é composto por **15.603 registros** e **11 atributos**, conforme detalhado no Quadro 1. Cada observação representa um evento único de afastamento de um jogador,
+permitindo análises longitudinais e transversais sobre a incidência e a gravidade das lesões.
+
+**Quadro 1 – Dicionário de Variáveis do Dataset**
+
+| Variável               | Descrição                                          | Tipo de Dado    | Unidade / Formato          | Exemplos                          |
+|------------------------|----------------------------------------------------|-----------------|----------------------------|-----------------------------------|
+| `Season`               | Temporada da ocorrência                            | Categórico      | Texto                      | `20/21`, `24/25`                  |
+| `Injury`               | Diagnóstico ou natureza da lesão                   | Categórico      | Texto                      | `Hamstring injury`, `Knee injury` |
+| `Days`                 | Período total de afastamento informado             | Texto/Numérico  | Dias                       | `43 days`, `8 days`               |
+| `Games missed`         | Quantidade de partidas oficiais perdidas           | Numérico        | Inteiro (jogos)            | `9`, `2`, `145`                   |
+| `injury_from_parsed`   | Data de início da indisponibilidade                | Temporal        | MM/DD/AAAA                 | `1/28/2021`, `11/6/2020`          |
+| `injury_until_parsed`  | Data de retorno às atividades                      | Temporal        | MM/DD/AAAA                 | `3/11/2021`, `11/13/2020`         |
+| `player_name`          | Identificação do atleta                            | Categórico      | Texto                      | `Benjamin Pavard`                 |
+| `player_age`           | Idade do atleta no momento do evento               | Numérico        | Anos (inteiro)             | `19`, `25`, `43`                  |
+| `player_position`      | Posição tática principal do jogador                | Categórico      | Texto                      | `Goalkeeper`, `Centre-Back`       |
+| `club`                 | Clube de vínculo do atleta                         | Categórico      | Texto                      | `Bayern Munich`                   |
+| `league`               | Liga nacional correspondente ao clube              | Categórico      | Texto                      | `Bundesliga`, `Serie A`           |
+
+---
+
+### Qualidade e Tratamento dos Dados
+
+A análise preliminar de qualidade revelou um conjunto de dados robusto, conforme sintetizado
+no Quadro 2.
+
+**Quadro 2 – Resumo da Qualidade dos Dados**
+
+| Dimensão                          | Resultado                                                                 |
+|-----------------------------------|---------------------------------------------------------------------------|
+| Valores faltantes (*missing*)     | **0** em todas as 11 variáveis (0% *missing data*)                        |
+| Duplicatas exatas                 | **0** linhas duplicadas                                                   |
+| Inconsistências temporais         | **0** casos com data de retorno anterior à data de início                 |
+| Coerência `Days` vs. intervalo    | **0** divergências superiores a 3 dias entre duração textual e datas      |
+| Outliers — `Games missed`         | **1.367** registros acima do limite IQR (~13,5 jogos); máx. **145**       |
+| Outliers — `Days` (numérico)      | **1.497** registros acima do limite IQR (~84 dias); máx. **1.013 dias**   |
+
+Os valores extremos identificados foram mantidos na análise inicial por representarem casos
+reais de lesões de longa duração — como rupturas de ligamento cruzado anterior —, típicas
+do contexto do futebol profissional de alto rendimento. Recomenda-se, contudo, o uso de
+medidas robustas (mediana e percentis) em análises descritivas, e a avaliação de técnicas
+de *winsorização* ou segmentação por tipo de lesão em modelos preditivos.
+
+---
 
 # Canvas analítico
 
@@ -135,8 +172,8 @@ O Canvas deve ser preenchido integralmente, mesmo que algumas informações aind
 
 **Dica:** O Canvas Analítico serve como guia visual para alinhar expectativas e direcionar o desenvolvimento. Ele poderá (e deverá) ser revisitado e atualizado ao longo do projeto.
 
-> **Links Úteis**:
-> - [Modelo do Canvas Analítico](https://github.com/ICEI-PUC-Minas-PMV-SI/PesquisaExperimentacao-Template/blob/main/help/Software-Analtics-Canvas-v1.0.pdf)
+<img width="1045" height="734" alt="analitico" src="https://github.com/user-attachments/assets/862e25fd-e39d-4809-a26e-869757c54bca" />
+
 
 # Vídeo de apresentação da Etapa 01
 
@@ -144,7 +181,13 @@ Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o 
 
 # Referências
 
-Inclua todas as referências (livros, artigos, sites, etc) utilizados no desenvolvimento do trabalho utilizando o padrão ABNT.
+> CREATIVE COMMONS. **Atribuição-CompartilhaIgual 4.0 Internacional (CC BY-SA 4.0)**. [S. l.], 2013. Disponível em: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR. Acesso em: 07 mar. 2026.
 
-> **Links Úteis**:
-> - [Padrão ABNT PUC Minas](https://portal.pucminas.br/biblioteca/index_padrao.php?pagina=5886)
+> GOOGLE. **Google Colaboratory**. Mountain View, CA: Google, 2026. Disponível em: https://colab.research.google.com/. Acesso em: 07 mar. 2026.
+
+> LÓPEZ-VALENCIANO, Alejandro et al. Epidemiology of injuries in professional football: a systematic review and meta-analysis. British Journal of Sports Medicine, v. 54, n. 12, p. 711–718, 2019. Disponível em: <https://pmc.ncbi.nlm.nih.gov/articles/PMC9929604/>. Acesso em: 6 mar. 2026.
+ 
+> MUZAFFAROV, Sanan. **European Football Injuries 2020-2025**. Versão 1. Kaggle, 2024. Disponível em: https://www.kaggle.com/datasets/sananmuzaffarov/european-football-injuries-2020-2025. Acesso em: 07 mar. 2026.
+
+> PANDAS DEVELOPMENT TEAM. **pandas-dev/pandas: Pandas 2.2.2**. Zenodo, 2024. Disponível em: https://pandas.pydata.org/. Acesso em: 07 mar. 2026.
+
