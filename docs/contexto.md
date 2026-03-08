@@ -48,21 +48,35 @@ Por fim, modelos preditivos podem também auxiliar processos de contratação de
 
 ## Público-Alvo
 
-Nesta seção, descreva quem poderá se beneficiar com a sua investigação, apresentando os diferentes perfis de pessoas ou grupos impactados.
+A investigação proposta sobre a predição e análise de lesões no futebol europeu atende a diferentes perfis dentro do ecossistema do esporte de alto rendimento. Os principais grupos beneficiados são detalhados a seguir:
 
-O objetivo aqui não é definir clientes específicos ou papéis exatos dentro da aplicação, mas sim compreender o perfil dos usuários e partes interessadas. Para isso, considere:
-* Conhecimentos prévios relacionados ao domínio do problema e ao uso de tecnologia;
-* Nível de familiaridade com recursos digitais e possíveis barreiras de uso;
-* Contexto profissional e hierárquico, quando aplicável (ex.: nível de decisão, responsabilidades, área de atuação);
-* Necessidades e expectativas que podem ser atendidas pelo projeto.
+5.1. Comissões Técnicas e Preparadores Físicos
+Perfil: Profissionais responsáveis pelo planejamento diário de treinos e pela gestão da carga de trabalho dos atletas.
 
-**Dica:** Seja objetivo e baseie suas descrições em informações reais ou plausíveis para o contexto escolhido. Isso ajudará a manter o foco no desenvolvimento de soluções relevantes e aplicáveis.
+Conhecimentos e Expectativas: Possuem alto domínio do domínio (futebol), mas nível variado de familiaridade com ciência de dados. Buscam ferramentas que traduzam algoritmos complexos em indicadores práticos (ex: "Risco Alto/Baixo").
 
-> **Links Úteis**:
-> - [Público-alvo](https://blog.hotmart.com/pt-br/publico-alvo/)
-> - [Como definir o público alvo](https://exame.com/pme/5-dicas-essenciais-para-definir-o-publico-alvo-do-seu-negocio/)
-> - [Público-alvo: o que é, tipos, como definir seu público e exemplos](https://klickpages.com.br/blog/publico-alvo-o-que-e/)
-> - [Qual a diferença entre público-alvo e persona?](https://rockcontent.com/blog/diferenca-publico-alvo-e-persona/)
+Necessidades: Identificar quais jogadores precisam de descanso ( load management ) e entender quais variáveis (idade, posição, calendário) estão elevando o risco de afastamento para ajustar a intensidade dos treinamentos.
+
+5.2. Departamentos Médicos e Fisioterapeutas
+Perfil: Médicos do esporte e fisioterapeutas focados na reabilitação e prevenção clínica.
+
+Conhecimentos e Expectativas: Familiarizados com terminologias de diagnósticos e histórico de lesões. Esperam que o modelo ajude a validar suspeitas clínicas com evidências estatísticas.
+
+Necessidades: Priorizar o monitoramento de atletas que o modelo aponte como propensos a lesões recorrentes ou graves (como rupturas de ligamento), otimizando os recursos de fisioterapia preventiva.
+
+5.3. Gestores e Diretores Executivos de Clubes
+Perfil: Tomadores de decisão em nível administrativo e financeiro.
+
+Contexto Profissional: Responsáveis pela saúde financeira do clube e pelo sucesso esportivo (ROI sobre o elenco).
+
+Necessidades: Reduzir o prejuízo financeiro causado por atletas inativos (estimado em €500.000/mês em grandes clubes). Utilizar as predições para auxiliar na tomada de decisão em janelas de transferências, avaliando se a contratação de um novo jogador representa um risco de investimento devido ao seu histórico de indisponibilidade.
+
+5.4. Analistas de Desempenho e de Mercado (Scouting)
+Perfil: Profissionais que utilizam dados para avaliar atletas internos e potenciais reforços.
+
+Nível de Familiaridade Tecnológica: Geralmente alto, acostumados a lidar com plataformas de estatísticas e softwares de análise de vídeo.
+
+Expectativas: Integrar os modelos preditivos de lesão aos seus relatórios de desempenho para fornecer uma visão 360º do atleta, indo além de gols e assistências, incluindo a "confiabilidade física".
 
 ## Estado da arte
 
