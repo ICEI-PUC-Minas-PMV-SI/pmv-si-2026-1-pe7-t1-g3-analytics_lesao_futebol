@@ -240,7 +240,9 @@ O Canvas deve ser preenchido integralmente, mesmo que algumas informações aind
 
 # Vídeo de apresentação da Etapa 01
 
-Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o trabalho realizado, no qual cada integrante deve dizer seu nome e apresentar uma parte do conteúdo desenvolvido, garantindo que todos participem ativamente da gravação. A ausência de participação de qualquer membro resultará em penalização na nota final desta etapa. Recomenda-se que o grupo elabore previamente um roteiro para organizar a ordem das falas, distribuir o tempo de forma equilibrada e assegurar que todos os tópicos relevantes sejam apresentados de maneira clara e objetiva.
+
+https://github.com/user-attachments/assets/7dc7c4d9-b8a2-439e-a8a8-3efb150ce1a8
+
 
 # Referências
 
