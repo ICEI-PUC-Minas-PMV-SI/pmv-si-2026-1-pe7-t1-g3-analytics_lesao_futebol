@@ -1,6 +1,8 @@
 # Introdução
 
-Texto descritivo introdutório apresentando a visão geral do projeto a ser desenvolvido considerando o contexto em que ele se insere, os objetivos gerais, a justificativa e o público-alvo do projeto.
+A ocorrência de lesões em atletas profissionais é um tema relevante no contexto do esporte de alto rendimento, especialmente no futebol, modalidade caracterizada por alta exigência física, grande volume de jogos e intensa rotina de treinamentos. As lesões podem comprometer não apenas a saúde e a carreira dos atletas, mas também o desempenho esportivo e a gestão das equipes, uma vez que a indisponibilidade de jogadores impacta diretamente as estratégias dos times e a competitividade ao longo da temporada.
+
+Diante desse cenário, o uso de técnicas de Inteligência Artificial e aprendizado de máquina tem possibilitado novas formas de analisar grandes volumes de dados esportivos e identificar padrões associados à ocorrência de lesões. Assim, este trabalho busca aplicar métodos de ciência de dados para analisar dados históricos de lesões em jogadores profissionais, contribuindo para ampliar os estudos acadêmicos sobre o uso dessas técnicas no esporte. Além disso, a proposta do presente trabalho é explorar como esses modelos podem auxiliar, na prática, clubes e comissões técnicas a identificar fatores de risco, melhorar o planejamento de treinamentos e jogos, reduzir a ocorrência de lesões e, consequentemente, diminuir os custos gerados pelo afastamento de jogadores ao longo da temporada.
 
 ## Problema
 
