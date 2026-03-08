@@ -141,14 +141,74 @@ O modelo de Gradient Boosting apresentou melhor desempenho, com AUC aproximada d
 | **Bittencourt et al. (2021)** | Modelagem do risco de lesões esportivas considerando fatores físicos, fisiológicos e contextuais em atletas de alto rendimento. | Registros históricos contendo idade, posição, carga de treinamento, indicadores fisiológicos e histórico de lesões. | Decision Trees, Random Forest, Support Vector Machines | Acurácia, F1-score, AUC | Random Forest apresentou melhor desempenho entre os modelos testados, destacando a importância de variáveis relacionadas à carga acumulada e histórico de lesões. |
 | **Wang et al. (2023)** | Previsão de lesões em jogadores profissionais utilizando dados médicos e estatísticas de desempenho esportivo. | Dados de diversas ligas europeias com variáveis como idade, posição, minutos jogados, histórico de lesões e intensidade de participação em partidas. | Gradient Boosting, Random Forest, Redes Neurais | AUC-ROC, Precision, F1-score | O modelo **Gradient Boosting apresentou melhor desempenho**, com **AUC aproximada de 0,79**, mostrando potencial de aplicação prática em departamentos médicos esportivos. |
 
+Os estudos analisados concordam que a previsão de lesões no futebol é um problema multifatorial, ou seja, não depende de apenas uma variável isolada. A maioria dos trabalhos utiliza variáveis semelhantes, como histórico de lesões, carga de treinamento, idade dos jogadores, minutos jogados e posição em campo, buscando identificar padrões que possam indicar maior risco de lesão. Além disso, há uma convergência em relação às técnicas utilizadas: algoritmos como Random Forest, Gradient Boosting, XGBoost e Support Vector Machines aparecem com frequência, principalmente por apresentarem bom desempenho em problemas de classificação com múltiplas variáveis. Outro ponto em comum é o uso de métricas como AUC-ROC, F1-score, precisão e recall, que são adequadas para avaliar modelos em cenários onde os eventos de lesão são relativamente raros em comparação com os casos sem lesão.
 
-Os estudos analisados convergem ao demonstrar que o uso de técnicas de aprendizado de máquina pode contribuir para a identificação de padrões associados ao risco de lesões em atletas profissionais. Em geral, os trabalhos utilizam algoritmos supervisionados, como Random Forest, Gradient Boosting e Support Vector Machines, que apresentam bom desempenho em problemas de classificação com múltiplas variáveis. Além disso, a maioria das pesquisas destaca a importância de fatores como carga de treinamento, histórico de lesões, minutos jogados e características físicas dos atletas para a construção de modelos preditivos.
+Apesar dessas semelhanças, os estudos também apresentam algumas diferenças importantes, principalmente em relação aos tipos de dados utilizados. Alguns trabalhos utilizam dados altamente detalhados de monitoramento físico, coletados por sensores GPS e sistemas de análise de desempenho durante treinos e partidas. Outros utilizam dados históricos e registros médicos, com informações mais gerais sobre os atletas e suas lesões. Essa diferença influencia diretamente os resultados obtidos, já que datasets com dados fisiológicos detalhados podem capturar melhor a carga física do atleta, enquanto datasets históricos permitem análises em escalas maiores, envolvendo diferentes equipes e competições.
 
-Apesar dessas convergências, os estudos apresentam diferenças relevantes em relação aos tipos de dados utilizados. Alguns trabalhos utilizam dados altamente detalhados coletados por sensores GPS e sistemas de monitoramento de treinamento, enquanto outros utilizam registros médicos e estatísticas de desempenho de jogadores. Essas diferenças influenciam diretamente a capacidade de generalização dos modelos, já que datasets restritos a um único clube ou equipe tendem a possuir menor diversidade de cenários.
+Outra divergência observada está relacionada ao tamanho e à abrangência dos datasets. Muitos estudos utilizam dados de apenas um clube ou de poucas temporadas, o que pode limitar a generalização dos resultados para outros contextos. Além disso, vários autores apontam como limitação o desbalanceamento dos dados, já que eventos de lesão são menos frequentes do que períodos sem lesão, o que pode impactar o treinamento e a avaliação dos modelos.
 
-Outra limitação recorrente na literatura é o tamanho relativamente reduzido dos conjuntos de dados e o desbalanceamento entre eventos de lesão e não lesão, fatores que dificultam o treinamento de modelos robustos. Além disso, muitos estudos destacam que lesões esportivas são eventos multifatoriais e dependem de fatores contextuais difíceis de capturar apenas com dados quantitativos.
-
+Nesse contexto, o projeto desenvolvido neste trabalho se alinha às abordagens encontradas na literatura ao aplicar técnicas de aprendizado de máquina para analisar padrões associados às lesões em jogadores de futebol. No entanto, uma diferença importante é o uso de um dataset público com registros de múltiplas ligas europeias e várias temporadas, o que pode permitir uma análise mais ampla e comparativa entre diferentes contextos competitivos. Dessa forma, o projeto busca explorar modelos semelhantes aos utilizados nos estudos analisados, mas aplicados a um conjunto de dados mais diversificado, contribuindo para ampliar a compreensão dos fatores associados ao risco de lesões no futebol profissional.
 Nesse contexto, o presente projeto se alinha às abordagens identificadas na literatura ao utilizar técnicas de aprendizado de máquina para analisar padrões de lesão em jogadores de futebol. A principal contribuição potencial do trabalho está no uso de um dataset público contendo registros de diversas ligas europeias ao longo de várias temporadas, o que pode permitir análises mais amplas e comparações entre diferentes contextos competitivos. Dessa forma, espera-se explorar modelos preditivos capazes de identificar fatores associados à ocorrência de lesões e contribuir para o avanço das aplicações de ciência de dados no esporte profissional.
+---
+
+## Descrição do Conjunto de Dados
+O presente estudo utiliza o conjunto de dados intitulado European Football Injuries 2020–2025,
+disponibilizado publicamente na plataforma Kaggle pelo autor Sanan Muzaffarov (2024). O dataset
+consolida registros detalhados de lesões e indisponibilidades de atletas profissionais de futebol
+que atuam nas cinco principais ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e
+Serie A), cobrindo o período compreendido entre as temporadas 2020/2021 e 2024/2025.
+
+Os dados estão licenciados sob a **Creative Commons Attribution-ShareAlike 4.0 International
+(CC BY-SA 4.0)**, o que permite o uso e a adaptação para fins acadêmicos, mediante a devida
+atribuição de autoria e compartilhamento sob a mesma licença.
+
+---
+
+### Estrutura e Atributos
+
+O arquivo analisado no Google Colab, por meio da biblioteca kagglehub e do link ("sananmuzaffarov/european-football-injuries-2020-2025") é composto por *15.603 registros* e *11 atributos*, conforme detalhado no Quadro 1. Cada observação representa um evento único de afastamento de um jogador,
+permitindo análises longitudinais e transversais sobre a incidência e a gravidade das lesões.
+
+*Quadro 1 – Dicionário de Variáveis do Dataset*
+
+| Variável               | Descrição                                          | Tipo de Dado    | Unidade / Formato          | Exemplos                          |
+|------------------------|----------------------------------------------------|-----------------|----------------------------|-----------------------------------|
+| Season               | Temporada da ocorrência                            | Categórico      | Texto                      | 20/21, 24/25                  |
+| Injury               | Diagnóstico ou natureza da lesão                   | Categórico      | Texto                      | Hamstring injury, Knee injury |
+| Days                 | Período total de afastamento informado             | Texto/Numérico  | Dias                       | 43 days, 8 days               |
+| Games missed         | Quantidade de partidas oficiais perdidas           | Numérico        | Inteiro (jogos)            | 9, 2, 145                   |
+| injury_from_parsed   | Data de início da indisponibilidade                | Temporal        | MM/DD/AAAA                 | 1/28/2021, 11/6/2020          |
+| injury_until_parsed  | Data de retorno às atividades                      | Temporal        | MM/DD/AAAA                 | 3/11/2021, 11/13/2020         |
+| player_name          | Identificação do atleta                            | Categórico      | Texto                      | Benjamin Pavard                 |
+| player_age           | Idade do atleta no momento do evento               | Numérico        | Anos (inteiro)             | 19, 25, 43                  |
+| player_position      | Posição tática principal do jogador                | Categórico      | Texto                      | Goalkeeper, Centre-Back       |
+| club                 | Clube de vínculo do atleta                         | Categórico      | Texto                      | Bayern Munich                   |
+| league               | Liga nacional correspondente ao clube              | Categórico      | Texto                      | Bundesliga, Serie A           |
+
+---
+
+### Qualidade e Tratamento dos Dados
+
+A análise preliminar de qualidade revelou um conjunto de dados robusto, conforme sintetizado
+no Quadro 2.
+
+*Quadro 2 – Resumo da Qualidade dos Dados*
+
+| Dimensão                          | Resultado                                                                 |
+|-----------------------------------|---------------------------------------------------------------------------|
+| Valores faltantes (missing)     | *0* em todas as 11 variáveis (0% missing data)                        |
+| Duplicatas exatas                 | *0* linhas duplicadas                                                   |
+| Inconsistências temporais         | *0* casos com data de retorno anterior à data de início                 |
+| Coerência Days vs. intervalo    | *0* divergências superiores a 3 dias entre duração textual e datas      |
+| Outliers — Games missed         | *1.367* registros acima do limite IQR (~13,5 jogos); máx. *145*       |
+| Outliers — Days (numérico)      | *1.497* registros acima do limite IQR (~84 dias); máx. *1.013 dias*   |
+
+Os valores extremos identificados foram mantidos na análise inicial por representarem casos
+reais de lesões de longa duração — como rupturas de ligamento cruzado anterior —, típicas
+do contexto do futebol profissional de alto rendimento. Recomenda-se, contudo, o uso de
+medidas robustas (mediana e percentis) em análises descritivas, e a avaliação de técnicas
+de winsorização ou segmentação por tipo de lesão em modelos preditivos.
+
 ---
 
 # Canvas analítico
