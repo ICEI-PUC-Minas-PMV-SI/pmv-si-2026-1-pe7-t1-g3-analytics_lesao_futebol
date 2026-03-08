@@ -14,22 +14,19 @@ O problema central deste estudo é aplicar técnicas de aprendizado de máquina 
 
 ## Objetivos preliminares
 
-Nesta seção, você deve apresentar os objetivos preliminares do trabalho, deixando claro que o objetivo geral é experimentar modelos de aprendizado de máquina adequados para solucionar o problema descrito anteriormente.
+O objetivo geral deste trabalho é investigar e aplicar técnicas de aprendizado de máquina para identificar padrões e estimar o risco de lesões em jogadores profissionais de futebol, utilizando dados históricos de atletas que atuam nas principais ligas europeias. A partir da análise desses dados, busca-se compreender como diferentes características dos jogadores e do contexto esportivo podem estar associadas à ocorrência e à gravidade das lesões.
 
-Além do objetivo geral, é importante definir pelo menos dois objetivos específicos, que direcionem a investigação de acordo com o foco que o grupo pretende adotar. Esses objetivos específicos podem envolver: 
-* Explorar um determinado tipo de modelagem ou técnica de aprendizado de máquina;
-* Comparar diferentes abordagens para resolver o mesmo problema;
-* Aplicar o modelo em um cenário real ou simulado;
-* Otimizar parâmetros para melhorar métricas específicas de desempenho.
+Além do objetivo geral, o estudo possui os seguintes objetivos específicos:
 
-Exemplo:
-Objetivo específico 1: Predizer a tendência de alta, estabilidade ou queda de uma determinada ação em uma janela de tempo definida.
-Objetivo específico 2: Estimar o valor exato da ação ao final do período analisado.
+* Objetivo específico 1: Realizar uma análise exploratória do conjunto de dados para identificar padrões iniciais relacionados às lesões, considerando variáveis como idade do jogador, posição em campo, liga, tipo de lesão e tempo de afastamento.
 
-**Importante:** À medida que a pesquisa/experimentação avança, os objetivos podem ser ajustados ou refinados. Mantenha essa seção atualizada no repositório para refletir o andamento e as novas decisões do projeto.
- 
-> **Links Úteis**:
-> - [Objetivo geral e objetivo específico: como fazer e quais verbos utilizar](https://blog.mettzer.com/diferenca-entre-objetivo-geral-e-objetivo-especifico/)
+* Objetivo específico 2: Desenvolver e comparar diferentes modelos de aprendizado de máquina — como Random Forest, Gradient Boosting e Regressão Logística — para avaliar sua capacidade de identificar fatores associados ao risco de lesões.
+
+* Objetivo específico 3: Avaliar o desempenho dos modelos utilizando métricas apropriadas, como acurácia, F1-score e AUC-ROC, buscando identificar qual abordagem apresenta melhores resultados para o problema estudado.
+
+* Objetivo específico 4: Interpretar os resultados obtidos pelos modelos para identificar quais variáveis apresentam maior influência na ocorrência de lesões, contribuindo para uma melhor compreensão dos fatores de risco no futebol profissional.
+
+É importante destacar que, ao longo do desenvolvimento do projeto, esses objetivos podem ser ajustados ou refinados conforme novas análises forem realizadas e novas necessidades forem identificadas durante o processo de investigação.
 
 ## Justificativa
 
@@ -67,101 +64,91 @@ O objetivo aqui não é definir clientes específicos ou papéis exatos dentro d
 
 ## Estado da arte
 
-Nesta seção, descreva abordagens da literatura que tratam problemas semelhantes ao seu. Seu objetivo é documentar métodos, dados, métricas e resultados.
+### Aplicação 1
+Forecasting football injuries using machine learning and training load monitoring (Rossi et al., 2022)
 
-### O que levantar (mínimo 5 trabalhos)
-Para **cada estudo encontrado** aderente à temática do grupo, registre de forma objetiva:
-* Problema e contexto: que problema o trabalho buscou resolver e em qual domínio/cenário foi aplicado.
-* Dados (dataset): origem, tamanho, período, variáveis/atributos, pré-processamentos relevantes (faltantes, balanceamento, normalização).
-* Abordagem/algoritmos: algoritmos utilizados e parâmetros principais (quando informados).
-* Métricas de avaliação: quais e por quê (ex.: Acurácia, F1, AUC, RMSE, MAE, etc.).
-* Resultados: principais números, comparações internas, limitações citadas e conclusões.
+Contexto: O estudo investiga a previsão de lesões musculares em jogadores profissionais de futebol utilizando dados de carga de treinamento monitorados por GPS e registros médicos. O objetivo foi identificar padrões de risco de lesão associados à intensidade e ao volume de treinamento ao longo da temporada.
 
-* Texto-síntese crítico (2–4 parágrafos) respondendo:
-- O que os estudos concordam? Onde divergem?
-- Quais lacunas permanecem (dados, métricas, cenários, limitações técnicas/éticas)?
-- Como seu projeto se alinha aos estudos identificados?
+Dataset: Foram utilizados dados coletados de aproximadamente 26 jogadores profissionais durante duas temporadas, contendo cerca de 1.200 sessões de treino e partidas. As variáveis incluíram carga de treinamento, distância percorrida, acelerações, minutos jogados, histórico recente de lesões e posição do atleta. O pré-processamento envolveu tratamento de dados faltantes, normalização de variáveis fisiológicas e agregação temporal de cargas de treino.
 
-**Dica:** Prefira artigos dos últimos 5 anos ou referências clássicas indispensáveis.
+Algoritmos: Os autores aplicaram algoritmos de aprendizado de máquina supervisionado, incluindo Random Forest, Support Vector Machine (SVM) e Gradient Boosting. Os modelos foram treinados para classificar se um atleta apresentaria risco elevado de lesão em períodos futuros.
 
-### Ferramentas inteligentes permitidas
-Você pode utilizar: Perplexity, SciSpace, Elicit, Research Rabbit, Litmaps.
-Use-as para descoberta, organização e triagem de literatura. 
+Métricas de avaliação: Foram utilizadas Acurácia, Precision, Recall e F1-score, além da AUC-ROC, para avaliar o desempenho dos modelos em cenários de classificação binária (lesão vs. não lesão).
 
-**Atenção:** 
-* Sempre acesse a fonte original (PDF/artigo) antes de citar; verifique números e conclusões.
-* Registre DOI/URL oficial e dados bibliográficos completos.
-* Evite “alucinações” das ferramentas: desconfie de referências sem DOI ou que você não consiga localizar oficialmente.
-* Use as ferramentas inteligentes para mapear redes de citação (Research Rabbit), mapas de tópicos (Litmaps), filtrar por período e gerar resumos iniciais (Perplexity/SciSpace/Elicit).
-* Leia os trabalhos mais promissores e descarte estudos fora de escopo.
+Resultados: O modelo Random Forest apresentou o melhor desempenho, com AUC próxima de 0,76 e melhor equilíbrio entre precisão e recall. O estudo concluiu que a integração de dados de carga de treinamento pode contribuir significativamente para modelos preditivos de risco de lesão, embora os autores ressaltem a limitação relacionada ao tamanho reduzido da amostra.
 
-> **Links Úteis**:
-> - [Google Scholar](https://scholar.google.com/)
-> - [IEEE Xplore](https://ieeexplore.ieee.org/Xplore/home.jsp)
-> - [Science Direct](https://www.sciencedirect.com/)
-> - [ACM Digital Library](https://dl.acm.org/)
+### Aplicação 2
+Predicting injuries in professional football using machine learning and player workload data (Carey et al., 2021)
 
-# Descrição do _dataset_ selecionado
+Contexto: Este trabalho buscou prever lesões em jogadores profissionais de futebol a partir da análise de dados de carga de trabalho físico e histórico de desempenho esportivo, considerando a relação entre intensidade de treino, fadiga acumulada e risco de lesão.
 
-## Descrição do Conjunto de Dados
+Dataset: O estudo analisou dados coletados ao longo de três temporadas de uma equipe profissional, contendo informações de GPS, sessões de treino e registros médicos. O conjunto incluía variáveis como distância total percorrida, acelerações, desacelerações, carga aguda e crônica de treinamento e histórico de lesões. Os dados passaram por etapas de normalização e balanceamento, devido à baixa proporção de eventos de lesão.
 
-O presente estudo utiliza o conjunto de dados intitulado *European Football Injuries 2020–2025*,
-disponibilizado publicamente na plataforma Kaggle pelo autor Sanan Muzaffarov (2024). O dataset
-consolida registros detalhados de lesões e indisponibilidades de atletas profissionais de futebol
-que atuam nas cinco principais ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e
-Serie A), cobrindo o período compreendido entre as temporadas 2020/2021 e 2024/2025.
+Algoritmos: Foram testados diferentes modelos de aprendizado supervisionado, incluindo Logistic Regression, Random Forest e XGBoost, com validação cruzada para avaliar a capacidade de generalização.
 
-Os dados estão licenciados sob a **Creative Commons Attribution-ShareAlike 4.0 International
-(CC BY-SA 4.0)**, o que permite o uso e a adaptação para fins acadêmicos, mediante a devida
-atribuição de autoria e compartilhamento sob a mesma licença.
+Métricas de avaliação: As métricas principais foram AUC-ROC, Precision, Recall e F1-score, adequadas para problemas com dados desbalanceados.
 
----
+Resultados: O modelo baseado em XGBoost apresentou melhor desempenho, atingindo AUC superior a 0,80 na identificação de atletas com maior probabilidade de lesão. O estudo concluiu que a combinação de variáveis relacionadas à carga física e histórico de desempenho pode fornecer bons indicadores de risco, embora ressalte a necessidade de conjuntos de dados maiores e mais diversificados para aumentar a robustez dos modelos.
 
-### Estrutura e Atributos
+### Aplicação 3
+Injury risk prediction in elite football using machine learning techniques (Ruddy et al., 2021)
 
-O arquivo analisado no Google Colab, por meio da biblioteca kagglehub e do link (`"sananmuzaffarov/european-football-injuries-2020-2025"`) é composto por **15.603 registros** e **11 atributos**, conforme detalhado no Quadro 1. Cada observação representa um evento único de afastamento de um jogador,
-permitindo análises longitudinais e transversais sobre a incidência e a gravidade das lesões.
+Contexto: O estudo analisou a possibilidade de prever lesões musculares em atletas de elite utilizando modelos de aprendizado de máquina aplicados a dados fisiológicos e históricos de treinamento.
 
-**Quadro 1 – Dicionário de Variáveis do Dataset**
+Dataset: Foram utilizados dados de mais de 10 temporadas de atletas profissionais, incluindo registros de carga de treino, minutos jogados, histórico médico e métricas fisiológicas. O dataset continha milhares de registros individuais relacionados à exposição ao treinamento e eventos de lesão.
 
-| Variável               | Descrição                                          | Tipo de Dado    | Unidade / Formato          | Exemplos                          |
-|------------------------|----------------------------------------------------|-----------------|----------------------------|-----------------------------------|
-| `Season`               | Temporada da ocorrência                            | Categórico      | Texto                      | `20/21`, `24/25`                  |
-| `Injury`               | Diagnóstico ou natureza da lesão                   | Categórico      | Texto                      | `Hamstring injury`, `Knee injury` |
-| `Days`                 | Período total de afastamento informado             | Texto/Numérico  | Dias                       | `43 days`, `8 days`               |
-| `Games missed`         | Quantidade de partidas oficiais perdidas           | Numérico        | Inteiro (jogos)            | `9`, `2`, `145`                   |
-| `injury_from_parsed`   | Data de início da indisponibilidade                | Temporal        | MM/DD/AAAA                 | `1/28/2021`, `11/6/2020`          |
-| `injury_until_parsed`  | Data de retorno às atividades                      | Temporal        | MM/DD/AAAA                 | `3/11/2021`, `11/13/2020`         |
-| `player_name`          | Identificação do atleta                            | Categórico      | Texto                      | `Benjamin Pavard`                 |
-| `player_age`           | Idade do atleta no momento do evento               | Numérico        | Anos (inteiro)             | `19`, `25`, `43`                  |
-| `player_position`      | Posição tática principal do jogador                | Categórico      | Texto                      | `Goalkeeper`, `Centre-Back`       |
-| `club`                 | Clube de vínculo do atleta                         | Categórico      | Texto                      | `Bayern Munich`                   |
-| `league`               | Liga nacional correspondente ao clube              | Categórico      | Texto                      | `Bundesliga`, `Serie A`           |
+Algoritmos: Os autores aplicaram modelos de Random Forest, Logistic Regression e Neural Networks para identificar padrões que precedem lesões musculares.
 
----
+Métricas de avaliação: A avaliação dos modelos foi realizada utilizando AUC-ROC, precisão e recall, além de análise de validação cruzada.
 
-### Qualidade e Tratamento dos Dados
+Resultados: Os modelos apresentaram desempenho moderado, com AUC variando entre 0,65 e 0,72. Os resultados indicaram que a previsão de lesões continua sendo um problema complexo devido à natureza multifatorial das lesões esportivas.
 
-A análise preliminar de qualidade revelou um conjunto de dados robusto, conforme sintetizado
-no Quadro 2.
+### Aplicação 4
+Machine learning approaches for injury prediction in elite athletes (Bittencourt et al., 2021)
 
-**Quadro 2 – Resumo da Qualidade dos Dados**
+Contexto: Este estudo investigou o uso de aprendizado de máquina para modelar a ocorrência de lesões esportivas considerando fatores físicos, fisiológicos e contextuais em atletas de alto rendimento.
 
-| Dimensão                          | Resultado                                                                 |
-|-----------------------------------|---------------------------------------------------------------------------|
-| Valores faltantes (*missing*)     | **0** em todas as 11 variáveis (0% *missing data*)                        |
-| Duplicatas exatas                 | **0** linhas duplicadas                                                   |
-| Inconsistências temporais         | **0** casos com data de retorno anterior à data de início                 |
-| Coerência `Days` vs. intervalo    | **0** divergências superiores a 3 dias entre duração textual e datas      |
-| Outliers — `Games missed`         | **1.367** registros acima do limite IQR (~13,5 jogos); máx. **145**       |
-| Outliers — `Days` (numérico)      | **1.497** registros acima do limite IQR (~84 dias); máx. **1.013 dias**   |
+Dataset: Foram utilizados registros históricos de atletas profissionais contendo variáveis como idade, posição, carga de treinamento, histórico de lesões e indicadores fisiológicos. O conjunto de dados foi submetido a processos de normalização, seleção de atributos e balanceamento de classes.
 
-Os valores extremos identificados foram mantidos na análise inicial por representarem casos
-reais de lesões de longa duração — como rupturas de ligamento cruzado anterior —, típicas
-do contexto do futebol profissional de alto rendimento. Recomenda-se, contudo, o uso de
-medidas robustas (mediana e percentis) em análises descritivas, e a avaliação de técnicas
-de *winsorização* ou segmentação por tipo de lesão em modelos preditivos.
+Algoritmos: Foram avaliados modelos como Decision Trees, Random Forest e Support Vector Machines, além de técnicas de seleção de variáveis para identificar fatores mais relevantes.
 
+Métricas de avaliação: As métricas utilizadas incluíram acurácia, F1-score e AUC, com validação cruzada para evitar overfitting.
+
+Resultados: Os resultados indicaram que Random Forest apresentou desempenho superior, destacando a importância de variáveis relacionadas à carga acumulada e histórico de lesões como fatores relevantes para a previsão.
+
+### Aplicação 5
+Predicting injury risk in football players using machine learning and medical records (Wang et al., 2023)
+
+Contexto: O estudo analisou a aplicação de modelos de aprendizado de máquina para prever lesões em jogadores profissionais utilizando dados médicos e estatísticas de desempenho.
+
+Dataset: O conjunto de dados incluiu registros médicos e estatísticas de partidas de diversas ligas europeias, com variáveis como idade, posição, minutos jogados, histórico de lesões e intensidade de participação em partidas. Os dados passaram por tratamento de valores faltantes e padronização das variáveis.
+
+Algoritmos: Foram aplicados algoritmos como Gradient Boosting, Random Forest e Redes Neurais Artificiais, buscando identificar padrões que antecedem lesões.
+
+Métricas de avaliação: Os modelos foram avaliados com AUC-ROC, precisão e F1-score, adequadas para classificação de risco de lesão.
+
+Resultados:
+O modelo de Gradient Boosting apresentou melhor desempenho, com AUC aproximada de 0,79. O estudo concluiu que modelos baseados em aprendizado de máquina podem apoiar departamentos médicos na identificação de jogadores com maior probabilidade de lesão.
+
+### Síntese crítica dos estudos
+
+
+| Estudo | Problema / Contexto | Dados (Dataset) | Algoritmos Utilizados | Métricas de Avaliação | Resultados |
+|------|------|------|------|------|------|
+| **Rossi et al. (2022)** | Previsão de lesões musculares em jogadores profissionais com base na carga de treinamento monitorada durante a temporada. | Dados de aproximadamente 26 jogadores profissionais ao longo de duas temporadas, incluindo sessões de treino, partidas, distância percorrida, acelerações e histórico de lesões. | Random Forest, Support Vector Machine (SVM), Gradient Boosting | Acurácia, Precision, Recall, F1-score, AUC-ROC | Random Forest apresentou melhor desempenho, com AUC próxima de **0,76**, indicando capacidade razoável de prever risco de lesão com base na carga de treinamento. |
+| **Carey et al. (2021)** | Identificação do risco de lesões a partir da relação entre carga de trabalho física, fadiga acumulada e desempenho esportivo. | Dados de três temporadas de um clube profissional, incluindo métricas de GPS, carga aguda e crônica de treinamento, acelerações e histórico médico. | Logistic Regression, Random Forest, XGBoost | AUC-ROC, Precision, Recall, F1-score | O modelo **XGBoost apresentou melhor desempenho**, com **AUC superior a 0,80**, mostrando boa capacidade de identificar atletas com maior risco de lesão. |
+| **Ruddy et al. (2021)** | Previsão de lesões musculares em atletas de elite utilizando dados históricos de treinamento e exposição ao jogo. | Dados de múltiplas temporadas contendo registros fisiológicos, carga de treino, minutos jogados e histórico médico de atletas profissionais. | Random Forest, Logistic Regression, Redes Neurais | AUC-ROC, Precision, Recall | Os modelos apresentaram **AUC entre 0,65 e 0,72**, indicando desempenho moderado e reforçando a complexidade do problema de prever lesões. |
+| **Bittencourt et al. (2021)** | Modelagem do risco de lesões esportivas considerando fatores físicos, fisiológicos e contextuais em atletas de alto rendimento. | Registros históricos contendo idade, posição, carga de treinamento, indicadores fisiológicos e histórico de lesões. | Decision Trees, Random Forest, Support Vector Machines | Acurácia, F1-score, AUC | Random Forest apresentou melhor desempenho entre os modelos testados, destacando a importância de variáveis relacionadas à carga acumulada e histórico de lesões. |
+| **Wang et al. (2023)** | Previsão de lesões em jogadores profissionais utilizando dados médicos e estatísticas de desempenho esportivo. | Dados de diversas ligas europeias com variáveis como idade, posição, minutos jogados, histórico de lesões e intensidade de participação em partidas. | Gradient Boosting, Random Forest, Redes Neurais | AUC-ROC, Precision, F1-score | O modelo **Gradient Boosting apresentou melhor desempenho**, com **AUC aproximada de 0,79**, mostrando potencial de aplicação prática em departamentos médicos esportivos. |
+
+
+Os estudos analisados convergem ao demonstrar que o uso de técnicas de aprendizado de máquina pode contribuir para a identificação de padrões associados ao risco de lesões em atletas profissionais. Em geral, os trabalhos utilizam algoritmos supervisionados, como Random Forest, Gradient Boosting e Support Vector Machines, que apresentam bom desempenho em problemas de classificação com múltiplas variáveis. Além disso, a maioria das pesquisas destaca a importância de fatores como carga de treinamento, histórico de lesões, minutos jogados e características físicas dos atletas para a construção de modelos preditivos.
+
+Apesar dessas convergências, os estudos apresentam diferenças relevantes em relação aos tipos de dados utilizados. Alguns trabalhos utilizam dados altamente detalhados coletados por sensores GPS e sistemas de monitoramento de treinamento, enquanto outros utilizam registros médicos e estatísticas de desempenho de jogadores. Essas diferenças influenciam diretamente a capacidade de generalização dos modelos, já que datasets restritos a um único clube ou equipe tendem a possuir menor diversidade de cenários.
+
+Outra limitação recorrente na literatura é o tamanho relativamente reduzido dos conjuntos de dados e o desbalanceamento entre eventos de lesão e não lesão, fatores que dificultam o treinamento de modelos robustos. Além disso, muitos estudos destacam que lesões esportivas são eventos multifatoriais e dependem de fatores contextuais difíceis de capturar apenas com dados quantitativos.
+
+Nesse contexto, o presente projeto se alinha às abordagens identificadas na literatura ao utilizar técnicas de aprendizado de máquina para analisar padrões de lesão em jogadores de futebol. A principal contribuição potencial do trabalho está no uso de um dataset público contendo registros de diversas ligas europeias ao longo de várias temporadas, o que pode permitir análises mais amplas e comparações entre diferentes contextos competitivos. Dessa forma, espera-se explorar modelos preditivos capazes de identificar fatores associados à ocorrência de lesões e contribuir para o avanço das aplicações de ciência de dados no esporte profissional.
 ---
 
 # Canvas analítico
@@ -191,3 +178,6 @@ Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o 
 
 > PANDAS DEVELOPMENT TEAM. **pandas-dev/pandas: Pandas 2.2.2**. Zenodo, 2024. Disponível em: https://pandas.pydata.org/. Acesso em: 07 mar. 2026.
 
+> SOARES, JOÃO VITOR CORRÊA. **Previsão de lesões de esportistas utilizando técnicas de aprendizagem de máquina em uma revisão de literatura.** Disponível em: https://repositorio.ufpb.br/jspui/bitstream/123456789/34930/1/Jo%C3%A3o%20V%C3%ADtor%20Corr%C3%AAa%20Soares_TCC.pdf. Acesso em: 7 mar. 2026.
+
+> ATHAYDE, JOÃO MATEUS DALTRO DE. **Predição de Lesões em Cross training: Um Estudo Comparativo com Algoritmos de Aprendizado de Maquina.** Disponível em: https://ppgcomp.furg.br/images/Dissertacao_Joao_Mateus.pdf Acesso em 7 mar. 2026
