@@ -244,6 +244,8 @@ Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o 
 
 # Referências
 
+> ATHAYDE, JOÃO MATEUS DALTRO DE. **Predição de Lesões em Cross training: Um Estudo Comparativo com Algoritmos de Aprendizado de Maquina.** Disponível em: https://ppgcomp.furg.br/images/Dissertacao_Joao_Mateus.pdf Acesso em 7 mar. 2026
+
 > CREATIVE COMMONS. **Atribuição-CompartilhaIgual 4.0 Internacional (CC BY-SA 4.0)**. [S. l.], 2013. Disponível em: https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR. Acesso em: 07 mar. 2026.
 
 > GOOGLE. **Google Colaboratory**. Mountain View, CA: Google, 2026. Disponível em: https://colab.research.google.com/. Acesso em: 07 mar. 2026.
@@ -256,4 +258,4 @@ Nesta etapa, o grupo deverá produzir um vídeo de 5 a 8 minutos apresentando o 
 
 > SOARES, JOÃO VITOR CORRÊA. **Previsão de lesões de esportistas utilizando técnicas de aprendizagem de máquina em uma revisão de literatura.** Disponível em: https://repositorio.ufpb.br/jspui/bitstream/123456789/34930/1/Jo%C3%A3o%20V%C3%ADtor%20Corr%C3%AAa%20Soares_TCC.pdf. Acesso em: 7 mar. 2026.
 
-> ATHAYDE, JOÃO MATEUS DALTRO DE. **Predição de Lesões em Cross training: Um Estudo Comparativo com Algoritmos de Aprendizado de Maquina.** Disponível em: https://ppgcomp.furg.br/images/Dissertacao_Joao_Mateus.pdf Acesso em 7 mar. 2026
+
