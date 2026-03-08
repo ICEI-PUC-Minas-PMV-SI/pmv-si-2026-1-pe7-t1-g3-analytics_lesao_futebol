@@ -1,4 +1,4 @@
-# TÍTULO DO PROJETO
+# PIPELINE DE PREDIÇÃO DE LESÕES NO FUTEBOL
 
 `CURSO: Sistemas de Informação`
 
