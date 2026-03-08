@@ -4,9 +4,9 @@ Texto descritivo introdutório apresentando a visão geral do projeto a ser dese
 
 ## Problema
 
-Lesões em jogadores profissionais de futebol são eventos comuns e multifatoriais. Elas dependem de características individuais (idade, posição, condição física e histórico), do contexto competitivo (calendário, intensidade e viagens) e da forma como o atleta é exposto a treinos e jogos, o que torna o fenômeno difícil de prever e controlar. 
+Lesões em jogadores profissionais de futebol são eventos comuns e multifatoriais. Elas dependem de características individuais (idade, posição, condição física e histórico), do contexto competitivo (calendário, intensidade e viagens) e da forma como o atleta é exposto a jogos e treinos, o que torna o risco de lesão difícil de prever e controlar.
 
-No cenário de clubes e ligas, lesões geram indisponibilidade de atletas, afetam o planejamento técnico e a performance esportiva, e aumentam demandas sobre o departamento médico e de preparação física. Assim, entender padrões de lesões e desenvolver modelos de apoio à decisão é um problema relevante dentro do esporte de alto rendimento.
+No cenário de clubes e ligas, antecipar situações de maior risco pode contribuir para decisões mais informadas sobre prevenção, preparação física e gestão do elenco. Assim, investigar padrões históricos de lesões e aplicar técnicas de aprendizado de máquina para apoiar a análise do risco de lesão em jogadores representa um problema relevante dentro do esporte de alto rendimento.
 
 ## Questão de pesquisa
 
