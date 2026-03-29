@@ -71,13 +71,3 @@ O projeto foi desenvolvido utilizando o ecossistema de Ciência de Dados da ling
 * **Jupyter Notebook:** Ambiente de desenvolvimento utilizado para documentação e execução do código de forma interativa.
 
 ---
-
-## Descrição dos achados
-
-A partir da análise descrita e exploratória realizada, descreva todos os achados considerados relevantes para o contexto em que o trabalho se insere. Por exemplo: com relação à centralidade dos dados algo chamou a atenção? Foi possível identificar correlação entre os atributos? Que tipo de correlação (forte, fraca, moderada)? 
-
-## Ferramentas utilizadas
-
-Existem muitas ferramentas diferentes que podem ser utilizadas para fazer a análise dos dados. Nesta seção, descreva as ferramentas/tecnologias utilizadas e sua aplicação. Vale destacar que, preferencialmente, as análises deverão ser realizadas utilizando a linguagem de programação Python.
-
-
