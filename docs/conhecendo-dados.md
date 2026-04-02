@@ -48,6 +48,18 @@ estatisticas = df_injuries[['duracao_dias', 'jogos_perdidos', 'idade']].describe
 
 ---
 
+* **Correlação e Dispersão:** Para investigar as relações existentes entre as variáveis numéricas do dataset, foram utilizados um **mapa de calor de correlação** e um **gráfico de dispersão**, técnicas complementares que permitem identificar tanto a intensidade quanto a forma das associações entre as variáveis.
+
+<img width="1097" height="334" alt="Captura de tela de 2026-04-01 20-54-01" src="https://github.com/user-attachments/assets/07bb3990-17c7-46f4-b4c7-5099273308df" />
+
+---
+
+* **Barras e Colunas:** O gráfico com o **Top 10 tipos de lesão mais frequentes** mostra que as ocorrências estão fortemente concentradas em problemas musculares. A **hamstring injury** aparece como a categoria mais frequente, seguida por registros como **corona virus**, **muscle injury** e **muscular problems**. Esse resultado sugere que lesões musculares e indisponibilidades físicas de curta ou média duração compõem grande parte dos eventos registrados no dataset. A presença de `corona virus` entre os tipos mais frequentes também indica que a base não se limita apenas a lesões traumáticas ou musculoesqueléticas, mas inclui outras condições de afastamento que impactaram o futebol europeu no período analisado. Já o gráfico de **média de dias de afastamento por posição** revela diferenças importantes entre funções táticas. Observa-se que posições como **goalkeeper**, **right midfield**, **centre-back** e **left-back** apresentam médias mais altas de dias afastados, enquanto posições como **midfielder** e **second striker** apresentam médias menores. Isso sugere que o impacto médio das lesões pode variar de acordo com as exigências físicas, o tipo de movimento mais frequente e o perfil biomecânico de cada posição.
+
+<img width="1094" height="327" alt="Captura de tela de 2026-04-01 21-00-17" src="https://github.com/user-attachments/assets/cc1367dc-1b21-4241-934d-5d2a0083e3f0" />
+
+---
+
 ## Descrição dos achados
 
 A partir da EDA, os seguintes pontos foram identificados como cruciais para o futuro treinamento da IA:
