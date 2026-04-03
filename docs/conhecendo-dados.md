@@ -81,7 +81,7 @@ Durante a preparação dos dados para a Análise Preditiva, foi realizado o cál
 *   ✅ **`player_age` (1.00):** O VIF próximo de 1 indica ausência de colinearidade, mostrando que a idade do jogador é uma variável independente sólida em relação ao tempo de afastamento.
 
 ### 💡 Conclusão e Recomendação para a Modelagem:
-> **Ação:** Devemos evitar o uso simultâneo de `Games missed` e `Days` como variáveis independentes no mesmo modelo de Machine Learning. Para não inflar a variância, causar viés e prejudicar as previsões, recomenda-se selecionar apenas **uma** dessas variáveis de impacto para treinar o algoritmo na próxima etapa.
+> Ação: Devemos evitar o uso simultâneo de `Games missed` e `Days` como variáveis independentes no mesmo modelo de Machine Learning. Para não inflar a variância, causar viés e prejudicar as previsões, recomenda-se selecionar apenas uma dessas variáveis de impacto para treinar o algoritmo na próxima etapa.
 
 ---
 
