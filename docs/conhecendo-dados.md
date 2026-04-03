@@ -71,6 +71,18 @@ A partir da EDA, os seguintes pontos foram identificados como cruciais para o fu
     * **Moderada/Fraca:** [Espaço para descrever a relação entre idade e frequência de lesões].
 4.  **Impacto Externo:** O dataset registra um volume significativo de afastamentos por "Corona virus" e "Quarantine" entre 2020 e 2022, o que deve ser tratado como um padrão atípico na engenharia de dados.
 
+
+   ## 📊 Análise de Multicolinearidade (VIF)
+
+Durante a preparação dos dados para a Análise Preditiva, foi realizado o cálculo do **VIF (Variance Inflation Factor)** para identificar possíveis problemas de multicolinearidade entre as variáveis numéricas do conjunto de dados.
+
+### 🔍 Resultados Obtidos:
+*   🚨 **`Games missed` (7.90) e `Days` (7.89):** Ambas apresentaram valores superiores a 5. Isso comprova matematicamente uma forte multicolinearidade, o que faz sentido no contexto do esporte: o tempo de afastamento em dias afeta diretamente e de forma proporcional a quantidade de partidas perdidas pelo jogador.
+*   ✅ **`player_age` (1.00):** O VIF próximo de 1 indica ausência de colinearidade, mostrando que a idade do jogador é uma variável independente sólida em relação ao tempo de afastamento.
+
+### 💡 Conclusão e Recomendação para a Modelagem:
+> **Ação:** Devemos evitar o uso simultâneo de `Games missed` e `Days` como variáveis independentes no mesmo modelo de Machine Learning. Para não inflar a variância, causar viés e prejudicar as previsões, recomenda-se selecionar apenas **uma** dessas variáveis de impacto para treinar o algoritmo na próxima etapa.
+
 ---
 
 ## Ferramentas utilizadas
