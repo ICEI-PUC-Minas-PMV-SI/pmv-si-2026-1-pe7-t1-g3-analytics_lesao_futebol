@@ -25,16 +25,40 @@ A análise inicial de integridade revelou dados extremamente consistentes:
 Utilizamos Python para calcular as métricas de centralidade e dispersão das variáveis quantitativas:
 
 ```python
-# Trecho do código utilizado para converter e analisar a duração
-df_injuries['duracao_dias'] = df_injuries['duracao_dias'].str.extract('(\d+)').astype(int)
-estatisticas = df_injuries[['duracao_dias', 'jogos_perdidos', 'idade']].describe()
-```
+# Seleção das variáveis númericas para análise de centralidade e variabilidade
+cols_num = ['idade', 'duracao_dias', 'jogos_perdidos']
 
-| Métrica | Duração (Dias) | Jogos Perdidos | Idade |
-| :--- | :--- | :--- | :--- |
-| **Média** | [Espaço para preencher] | [Espaço para preencher] | [Espaço para preencher] |
-| **Mediana** | [Espaço para preencher] | [Espaço para preencher] | [Espaço para preencher] |
-| **Desvio Padrão** | [Espaço para preencher] | [Espaço para preencher] | [Espaço para preencher] |
+# Cálculo de estatísticas detalhadas
+estatistica = df_injuries[cols_num].describe().T
+estatistica['mediana'] = df_injuries[cols_num].median()
+estatistica['moda'] = df_injuries[cols_num].mode().iloc[0]
+estatistica['variancia'] = df_injuries[cols_num].var()
+estatistica['amplitude'] = df_injuries[cols_num].max() - df_injuries[cols_num].min()
+
+# Renomeando para visualização clara
+estatistica = estatistica[['count', 'mean', 'mediana', 'moda', 'std', 'variancia', 'min', 'max', 'amplitude']]
+
+display(estatistica)
+```
+A tabela abaixo apresenta as medidas de tendência central e dispersão para as três variáveis numéricas do dataset.
+
+| Variável | Count | Média | Mediana | Moda | Desvio Padrão | Variância | Mín | Máx | Amplitude |
+|---|---|---|---|---|---|---|---|---|---|
+| `idade` | 15.603 | 26,55 | 26,0 | 25 | 4,40 | 19,34 | 16 | 43 | 27 |
+| `duracao_dias` | 15.603 | 36,10 | 18,0 | 8 | 54,42 | 2.961,52 | 1 | 1.013 | 1.012 |
+| `jogos_perdidos` | 15.603 | 5,51 | 3,0 | 1 | 7,64 | 58,30 | 1 | 145 | 144 |
+
+### Análise
+
+Os dados revelam padrões importantes sobre o perfil das lesões no futebol europeu:
+
+- **Idade:** Os atletas lesionados têm em média **26,5 anos**, com mediana de 26 e moda de 25, indicando uma distribuição relativamente simétrica e concentrada na faixa de atletas jovens-adultos em plena carreira. A amplitude de 27 anos (de 16 a 43) mostra que lesões ocorrem em todas as fases da carreira profissional.
+
+- **Duração das Lesões (`duracao_dias`):** Esta é a variável com maior assimetria. A **média de 36 dias é o dobro da mediana de 18 dias**, e a moda é de apenas 8 dias. Isso confirma uma distribuição com forte cauda longa à direita: a grande maioria das lesões é de curta duração, mas poucos eventos graves (chegando a 1.013 dias) puxam a média para cima. A variância elevada (2.961,52) reforça a alta heterogeneidade no tempo de recuperação.
+
+- **Jogos Perdidos:** Segue o mesmo padrão assimétrico de `duracao_dias`. A **média de 5,5 jogos é quase o dobro da mediana de 3**, e a moda é 1, indicando que a maioria dos atletas perde apenas 1 jogo por evento de lesão. Casos extremos (até 145 jogos) representam lesões gravíssimas que distorcem a média.
+
+> **Conclusão:** Para análises comparativas e modelos preditivos, recomenda-se priorizar a **mediana** como medida de centralidade para `duracao_dias` e `jogos_perdidos`, dado o forte efeito dos outliers sobre a média. Técnicas como winsorização ou transformação logarítmica devem ser consideradas nas etapas seguintes.
 
 *Visualizações inseridas:*
 * **Box Plots:** Foram gerados para identificar a severidade das lesões por posição do jogador e idade, permitindo a visualização clara de *outliers* (lesões de longa duração, como rupturas de ligamento cruzado que chegam a +200 dias).
@@ -48,7 +72,40 @@ estatisticas = df_injuries[['duracao_dias', 'jogos_perdidos', 'idade']].describe
 
 ---
 
+Para complementar a análise estatística descritiva, foram utilizados **histogramas** e **boxplots**, com o objetivo de representar visualmente a distribuição da variável `duracao_dias` e comparar seu comportamento entre as diferentes ligas europeias.
+
+O **histograma da duração das lesões** evidencia uma distribuição fortemente assimétrica à direita. Observa-se uma grande concentração de casos em afastamentos curtos, especialmente nas primeiras faixas de dias, enquanto a frequência diminui rapidamente à medida que a duração aumenta. Esse comportamento confirma o que já havia sido identificado nas medidas de tendência central: a maior parte das lesões possui curta duração, mas há um número reduzido de casos extremamente longos que estendem a cauda da distribuição. Assim, trata-se de uma variável com forte presença de outliers e alta dispersão.
+
+Já o **boxplot da duração das lesões por liga** permite comparar a distribuição dos afastamentos entre Bundesliga, Premier League, La Liga, Ligue 1 e Serie A. De modo geral, as medianas e os intervalos interquartis das ligas são relativamente semelhantes, sugerindo um comportamento central próximo entre os campeonatos. No entanto, todas as ligas apresentam quantidade expressiva de valores extremos, indicando que lesões graves ou afastamentos muito longos são um fenômeno recorrente em todo o futebol europeu, e não restrito a uma competição específica.
+
+Além disso, nota-se que algumas ligas apresentam outliers mais elevados do que outras, como a Premier League e a La Liga, que exibem casos de afastamentos excepcionalmente longos. Isso sugere que, embora o padrão central seja semelhante, a severidade máxima das lesões pode variar entre as ligas.
+
+Em conjunto, essas visualizações reforçam três pontos principais:
+- a distribuição de `duracao_dias` não é normal, sendo marcada por forte assimetria positiva;
+- a maioria das lesões é de curta duração;
+- os casos extremos devem ser mantidos na base, pois representam eventos reais e relevantes para a compreensão da severidade das lesões.
+
+Dessa forma, os gráficos confirmam que a variável `duracao_dias` exige atenção especial nas análises posteriores, sendo recomendável o uso de medidas robustas, como mediana e percentis, além de possíveis transformações ou segmentações em etapas preditivas futuras.
+
+<img width="1093" height="365" alt="Captura de tela de 2026-04-04 18-11-56" src="https://github.com/user-attachments/assets/603e695a-52af-44f7-974a-974a6d76d4fd" />
+
+---
+
 * **Correlação e Dispersão:** Para investigar as relações existentes entre as variáveis numéricas do dataset, foram utilizados um **mapa de calor de correlação** e um **gráfico de dispersão**, técnicas complementares que permitem identificar tanto a intensidade quanto a forma das associações entre as variáveis.
+
+  O **mapa de calor** apresenta os coeficientes de correlação de Pearson entre `idade`, `duracao_dias` e `jogos_perdidos`. Os resultados revelam dois padrões distintos:
+
+- A correlação entre `duracao_dias` e `jogos_perdidos` é de **0,93**, indicando uma associação positiva muito forte. Isso significa que, quanto maior o tempo de afastamento de um atleta, maior tende a ser o número de partidas que ele perde, o que é esperado e confirma a coerência interna dos dados.
+- Já a correlação entre `idade` e as demais variáveis é de apenas **-0,06** em ambos os casos, valor próximo de zero que indica ausência de relação linear relevante. Isso sugere que a idade do atleta, isoladamente, não é um fator determinante para a gravidade ou duração de uma lesão neste dataset.
+
+O **gráfico de dispersão** entre `duracao_dias` e `jogos_perdidos` confirma visualmente a forte correlação identificada. A nuvem de pontos apresenta uma tendência linear clara e crescente: atletas com afastamentos mais longos tendem a perder mais jogos de forma proporcional. Observa-se também que a dispersão aumenta conforme a duração cresce, o que indica maior variabilidade nos casos mais graves, possivelmente influenciada pelo calendário de cada liga ou pela fase da temporada em que a lesão ocorreu.
+
+Alguns pontos extremos são visíveis no canto superior direito do gráfico, representando os casos mais severos do dataset, com afastamentos superiores a 600 dias e mais de 100 jogos perdidos. Esses casos, embora raros, reforçam a importância de considerar a severidade das lesões como uma dimensão crítica em análises preditivas futuras.
+
+Em síntese, os resultados desta etapa indicam que:
+- O **tempo de afastamento é o principal preditor do impacto esportivo** (jogos perdidos);
+- A **idade não apresenta correlação linear** com a gravidade das lesões neste conjunto de dados;
+- A relação entre `duracao_dias` e `jogos_perdidos` é robusta e consistente, validando ambas as variáveis como representações complementares da severidade de uma lesão.
 
 <img width="1097" height="334" alt="Captura de tela de 2026-04-01 20-54-01" src="https://github.com/user-attachments/assets/07bb3990-17c7-46f4-b4c7-5099273308df" />
 
