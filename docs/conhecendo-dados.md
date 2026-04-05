@@ -165,11 +165,54 @@ Com as variáveis numéricas validadas pelo VIF e as categóricas devidamente co
 2. Todas as informações táticas e de contexto estão em formato legível para a IA.
 ---
 
+## Análises com Pairplot
+
+### 1) Relações entre Variáveis Numéricas com Pairplot Balanceado (idade, duração das lesões e jogos perdidos por liga)
+
+A proposta desta seção foi avaliar a relação entre as três variáris numéricas: idades dos jogadores, tempo de lesão (em dias) e número de jogos peridos. Além disso, buscamos comparar esses padrões entre as diferentes ligas europeias analisadas.
+
+Para garantir uma comparação justa entre as ligas, foi selecionada uma amostragem que inclui 100 registros para cada liga. Também foi realizado um filtro para remover lesões que possuem duração supeerior a 200 dias, com o objetico de reduzir o impacto de valroes extremos.
+
+<img width="905" height="770" alt="image" src="https://github.com/user-attachments/assets/d6f264cf-84db-49f2-8aa2-c4c9efb9a1c7" />
+
+Conclusão:
+O conjunto de gráficos evidencia que a duração da lesão é o principal fator associado ao número de jogos perdidos, apresentando uma forte relação positiva. Por outro lado, a idade não demonstra influência significativa sobre a gravidade ou o impacto das lesões. Além disso, observa-se que a maioria das lesões é de curta duração e baixo impacto, embora existam casos extremos. As ligas europeias apresentam comportamento semelhante, sem diferenças relevantes entre elas.
+
+### 2) Análise por Posição dos Jogadores (Pairplot Balanceado)
+
+Nesta etapa, foi realizada uma análise exploratória com o objetivo de investigar as relações entre as variáveis idade, duração das lesões (em dias) e número de jogos perdidos, considerando agora a posição dos jogadores em campo como fator de segmentação.
+
+Para isso, foram selecionadas as cinco posições mais frequentes no conjunto de dados, garantindo maior representatividade na análise. Em seguida, foi aplicada uma amostragem balanceada, com a seleção de uma quantidade fixa de registros para cada posição, permitindo uma comparação mais justa entre os grupos.
+
+Assim como na análise anterior, também foi aplicado um filtro para excluir lesões com duração superior a 200 dias, com o objetivo de reduzir a influência de valores extremos e facilitar a visualização dos padrões centrais.
+
+Essa análise permite identificar possíveis diferenças no comportamento das lesões de acordo com a posição dos jogadores, contribuindo para uma compreensão mais aprofundada dos fatores associados à severidade e ao impacto das lesões no futebol.
+
+<img width="1185" height="1208" alt="image" src="https://github.com/user-attachments/assets/98ecb614-f098-4fc9-9501-e13e2fb8aeae" />
+
+Conclusão:
+A análise do pairplot por posição indica que o padrão de lesões é bastante semelhante entre os diferentes papéis em campo. A duração da lesão mantém forte relação com o número de jogos perdidos em todas as posições, enquanto não há evidência de que alguma posição específica esteja associada a maior severidade das lesões. Além disso, observa-se que a maioria das lesões é de curta duração, com poucos casos extremos distribuídos entre todas as posições.
+
+### 3) Análise da Severidade das Lesões e seu Impacto (Pairplot)
+
+Nesta etapa, foi realizada uma preparação e visualização dos dados com o objetivo de analisar a severidade das lesões a partir de uma abordagem em categorias.
+
+Inicialmente, foi criada uma nova variável denominada severidade, a partir da variável numérica duração das lesões (duracao_dias). Para isso, utilizamos a função pd.cut, que permite segmentar dados contínuos em intervalos. As lesões foram classificadas em três categorias: leve, para afastamentos de até 15 dias; moderada, para durações entre 16 e 60 dias; e grave, para períodos superiores a 60 dias. Essa transformação permitiu converter uma variável contínua em uma variável categórica, facilitando a análise comparativa entre níveis de gravidade.
+
+Em seguida, foi realizada uma amostragem aleatória de 1000 registros do conjunto de dados, com o objetivo de reduzir o volume de informações e melhorar a visualização gráfica, mantendo a representatividade dos dados. O uso do parâmetro random_state=42 garantiu a repetibilidade da amostra, permitindo que os mesmos registros sejam selecionados em diferentes execuções.
+
+<img width="868" height="770" alt="image" src="https://github.com/user-attachments/assets/15f611f5-3687-4dd7-b486-a5ab27d65115" />
+
+Conclusão:
+Os resultados demonstram que a severidade da lesão é um dos principais fatores para explicar o impacto esportivo, apresentando forte associação com a duração do afastamento e o número de jogos perdidos. A classificação adotada mostrou-se eficaz para segmentar os dados e evidenciar padrões relevantes. Por outro lado, a idade não apresenta influência significativa sobre a gravidade ou o impacto das lesões. Dessa forma, a variável severidade se destaca como uma importante dimensão para análises futuras.
+
 ## Ferramentas utilizadas
 
 O projeto foi desenvolvido utilizando o ecossistema de Ciência de Dados da linguagem **Python**, com as seguintes bibliotecas:
 
 * **Pandas:** Manipulação de dados, tratamento de tipos e tradução de colunas.
+* **Matplotlib:** Geração e customização de gráficos, incluindo títulos, ajustes visuais e exibição das figuras.
+* **Matplotlib:** Geração e customização de gráficos, incluindo títulos, ajustes visuais e exibição das figuras.
 * **NumPy:** Suporte para cálculos matemáticos e operações em arrays.
 * **Matplotlib / Seaborn:** Geração de gráficos estatísticos, box plots e histogramas para análise visual.
 * **Jupyter Notebook:** Ambiente de desenvolvimento utilizado para documentação e execução do código de forma interativa.
