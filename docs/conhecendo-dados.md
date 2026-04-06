@@ -68,7 +68,9 @@ Os dados revelam padrões importantes sobre o perfil das lesões no futebol euro
 <img width="1005" height="864" alt="output2" src="https://github.com/user-attachments/assets/eb0c85c2-7f29-4fa3-99a3-8fa032dad881" />
 
 
-* **Histogramas:** [Espaço para descrever a distribuição da frequência das lesões].
+* **Histogramas:**
+![Histogramas](https://github.com/user-attachments/assets/06803b23-9ed5-40db-a411-a263d2059be6)
+
 
 ---
 
