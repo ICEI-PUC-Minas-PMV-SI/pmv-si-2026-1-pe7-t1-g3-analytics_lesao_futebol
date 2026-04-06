@@ -206,6 +206,72 @@ Em seguida, foi realizada uma amostragem aleatória de 1000 registros do conjunt
 Conclusão:
 Os resultados demonstram que a severidade da lesão é um dos principais fatores para explicar o impacto esportivo, apresentando forte associação com a duração do afastamento e o número de jogos perdidos. A classificação adotada mostrou-se eficaz para segmentar os dados e evidenciar padrões relevantes. Por outro lado, a idade não apresenta influência significativa sobre a gravidade ou o impacto das lesões. Dessa forma, a variável severidade se destaca como uma importante dimensão para análises futuras.
 
+
+## 📊 Análises com Barplot
+
+### 1) Distribuição do Top 15 Tipos de Lesão Mais Frequentes
+
+Nesta etapa, foi realizada uma análise da variável-alvo (`tipo_lesao`) com o objetivo de compreender a concentração de classes e identificar possíveis desbalanceamentos que impactem o treinamento de modelos preditivos.
+
+Para isso, foi gerado um gráfico de barras horizontal mostrando os 15 tipos de lesão mais frequentes no dataset. A escolha de limitar a visualização aos top 15 permite focar nas categorias mais representativas, evitando a poluição visual de centenas de classes raras.
+
+![Grafico em barras](../docs/img/barplot1.png)
+
+**Achados Principais:**
+
+O gráfico evidencia uma concentração significativa em problemas musculares, onde **hamstring injury** emerge como a categoria predominante, seguida por **corona virus** (refletindo o impacto da pandemia COVID-19 entre 2020–2022) e um conjunto de condições semanticamente similares: **muscle injury**, **muscular problems** e **muscle fatigue**. Lesões ligamentares e articulares (**ankle sprain**, **knee injury**, **ligament injury**) ocupam posições intermediárias, enquanto condições raras ou específicas (**quarantine**, **illness**, **fever**) concentram-se nas últimas posições.
+
+**Conclusão:** O padrão de distribuição revela um **forte desbalanceamento de classes**, com as lesões musculares representando uma proporção majoritária dos eventos. Além disso, a presença de múltiplas categorias semanticamente próximas sugere heterogeneidade na coleta dos dados. Essas características justificam a aplicação de técnicas de balanceamento (SMOTE, class weights) e consolidação de categorias similares nas etapas subsequentes de modelagem.
+
+---
+
+### 2) Distribuição de Lesões por Posição do Jogador (Barplot Comparativo)
+
+Nesta seção, foi investigado como a frequência de tipos de lesão varia de acordo com a **posição tática** do jogador em campo. O objetivo é identificar se posições específicas (goleiro, zagueiro, lateral, meia, atacante) estão associadas a padrões distintos de lesão.
+
+Para isso, foram gerados gráficos de barras que comparam o número de ocorrências de lesão para cada posição. A análise permite segmentar o dataset por função táctica e extrair insights sobre vulnerabilidades específicas de cada papel no campo.
+
+*[Inserir aqui imagem comparativa de barras por posição]*
+
+**Achados Principais:**
+
+A análise por posição revela padrões diferenciados de incidência de lesão. Determinadas posições apresentam volume significativamente maior de eventos (ex.: midfielder com alta frequência de afastamentos), enquanto outras mostram concentração em tipos específicos (ex.: goleiros mais afetados por problemas articulares, atacantes por lesões musculares). A distribuição não é uniforme, sugerindo que demandas físicas e biomecânicas variam substancialmente entre as funções.
+
+**Conclusão:** A posição do jogador influencia tanto a **frequência quanto o tipo de lesão** esperado. Esses insights permitem criar estratégias de prevenção personalizadas e refinar modelos preditivos ao incluir segmentação por posição como fator de segurança e especialização do algoritmo.
+
+---
+
+### 3) Distribuição de Lesões por Liga Europeia (Barplot Comparativo)
+
+Nesta etapa, foi analisada a distribuição de lesões entre as cinco grandes ligas europeias (**Bundesliga, Premier League, La Liga, Ligue 1 e Serie A**), com o objetivo de identificar se existem padrões epidemiológicos distintos entre os campeonatos.
+
+Para isso, foram gerados gráficos de barras comparando o volume de afastamentos por liga e, secundariamente, a frequência de tipos específicos em cada competição. A análise permite avaliar se diferenças em calendários, intensidade de jogo ou protocolos médicos impactam o perfil de lesões.
+
+**Achados Principais:**
+
+A distribuição por liga mostra variações moderadas no volume total de lesões registradas, com a **Premier League** e **La Liga** apresentando números ligeiramente elevados. Em termos de tipos de lesão, observa-se que **hamstring injury** permanece dominante em todas as ligas, sugerindo um padrão universal de lesão muscular no futebol europeu. Diferenças secundárias existem em categorias raras ou específicas de contexto (ex.: taxa de quarantine variando conforme políticas de COVID-19 de cada país).
+
+A análise da matriz normalizada mostra que o modelo apresenta desempenho variável entre as classes:
+- **Desempenho forte:** Certas lesões como **corona virus** e **hamstring injury** apresentam taxas de acerto mais altas, sugerindo que essas categorias possuem características distintas que o modelo consegue identificar com maior precisão.
+- **Confusões semânticas:** O modelo frequentemente confunde lesões com nomes ou características similares, como **muscle injury**, **muscular problems** e **muscle fatigue**, que possuem padrões muito parecidos no dataset.
+- **Classes raras:** Lesões menos frequentes apresentam menor taxa de acerto, o que é esperado quando o modelo tem menos exemplos de treinamento para aprender seus padrões específicos.
+
+![Matriz de Confusao](../docs/img/matriz-confusao-barplot2.png)
+
+**Implicação para melhorias futuras:**
+Os erros revelados pela matriz de confusão indicam a necessidade de:
+
+1. **Consolidação de classes similares:** Agrupar lesões semanticamente próximas antes do treinamento poderia melhorar a performance.
+2. **Balanceamento de dados:** Aplicar técnicas como SMOTE para gerar mais exemplos de classes raras.
+3. **Ajuste de hiperparâmetros:** Testar diferentes algoritmos de classificação para melhor distinção entre tipos de lesão.
+
+A matriz de confusão é, portanto, uma ferramenta diagnóstica essencial que guia os próximos passos na otimização do modelo preditivo.
+
+**Conclusão:** As ligas apresentam comportamento epidemiológico **semelhante**, sem diferenças revolucionárias no perfil geral de lesões. Isso valida que o dataset pode ser tratado como um conjunto coeso de dados europeus de futebol profissional. Para modelagem, não há necessidade de estratificação extrema por liga, embora incluir liga como variável categórica no modelo possa capturar nuances regionais menores.
+
+---
+
+
 ## Ferramentas utilizadas
 
 O projeto foi desenvolvido utilizando o ecossistema de Ciência de Dados da linguagem **Python**, com as seguintes bibliotecas:
