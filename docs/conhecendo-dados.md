@@ -128,41 +128,6 @@ A partir da EDA, os seguintes pontos foram identificados como cruciais para o fu
     * **Moderada/Fraca:** [Espaço para descrever a relação entre idade e frequência de lesões].
 4.  **Impacto Externo:** O dataset registra um volume significativo de afastamentos por "Corona virus" e "Quarantine" entre 2020 e 2022, o que deve ser tratado como um padrão atípico na engenharia de dados.
 
-
-   ## 📊 Análise de Multicolinearidade (VIF)
-
-Durante a preparação dos dados para a Análise Preditiva, foi realizado o cálculo do **VIF (Variance Inflation Factor)** para identificar possíveis problemas de multicolinearidade entre as variáveis numéricas do conjunto de dados.
-
-### 🔍 Resultados Obtidos:
-*   🚨 **`Games missed` (7.90) e `Days` (7.89):** Ambas apresentaram valores superiores a 5. Isso comprova matematicamente uma forte multicolinearidade, o que faz sentido no contexto do esporte: o tempo de afastamento em dias afeta diretamente e de forma proporcional a quantidade de partidas perdidas pelo jogador.
-*   ✅ **`player_age` (1.00):** O VIF próximo de 1 indica ausência de colinearidade, mostrando que a idade do jogador é uma variável independente sólida em relação ao tempo de afastamento.
-
-### 💡 Conclusão e Recomendação para a Modelagem:
-> Ação: Devemos evitar o uso simultâneo de `Games missed` e `Days` como variáveis independentes no mesmo modelo de Machine Learning. Para não inflar a variância, causar viés e prejudicar as previsões, recomenda-se selecionar apenas uma dessas variáveis de impacto para treinar o algoritmo na próxima etapa.
-
-## 🔍 Análise Exploratória de Dados (EDA) - Parte 2
-
-Nesta etapa, focamos na preparação das variáveis categóricas e na visualização da distribuição de lesões para subsidiar o modelo preditivo.
-
-### 1. Distribuição de Lesões por Posição e Liga
-Foram gerados gráficos de barras para identificar padrões de incidência:
-*   **Posição:** Analisamos quais setores do campo (Goleiros, Defensores, Meias ou Atacantes) sofrem mais afastamentos.
-*   **Ligas:** Comparação do volume de dados entre as cinco grandes ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e Serie A).
-
-<img width="861" height="557" alt="download" src="https://github.com/user-attachments/assets/c8adbde7-ea22-46a4-89dd-78c9b90b849b" />
-
-<img width="859" height="543" alt="download 2" src="https://github.com/user-attachments/assets/3551bf98-8eb3-460b-ad7e-3f814bf613e0" />
-
-### 2. Codificação de Variáveis (Feature Engineering)
-Como modelos de Machine Learning (como o Random Forest) operam apenas com dados numéricos, aplicamos a técnica de **One-Hot Encoding** utilizando a função `get_dummies`.
-
-*   **O que foi feito:** As colunas de texto `player_position` e `league` foram transformadas em vetores binários (True/False).
-*   **Resultado:** O dataset agora possui colunas específicas para cada categoria, permitindo que o algoritmo calcule pesos matemáticos para cada posição e liga sem criar uma hierarquia falsa entre elas.
-
-### 3. Validação Final para Modelagem
-Com as variáveis numéricas validadas pelo VIF e as categóricas devidamente codificadas, o dataset está pronto para a fase de **Treinamento e Teste**, garantindo que:
-1. Não há redundância de dados (Multicolinearidade controlada).
-2. Todas as informações táticas e de contexto estão em formato legível para a IA.
 ---
 
 ## Análises com Pairplot
@@ -269,6 +234,42 @@ A matriz de confusão é, portanto, uma ferramenta diagnóstica essencial que gu
 
 **Conclusão:** As ligas apresentam comportamento epidemiológico **semelhante**, sem diferenças revolucionárias no perfil geral de lesões. Isso valida que o dataset pode ser tratado como um conjunto coeso de dados europeus de futebol profissional. Para modelagem, não há necessidade de estratificação extrema por liga, embora incluir liga como variável categórica no modelo possa capturar nuances regionais menores.
 
+---
+
+   ## 📊 Análise de Multicolinearidade (VIF)
+
+Durante a preparação dos dados para a Análise Preditiva, foi realizado o cálculo do **VIF (Variance Inflation Factor)** para identificar possíveis problemas de multicolinearidade entre as variáveis numéricas do conjunto de dados.
+
+### 🔍 Resultados Obtidos:
+*   🚨 **`Games missed` (7.90) e `Days` (7.89):** Ambas apresentaram valores superiores a 5. Isso comprova matematicamente uma forte multicolinearidade, o que faz sentido no contexto do esporte: o tempo de afastamento em dias afeta diretamente e de forma proporcional a quantidade de partidas perdidas pelo jogador.
+*   ✅ **`player_age` (1.00):** O VIF próximo de 1 indica ausência de colinearidade, mostrando que a idade do jogador é uma variável independente sólida em relação ao tempo de afastamento.
+
+### 💡 Conclusão e Recomendação para a Modelagem:
+> Ação: Devemos evitar o uso simultâneo de `Games missed` e `Days` como variáveis independentes no mesmo modelo de Machine Learning. Para não inflar a variância, causar viés e prejudicar as previsões, recomenda-se selecionar apenas uma dessas variáveis de impacto para treinar o algoritmo na próxima etapa.
+
+## 🔍 Análise Exploratória de Dados (EDA) - Parte 2
+
+Nesta etapa, focamos na preparação das variáveis categóricas e na visualização da distribuição de lesões para subsidiar o modelo preditivo.
+
+### 1. Distribuição de Lesões por Posição e Liga
+Foram gerados gráficos de barras para identificar padrões de incidência:
+*   **Posição:** Analisamos quais setores do campo (Goleiros, Defensores, Meias ou Atacantes) sofrem mais afastamentos.
+*   **Ligas:** Comparação do volume de dados entre as cinco grandes ligas europeias (Bundesliga, Premier League, La Liga, Ligue 1 e Serie A).
+
+<img width="861" height="557" alt="download" src="https://github.com/user-attachments/assets/c8adbde7-ea22-46a4-89dd-78c9b90b849b" />
+
+<img width="859" height="543" alt="download 2" src="https://github.com/user-attachments/assets/3551bf98-8eb3-460b-ad7e-3f814bf613e0" />
+
+### 2. Codificação de Variáveis (Feature Engineering)
+Como modelos de Machine Learning (como o Random Forest) operam apenas com dados numéricos, aplicamos a técnica de **One-Hot Encoding** utilizando a função `get_dummies`.
+
+*   **O que foi feito:** As colunas de texto `player_position` e `league` foram transformadas em vetores binários (True/False).
+*   **Resultado:** O dataset agora possui colunas específicas para cada categoria, permitindo que o algoritmo calcule pesos matemáticos para cada posição e liga sem criar uma hierarquia falsa entre elas.
+
+### 3. Validação Final para Modelagem
+Com as variáveis numéricas validadas pelo VIF e as categóricas devidamente codificadas, o dataset está pronto para a fase de **Treinamento e Teste**, garantindo que:
+1. Não há redundância de dados (Multicolinearidade controlada).
+2. Todas as informações táticas e de contexto estão em formato legível para a IA.
 ---
 
 
