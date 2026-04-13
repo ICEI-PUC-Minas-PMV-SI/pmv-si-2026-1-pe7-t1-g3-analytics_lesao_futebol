@@ -12,7 +12,7 @@ No cenário de clubes e ligas, antecipar situações de maior risco pode contrib
 
 ## Questão de pesquisa
 
-O problema central deste estudo é aplicar técnicas de aprendizado de máquina em dados históricos das principais ligas europeias para identificar padrões e prever o risco de lesões em jogadores profissionais de futebol.
+De que forma técnicas de aprendizado de máquina aplicadas a dados históricos de lesões de jogadores das principais ligas europeias podem identificar padrões associados ao risco de lesão em jogadores profissionais de futebol?
 
 ## Objetivos preliminares
 
