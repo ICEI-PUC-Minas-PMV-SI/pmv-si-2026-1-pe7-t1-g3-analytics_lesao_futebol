@@ -808,3 +808,216 @@ Padrões Lineares vs. Não Lineares: O modelo percebe que nem toda lesão muscul
 Cores e Intensidade: As caixas coloridas (geralmente laranja para uma classe e azul para outra) facilitam a identificação visual das zonas de perigo. Se uma folha final é azul escura e tem um Gini baixo, você encontrou um perfil de jogador com altíssimo risco de lesão grave.
 
 
+## Permutation Importance Geral
+O que é? A Permutation Importance embaralha aleatoriamente os valores de uma feature e mede o quanto a métrica do modelo (F1-ponderado) cai. Quanto maior a queda, mais importante é aquela feature para o modelo.
+
+Por que usar? Diferente da importância nativa da árvore (impurity-based), a Permutation Importance é mais confiável para features categóricas com muitas categorias (como posicao e liga após o encoding).
+
+Parâmetros: n_repeats=30 — cada feature é embaralhada 30 vezes para estabilizar a estimativa. O gráfico mostra a média ± desvio padrão das 30 repetições.
+
+```
+# ── Calcular Permutation Importance Geral ───────────────────────────────
+perm_result = permutation_importance(
+    rf, X_test, y_test,
+    n_repeats=30,
+    random_state=42,
+    scoring='f1_weighted',
+    n_jobs=-1
+)
+
+# Organizar em DataFrame
+pi_df = pd.DataFrame({
+    'feature': X_test.columns,
+    'importance_mean': perm_result.importances_mean,
+    'importance_std':  perm_result.importances_std
+}).sort_values('importance_mean', ascending=False)
+
+# Mostrar top 20
+top20 = pi_df.head(20)
+
+fig, ax = plt.subplots(figsize=(10, 8))
+ax.barh(
+    top20['feature'][::-1],
+    top20['importance_mean'][::-1],
+    xerr=top20['importance_std'][::-1],
+    color='steelblue', alpha=0.85, capsize=4
+)
+ax.axvline(0, color='black', linewidth=0.8, linestyle='--')
+ax.set_title('Permutation Importance Geral – Top 20 Features\n(Redução média no F1-ponderado ao embaralhar a feature)', fontsize=12)
+ax.set_xlabel('Redução média no F1-ponderado')
+ax.set_ylabel('Feature')
+plt.tight_layout()
+plt.savefig('../../docs/img/permutation_geral.png', dpi=150, bbox_inches='tight')
+plt.show()
+
+print('\nTop 10 features mais importantes:')
+print(pi_df.head(10).to_string(index=False))
+```
+
+<img width="965" height="752" alt="image" src="https://github.com/user-attachments/assets/06c31137-9912-4091-9519-64462d111d21" />
+Top 10 features mais importantes:
+                   feature  importance_mean  importance_std
+           liga_Bundesliga         0.030431        0.004216
+                     idade         0.017480        0.006159
+              liga_Ligue 1         0.008997        0.003679
+              liga_Serie A         0.008194        0.005211
+posicao_Attacking Midfield         0.004461        0.002261
+       liga_Premier League         0.003717        0.004081
+      posicao_Right Winger         0.002573        0.002189
+              liga_La Liga         0.000928        0.002512
+         posicao_Left-Back         0.000386        0.001780
+     posicao_Left Midfield         0.000279        0.000588
+
+## Permutation Importance por Classe
+O que é? O mesmo processo de embaralhamento, mas o scorer avalia o F1 somente para uma classe específica (leve, moderada ou grave). Isso revela quais features são mais relevantes para identificar cada tipo de severidade.
+
+Por que é útil? Uma feature pode ser importante globalmente mas irrelevante para uma classe específica — ou vice-versa. Essa análise permite otimizações mais precisas.
+
+```
+# ── Scorer por classe ────────────────────────────────────────────────────
+def make_class_scorer(cls_label):
+    """Retorna um scorer que avalia F1 apenas para a classe cls_label."""
+    def scorer(estimator, X, y):
+        y_pred = estimator.predict(X)
+        classes = list(estimator.classes_)
+        scores = f1_score(y, y_pred, average=None,
+                          labels=classes, zero_division=0)
+        return scores[classes.index(cls_label)]
+    return scorer
+
+
+# ── Calcular para cada classe ────────────────────────────────────────────
+classes = list(rf.classes_)
+pi_per_class = {}
+
+for cls in classes:
+    print(f'Calculando para classe: {cls}...')
+    result = permutation_importance(
+        rf, X_test, y_test,
+        n_repeats=20,
+        random_state=42,
+        scoring=make_class_scorer(cls),
+        n_jobs=-1
+    )
+    pi_per_class[cls] = pd.DataFrame({
+        'feature': X_test.columns,
+        'importance_mean': result.importances_mean,
+        'importance_std':  result.importances_std
+    }).sort_values('importance_mean', ascending=False)
+
+print('\nCálculo concluído!')
+```
+
+```
+# ── Visualizar Top 15 por classe ─────────────────────────────────────────
+cores = {'leve': '#2ecc71', 'moderada': '#f39c12', 'grave': '#e74c3c'}
+fig, axes = plt.subplots(1, 3, figsize=(20, 8))
+
+for ax, cls in zip(axes, classes):
+    top15 = pi_per_class[cls].head(15)
+    ax.barh(
+        top15['feature'][::-1],
+        top15['importance_mean'][::-1],
+        xerr=top15['importance_std'][::-1],
+        color=cores[cls], alpha=0.85, capsize=3
+    )
+    ax.axvline(0, color='black', linewidth=0.8, linestyle='--')
+    ax.set_title(f'Permutation Importance\nClasse: {cls.upper()}', fontsize=12, fontweight='bold')
+    ax.set_xlabel('Redução no F1 da classe')
+
+axes[0].set_ylabel('Feature')
+plt.suptitle('Permutation Importance por Classe de Severidade\n(Top 15 Features por Classe)', fontsize=13, y=1.02)
+plt.tight_layout()
+plt.savefig('../../docs/img/permutation_por_classe.png', dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+<img width="1467" height="549" alt="image" src="https://github.com/user-attachments/assets/5c83a816-98f5-48a3-9b2e-8704c4269662" />
+
+```
+# ── Comparação consolidada: heatmap de importâncias ─────────────────────
+# Pegar top 20 features globais e comparar entre classes
+top_features = pi_df.head(20)['feature'].tolist()
+
+heatmap_data = pd.DataFrame(
+    {cls: pi_per_class[cls].set_index('feature')['importance_mean']
+     for cls in classes},
+    index=top_features
+)
+
+fig, ax = plt.subplots(figsize=(8, 10))
+sns.heatmap(
+    heatmap_data,
+    annot=True, fmt='.4f', cmap='RdYlGn',
+    linewidths=0.5, ax=ax, center=0
+)
+ax.set_title('Heatmap: Permutation Importance por Classe\n(Top 20 Features Gerais)', fontsize=12)
+ax.set_xlabel('Classe de Severidade')
+plt.tight_layout()
+plt.savefig('../../docs/img/permutation_heatmap.png', dpi=150, bbox_inches='tight')
+plt.show()
+```
+
+<img width="482" height="633" alt="image" src="https://github.com/user-attachments/assets/79ec4f57-c3ec-454b-afd8-fb7e7658c820" />
+
+
+## Análise SHAP (SHapley Additive exPlanations)
+
+O que é? SHAP usa teoria dos jogos cooperativos para explicar cada previsão individualmente. Para cada amostra e cada feature, calcula um valor SHAP que representa quanto aquela feature empurrou a previsão para cima ou para baixo.
+
+```
+# ── Configurar SHAP ──────────────────────────────────────────────────────
+# Amostra para visualização (SHAP pode ser lento em datasets grandes)
+SAMPLE_SIZE = 500
+X_sample = X_test.sample(SAMPLE_SIZE, random_state=42)
+
+explainer = shap.TreeExplainer(rf)
+shap_values = explainer.shap_values(X_sample)
+# shap_values é uma lista com 3 arrays (um por classe)
+# shape de cada array: (SAMPLE_SIZE, n_features)
+
+print(f'SHAP calculado para {SAMPLE_SIZE} amostras')
+print(f'Classes: {rf.classes_}')
+print(f'Shape dos valores SHAP por classe: {shap_values[0].shape}')
+```
+SHAP calculado para 500 amostras
+Classes: ['grave' 'leve' 'moderada']
+Shape dos valores SHAP por classe: (20, 3)
+
+```
+# ── Summary Plot Geral (impacto médio por feature) ───────────────────────
+# SHAP 3D: shape (n_amostras, n_features, n_classes)
+# Para summary_plot multiclasse passamos lista de slices por classe
+shap_by_class = [shap_values[:, :, i] for i in range(shap_values.shape[2])]
+
+shap.summary_plot(
+    shap_by_class,
+    X_sample,
+    plot_type='bar',
+    max_display=20,
+    class_names=list(rf.classes_),
+    show=False
+)
+plt.title('SHAP – Importância Média por Feature (todas as classes)', fontsize=12)
+plt.tight_layout()
+plt.savefig('../../docs/img/shap_summary_bar.png', dpi=150, bbox_inches='tight')
+plt.show()
+```
+<img width="529" height="583" alt="image" src="https://github.com/user-attachments/assets/92763e36-a8f1-4962-8096-f67ce167d87c" />
+
+### Conclusões
+**Permutation Importance Geral**
+A análise de Permutation Importance global identificou as features que, ao serem embaralhadas, causam maior degradação no F1-ponderado do modelo. Features com importância positiva elevada são essenciais para a capacidade preditiva geral. Features próximas de zero (ou negativas) podem ser removidas sem perda de desempenho.
+
+**Permutation Importance por Classe**
+A análise por classe revelou que diferentes features têm impacto distinto dependendo da severidade a ser prevista:
+
+ - Leve: Tende a ser influenciada por features de baixa intensidade de esforço (posição, liga).
+ - Moderada: Classe com maior distribuição; features gerais têm mais peso.
+ - Grave: Casos extremos — features que diferenciam lesões severas ganham relevância.
+SHAP
+O SHAP complementa a Permutation Importance ao:
+
+Revelar a direção do efeito (valor alto de uma feature aumenta ou diminui a previsão de 'grave'?).
+Explicar casos individuais (Waterfall plot mostra exatamente por que o modelo previu 'grave' para um jogador específico).
+Identificar não-linearidades (Dependence plot mostra se o efeito da idade é linear ou tem pontos de inflexão).
