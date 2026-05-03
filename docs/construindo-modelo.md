@@ -3,7 +3,8 @@
 Nesta etapa, são realizadas as definições necessárias para preparar os dados e configurar o modelo de aprendizado de máquina que será utilizado. Primeiramente, ocorre a escolha das features e do target, delimitando quais variáveis serão usadas como preditoras e qual será a variável de saída. Em seguida, avalia-se a relação entre as variáveis e o tipo de falha, bem como a separação dos dados em conjuntos de treinamento e teste, garantindo a validade da avaliação. A partir disso, procede-se com a seleção do algoritmo — neste caso, o RandomForestClassifier, devido à sua robustez em problemas de classificação das lesões, considerando os outros fatores elencados na tabela (clube, posição, liga).Posteriormente, aplica-se a normalização dos dados, quando necessária, e define-se a parametrização inicial do modelo, que poderá ser ajustada ao longo do processo.samento conforme necessário ao longo do tempo, especialmente se os dados ou as condições do problema mudarem.
 
 
-```def categorizar_gravidade(dias):
+```
+def categorizar_gravidade(dias):
     if dias <= 14:
         return 'Leve'
     elif dias <= 30:
@@ -631,12 +632,10 @@ De forma geral, observa-se que tanto a calibração quanto o uso de SMOTE ajudam
 ### Métricas:
 
 **Base**
-
 Apresenta valores máximos de Accuracy, Balanced Accuracy e Macro-F1 (1.0), indicando desempenho satisfatório na classificação.
 No entanto, o LogLoss (0.0676) e o ECE (0.9359) são relativamente altos, mostrando que, apesar de acertar as classes, o modelo não fornece probabilidades bem calibradas.
 
 **SMOTE**
-
 Também apresenta desempenho adequado nas métricas de classificação (1.0), mantendo o mesmo nível do modelo base.
 Porém, apresenta melhora significativa nas métricas de calibração, com redução do LogLoss (0.0202) e do ECE (0.5820).
 Indica que o SMOTE contribuiu para tornar as probabilidades mais confiáveis, além de lidar melhor com o desbalanceamento das classes.
@@ -651,7 +650,161 @@ O uso de SMOTE melhora a qualidade das probabilidades e contribui para lidar com
 A calibração, especialmente a isotonic, apresenta os melhores resultados em termos de confiabilidade das probabilidades.
 
 **Síntese:**
-
 Para melhor equilíbrio entre classes, o SMOTE parece ser o mais adequado.
 Para probabilidades mais confiáveis, deve ser utilizado o Calibrado (isotonic).
 Para acerto geral, concluiu-se que todos os modelos apresentam desempenho semelhante.
+
+
+## Matriz de Confusão
+
+```
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Top classes
+top_n = 20
+top_classes = y_test.value_counts().head(top_n).index.tolist()
+
+# Filtrar
+y_test_filtered = y_test[y_test.isin(top_classes)]
+y_pred_filtered = y_pred[y_test.isin(top_classes)]
+
+# Matriz SEM normalização (valores absolutos)
+cm = confusion_matrix(
+    y_test_filtered,
+    y_pred_filtered,
+    labels=top_classes
+)
+
+# Heatmap manual com mais controle
+plt.figure(figsize=(16, 14))
+sns.heatmap(cm, annot=True, fmt='d', cmap='YlGnBu', 
+            xticklabels=top_classes, 
+            yticklabels=top_classes,
+            cbar_kws={'label': 'Quantidade de predições'})
+plt.title('Matriz de Confusão - Top 20 Tipos de Lesão', fontsize=14)
+plt.xlabel('Lesão Predita', fontsize=12)
+plt.ylabel('Lesão Verdadeira', fontsize=12)
+plt.xticks(rotation=45, ha='right', fontsize=8)
+plt.yticks(fontsize=8)
+plt.tight_layout()
+plt.show()
+```
+
+<img width="652" height="610" alt="image" src="https://github.com/user-attachments/assets/a6b4a495-264a-4e97-b812-cf703bbef6dc" />
+
+```
+# Selecionar apenas as top 15 classes mais frequentes
+top_n = 10  # diminua para 10 ou 12
+top_classes = y_test.value_counts().head(top_n).index.tolist()
+
+y_test_filtered = y_test[y_test.isin(top_classes)]
+y_pred_filtered = y_pred[y_test.isin(top_classes)]
+
+cm_norm_filtered = confusion_matrix(
+    y_test_filtered,
+    y_pred_filtered,
+    labels=top_classes,
+    normalize='true'
+)
+
+plt.figure(figsize=(14, 12))
+disp_norm = ConfusionMatrixDisplay(confusion_matrix=cm_norm_filtered, display_labels=top_classes)
+disp_norm.plot(cmap='Greens', xticks_rotation=35, values_format='.2f')
+plt.title('Matriz de Confusão Normalizada - Top 10 Tipos de Lesão', fontsize=14)
+plt.xlabel('Lesão Predita', fontsize=12)
+plt.ylabel('Lesão Verdadeira', fontsize=12)
+plt.xticks(fontsize=9)
+plt.yticks(fontsize=9)
+plt.tight_layout()
+plt.show()
+```
+
+<img width="749" height="577" alt="image" src="https://github.com/user-attachments/assets/14c9a773-f45a-49c5-97ae-ef05a6bb0438" />
+
+```
+# Extração das importâncias das variáveis
+ohe = modelo.named_steps['preprocessamento'].named_transformers_['cat']
+feature_names_cat = ohe.get_feature_names_out(cat_features)
+
+feature_names = num_features + list(feature_names_cat)
+
+importancias = modelo.named_steps['classificador'].feature_importances_
+
+df_importancias = pd.DataFrame({
+    'variavel': feature_names,
+    'importancia': importancias
+}).sort_values(by='importancia', ascending=False)
+
+#%%
+plt.figure(figsize=(12, 8))
+sns.barplot(data=df_importancias.head(20), x='importancia', y='variavel', color='darkcyan')
+plt.title('Top 20 Feature Importances')
+plt.xlabel('Importância')
+plt.ylabel('Variável')
+plt.tight_layout()
+plt.show()
+```
+
+## Árvore de Decisão
+
+A árvore mostra as regras que o modelo aprendeu para prever falhas. Por exemplo, se a rotação for baixa e o desgaste não for extremo, o modelo conclui que não há falha. Mas se a rotação for muito alta e o torque muito baixo, pode indicar uma falha específica. Caracaterísticas:
+
+O gráfico mostra como o modelo usa cada variável para dividir os dados e tomar decisões.
+
+Cada divisão representa uma condição de operação, e o modelo aprende com os dados históricos onde os problemas costumam surgir.
+É não linear, condicional e hierárquica.
+Mesmo uma variável com baixa correlação linear pode ser muito útil na árvore quando combinada com outras condições.
+
+**Script utilizado em python para gerar a árvore de decisão:** 
+```
+# 1. CRIANDO O OBJETO (Aqui é onde ele passa a existir)
+# max_depth=3 evita que a árvore fique gigantesca e ilegível
+modelo_arvore = DecisionTreeClassifier(max_depth=3, random_state=42)
+
+# 2. TREINANDO O MODELO
+# X_train e y_train devem ter sido definidos na etapa anterior (split dos dados)
+modelo_arvore.fit(X_train, y_train)
+
+# 3. GERANDO A VISUALIZAÇÃO
+plt.figure(figsize=(20,10))
+plot_tree(modelo_arvore, 
+          feature_names=features, 
+          class_names=['Baixo Risco', 'Alto Risco'], 
+          filled=True, 
+          rounded=True)
+
+plt.show()
+```
+
+**Resultado:**
+<img width="1338" height="621" alt="image" src="https://github.com/user-attachments/assets/70c9c6b6-f4d0-4198-a4a9-c78245e6258f" />
+
+#### Análise:
+
+**1. A Estrutura de Decisão (O Fluxo de Risco)**
+A árvore organiza as variáveis por ordem de importância, de cima para baixo.
+
+O "Nó Raiz" (Topo): A primeira variável que aparece no topo é o principal filtro de risco. O modelo identificou que essa característica é a que mais separa lesões leves de lesões graves no futebol europeu.
+
+As Divisões (Ramos): Cada caixa pergunta se uma condição é verdadeira ou falsa. Por exemplo, se o valor da lesão for menor que um determinado limite (índice codificado), o modelo segue para a esquerda (provável Baixo Risco); se for maior, segue para a direita.
+
+**2. Interpretação dos Dados nas Caixas**
+Cada quadrado da sua imagem contém informações cruciais:
+
+Gini: É uma medida de "impureza". Quanto mais próximo de 0.0, mais "pura" é a decisão (ou seja, o modelo tem certeza absoluta do resultado naquele nó).
+
+Samples: Indica quantos casos da base de dados histórica passaram por aquela condição.
+
+Value: Mostra a distribuição. Exemplo: value = [892, 77] significa que ali existem 892 casos de baixo risco e 77 de alto risco.
+
+Class: É a previsão final daquele ramo (Baixo Risco ou Alto Risco).
+
+**3. Análise do Padrão de Risco Identificado**
+Olhando para a profundidade da árvore na imagem:
+
+Padrões Lineares vs. Não Lineares: O modelo percebe que nem toda lesão muscular é grave. Ele condiciona: "É uma lesão muscular? Se sim, qual a temporada? Se for a temporada X, o risco aumenta". 
+
+Cores e Intensidade: As caixas coloridas (geralmente laranja para uma classe e azul para outra) facilitam a identificação visual das zonas de perigo. Se uma folha final é azul escura e tem um Gini baixo, você encontrou um perfil de jogador com altíssimo risco de lesão grave.
+
+
