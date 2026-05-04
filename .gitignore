@@ -1,2 +1,13 @@
 __pycache__/
 *.pyc
+
+# Mac
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+
+# Python
+venv/
+.venv/

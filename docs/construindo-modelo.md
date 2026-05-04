@@ -2,6 +2,9 @@
 
 Nesta etapa, deverão ser descritas todas as técnicas utilizadas para pré-processamento/tratamento dos dados.
 
+Para o problema de classificação do tipo de lesão, a variável-alvo definida foi `tipo_lesao`. As variáveis utilizadas como entrada foram `idade`, `posicao`, `clube`, `liga` e `temporada`, pois representam informações disponíveis antes ou no contexto da ocorrência. As variáveis `duracao_dias`, `jogos_perdidos` e `data_fim_lesao` não foram utilizadas como entrada para evitar vazamento de informação, já que estão diretamente ligadas ao desfecho da lesão.
+
+
 Algumas das etapas podem estar relacionadas à:
 
 * Limpeza de Dados: trate valores ausentes: decida como lidar com dados faltantes, seja removendo linhas, preenchendo com médias, medianas ou usando métodos mais avançados; remova _outliers_: identifique e trate valores que se desviam significativamente da maioria dos dados.
@@ -32,11 +35,15 @@ Nesta seção, conhecendo os dados e de posse dos dados preparados, é hora de d
 
 Explore aspectos específicos, como o ajuste dos parâmetros livres do algoritmo. Lembre-se de experimentar parâmetros diferentes e principalmente, de registrar os testes realizados com diferentes parâmetros que servirão para justificar as escolhas realizadas.
 
+Foi utilizado o algoritmo Random Forest Classifier por ser um método robusto para classificação multiclasse, capaz de lidar bem com variáveis categóricas após codificação e fornecer uma medida de importância das variáveis. Essa escolha também facilita a interpretação do modelo por meio de matriz de confusão, matriz normalizada e feature importances.
+
+
 # Avaliação dos modelos criados
 
 ## Métricas utilizadas
 
-Nesta seção, as métricas utilizadas para avaliar os modelos desenvolvidos deverão ser apresentadas (p. ex.: acurácia, precisão, recall, F1-Score, MSE etc.). A escolha de cada métrica deverá ser justificada, pois esta escolha é essencial para avaliar de forma mais assertiva a qualidade do modelo construído. 
+A avaliação do modelo foi realizada por meio de matriz de confusão e matriz de confusão normalizada, permitindo identificar acertos e erros por classe. Também foi analisada a importância das variáveis para entender quais atributos mais influenciaram a previsão do tipo de lesão.
+
 
 ## Discussão dos resultados obtidos
 
