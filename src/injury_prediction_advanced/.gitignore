@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Ambiente virtual
+venv/
+env/
+.venv/
+
+# Logs
+logs/*.log
+
+# MLflow
+mlruns/
+
+# CatBoost
+catboost_info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dados grandes (descomente se necessário)
+# data/*.csv
