@@ -1,0 +1,70 @@
+{
+  "execution_date": "2026-05-21 21:36:59",
+  "dataset": {
+    "total_records": 15526,
+    "train_records": 12247,
+    "test_records": 3279,
+    "n_features": 46,
+    "test_season": "24/25"
+  },
+  "best_model": "LightGBM_Optuna",
+  "best_model_metrics": {
+    "MAE": 20.06761975007197,
+    "RMSE": 33.50917688601378,
+    "R2": 0.5423865511838453,
+    "MedianAE": 12.100955695792422,
+    "MAPE": 1.1009595137306984,
+    "MaxError": 251.0577612243243
+  },
+  "ensemble_metrics": {
+    "MAE": 20.030034346631897,
+    "RMSE": 33.331860663641194,
+    "R2": 0.5472167267024062,
+    "MedianAE": 11.94906541010942,
+    "MAPE": 1.1062673064413937,
+    "MaxError": 253.61844320980853
+  },
+  "ensemble_strategy": "WeightedAverage",
+  "feature_importance_top10": [
+    {
+      "feature": "Injury_target_enc",
+      "mean_abs_shap": 15.534697859780774
+    },
+    {
+      "feature": "club_target_enc",
+      "mean_abs_shap": 3.156319595931758
+    },
+    {
+      "feature": "player_injury_rate_percentile",
+      "mean_abs_shap": 2.9741398278637523
+    },
+    {
+      "feature": "Injury_freq",
+      "mean_abs_shap": 2.1184114961267677
+    },
+    {
+      "feature": "days_to_season_end",
+      "mean_abs_shap": 1.9223576593845406
+    },
+    {
+      "feature": "player_age",
+      "mean_abs_shap": 1.1024835430450202
+    },
+    {
+      "feature": "days_since_last_injury",
+      "mean_abs_shap": 1.0240188677639857
+    },
+    {
+      "feature": "rolling_mean_days_3",
+      "mean_abs_shap": 0.9553164788467624
+    },
+    {
+      "feature": "player_position_target_enc",
+      "mean_abs_shap": 0.7957976427811235
+    },
+    {
+      "feature": "league_freq",
+      "mean_abs_shap": 0.7602625150146964
+    }
+  ]
+}

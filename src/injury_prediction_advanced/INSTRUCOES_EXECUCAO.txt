@@ -1,0 +1,183 @@
+================================================================================
+  INSTRUÇÕES DE EXECUÇÃO — Predição de Lesões no Futebol Europeu
+  Projeto de Mestrado — Pipeline Avançado com 20 Melhorias Metodológicas
+================================================================================
+
+📁 ESTRUTURA DE PASTAS
+================================================================================
+
+injury_prediction_advanced/
+│
+├── src/                          # Módulos Python do pipeline
+│   ├── __init__.py               # Inicialização do pacote
+│   ├── config.py                 # Configurações globais e constantes
+│   ├── utils.py                  # Funções utilitárias (logging, seeds, I/O)
+│   ├── data_processing.py        # Carregamento, limpeza e split de dados
+│   ├── feature_engineering.py    # Feature engineering com causalidade temporal
+│   ├── models.py                 # Modelos base, ensembles e Optuna
+│   ├── evaluation.py             # Métricas, CV aninhada, testes estatísticos
+│   ├── explainability.py         # SHAP e interpretabilidade
+│   ├── calibration.py            # Intervalos de confiança e calibração
+│   ├── quantile_models.py        # Regressão quantílica
+│   ├── visualization.py          # Gráficos profissionais para a tese
+│   ├── experiment_tracking.py    # Tracking com MLflow
+│   └── production.py             # Pipeline de produção/inferência
+│
+├── notebooks/
+│   └── notebook_final_avancado.ipynb  # 🎯 NOTEBOOK PRINCIPAL (executar este!)
+│
+├── data/                         # Dados do projeto
+│   ├── full_dataset_thesis - 1.csv    # Dataset completo de lesões
+│   └── modelo_regressivo_daysnum_abordagem_nova.ipynb  # Notebook original
+│
+├── models/                       # Modelos salvos
+├── figures/                      # Gráficos gerados
+├── results/                      # Resultados de experimentos
+├── logs/                         # Logs de execução
+├── mlruns/                       # Tracking MLflow
+│
+├── requirements.txt              # Dependências Python
+├── README.md                     # Documentação técnica do projeto
+├── .gitignore                    # Arquivos ignorados pelo Git
+└── INSTRUCOES_EXECUCAO.txt       # Este arquivo
+
+
+🔧 CONFIGURAÇÃO DO AMBIENTE (VS Code)
+================================================================================
+
+### Passo 1: Pré-requisitos
+   - Python 3.9 ou superior instalado
+   - VS Code com extensão "Jupyter" instalada
+   - (Recomendado) Extensão "Python" do VS Code
+
+### Passo 2: Descompactar o projeto
+   Extraia o arquivo ZIP para uma pasta de sua escolha, por exemplo:
+   
+   Windows:  C:\Users\SeuNome\projetos\injury_prediction_advanced\
+   Mac/Linux: ~/projetos/injury_prediction_advanced/
+
+### Passo 3: Abrir no VS Code
+   - Abra o VS Code
+   - Vá em File → Open Folder
+   - Selecione a pasta "injury_prediction_advanced"
+
+### Passo 4: Criar ambiente virtual (recomendado)
+   Abra o terminal do VS Code (Ctrl+` ou Terminal → New Terminal):
+
+   # No Windows:
+   python -m venv venv
+   venv\Scripts\activate
+
+   # No Mac/Linux:
+   python3 -m venv venv
+   source venv/bin/activate
+
+### Passo 5: Instalar dependências
+   Com o ambiente virtual ativo:
+
+   pip install -r requirements.txt
+
+   Nota: A instalação pode levar alguns minutos devido ao tamanho
+   dos pacotes (CatBoost, XGBoost, LightGBM, etc.)
+
+### Passo 6: Configurar o kernel no VS Code
+   - Abra o notebook: notebooks/notebook_final_avancado.ipynb
+   - No canto superior direito, clique em "Select Kernel"
+   - Escolha o ambiente virtual que você criou (venv)
+   - Se não aparecer, clique em "Python Environments" → selecione o venv
+
+
+▶️  EXECUTANDO O NOTEBOOK
+================================================================================
+
+### Opção A: No VS Code (recomendado)
+   1. Abra notebooks/notebook_final_avancado.ipynb no VS Code
+   2. Selecione o kernel correto (venv)
+   3. Execute "Run All" (▶▶) ou célula por célula (Shift+Enter)
+   
+   IMPORTANTE: A Célula 2 (Setup de Path) DEVE ser executada PRIMEIRO!
+   Ela configura automaticamente o sys.path para encontrar os módulos src/
+
+### Opção B: No Jupyter Notebook clássico
+   1. No terminal, com o venv ativo:
+      jupyter notebook
+   2. Navegue até notebooks/notebook_final_avancado.ipynb
+   3. Execute célula por célula (Shift+Enter)
+
+### Opção C: No JupyterLab
+   1. No terminal, com o venv ativo:
+      jupyter lab
+   2. Abra o notebook e execute
+
+
+⚠️  CONFIGURAÇÃO DO DATASET
+================================================================================
+
+O dataset deve estar acessível pelo notebook. Por padrão, o config.py
+procura o arquivo em:
+
+   data/full_dataset_thesis - 1.csv
+
+Se você colocou o CSV em outro local, edite o caminho em src/config.py:
+   DATA_PATH = os.path.join(PROJECT_ROOT, 'data', 'full_dataset_thesis - 1.csv')
+
+Alternativamente, o notebook pode pedir o caminho interativamente.
+
+
+📊 SOBRE O DATASET
+================================================================================
+
+- Arquivo: full_dataset_thesis - 1.csv
+- Registros: ~15.603 lesões
+- Colunas: 11 (player_name, age, Injury, days_num, season, etc.)
+- Target: days_num (duração da lesão em dias)
+- Fonte: Lesões no futebol europeu (múltiplas ligas e temporadas)
+
+
+🏗️  MÓDULOS DO PIPELINE (src/)
+================================================================================
+
+ Módulo                   | Melhoria | Descrição
+ ------------------------ | -------- | -----------------------------------------
+ config.py                |    -     | Configurações globais e constantes
+ utils.py                 |    -     | Logging, seeds, I/O
+ data_processing.py       |    1     | Carga, limpeza, split temporal
+ feature_engineering.py   |  1-4     | Features com causalidade temporal
+ models.py                |  5-6     | Ensembles avançados + Optuna
+ evaluation.py            | 9,11,13  | CV aninhada, bootstrap, testes
+ explainability.py        |    7     | SHAP e interpretabilidade
+ calibration.py           |    8     | Intervalos de confiança
+ quantile_models.py       |   10     | Regressão quantílica
+ visualization.py         |   17     | Gráficos profissionais
+ experiment_tracking.py   |   15     | MLflow tracking
+ production.py            |   19     | Pipeline de produção
+
+
+🐛 TROUBLESHOOTING
+================================================================================
+
+Problema: ModuleNotFoundError: No module named 'src'
+Solução:  Execute a Célula 2 (Setup de Path) antes de qualquer outra célula.
+          Ela adiciona automaticamente o diretório raiz ao sys.path.
+
+Problema: FileNotFoundError para o dataset CSV
+Solução:  Verifique se o arquivo CSV está em data/ dentro do projeto.
+          Ajuste o caminho em src/config.py se necessário.
+
+Problema: Pacote não encontrado (ex: catboost, shap)
+Solução:  pip install -r requirements.txt
+          Se um pacote específico falhar: pip install <pacote>
+
+Problema: Kernel não aparece no VS Code
+Solução:  1. Certifique-se de que o venv está ativo
+          2. pip install ipykernel
+          3. python -m ipykernel install --user --name=venv
+          4. Reinicie o VS Code
+
+Problema: Gráficos não aparecem no notebook
+Solução:  Adicione %matplotlib inline no início do notebook
+
+
+================================================================================
+  Bom trabalho com a tese! 🎓⚽
+================================================================================
