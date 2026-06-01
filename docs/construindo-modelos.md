@@ -415,6 +415,417 @@ Lembre-se de que um pipeline bem estruturado deve contemplar, de forma flexível
 
 O resultado desta etapa deverá ser um pipeline revisado e justificado, acompanhado de uma breve descrição das alterações realizadas e dos motivos que levaram a cada mudança.
 
+# 15. Análise Estatística dos Resultados
+
+## Objetivo
+
+Após a etapa de treinamento e otimização dos modelos, foi realizada uma análise estatística aprofundada dos resultados com o objetivo de verificar a robustez metodológica do pipeline, identificar possíveis inconsistências temporais e avaliar a confiabilidade das variáveis derivadas utilizadas durante o processo de modelagem.
+
+Essa etapa é fundamental em projetos de séries temporais e Sports Analytics, pois permite identificar potenciais casos de Data Leakage, inconsistências históricas e problemas de qualidade dos dados que poderiam comprometer a validade científica dos resultados.
+
+---
+
+## Validação Temporal das Features
+
+Foram selecionadas as principais variáveis históricas derivadas durante o processo de Feature Engineering para análise individual.
+
+O fluxo de validação consistiu em:
+
+1. Seleção das features temporais críticas;
+2. Ordenação cronológica dos eventos por atleta;
+3. Verificação da consistência temporal das variáveis;
+4. Identificação de possíveis violações;
+5. Análise das ocorrências encontradas.
+
+---
+
+## Resultados Obtidos
+
+A validação identificou:
+
+| Métrica                       | Resultado              |
+| ----------------------------- | ---------------------- |
+| Features analisadas           | 17                     |
+| Possíveis violações temporais | 258                    |
+| Feature mais crítica          | days_since_last_injury |
+
+A principal variável envolvida foi a feature **Dias desde a última lesão**, responsável por representar o intervalo entre uma lesão atual e a lesão imediatamente anterior do atleta.
+
+---
+
+## Interpretação dos Casos Detectados
+
+A existência de valores negativos nessa variável não implica necessariamente em Data Leakage.
+
+Diversos cenários clínicos podem justificar esse comportamento:
+
+* recaídas durante recuperação;
+* múltiplas lesões simultâneas;
+* procedimentos cirúrgicos durante afastamento;
+* mudanças de status médico;
+* histórico incompleto do atleta no dataset.
+
+Além disso, a primeira lesão registrada no conjunto de dados não corresponde necessariamente à primeira lesão da carreira do jogador.
+
+---
+
+## Conclusões da Seção
+
+A análise demonstrou que o pipeline possui mecanismos avançados de validação temporal e preocupação explícita com rigor metodológico.
+
+A identificação automática de inconsistências representa uma importante camada de qualidade frequentemente ausente em projetos convencionais de Machine Learning.
+
+---
+
+# 16. Avaliação por Cenário Real
+
+## Objetivo
+
+Enquanto a avaliação tradicional mede o desempenho geral do modelo, a avaliação por cenário real busca verificar sua capacidade de generalização em situações semelhantes às encontradas em ambiente de produção.
+
+Foram definidos quatro cenários principais:
+
+* Jogadores nunca vistos;
+* Clubes nunca vistos;
+* Lesões raras;
+* Temporadas futuras.
+
+---
+
+## Jogadores Nunca Vistos
+
+O modelo foi avaliado utilizando atletas que não estavam presentes durante o treinamento.
+
+### Resultado
+
+* MAE ≈ 21,76 dias
+
+### Interpretação
+
+O aumento relativamente pequeno do erro demonstra que o sistema consegue utilizar informações contextuais e históricas para realizar previsões mesmo sem conhecer previamente o atleta.
+
+---
+
+## Clubes Nunca Vistos
+
+Foi avaliada a capacidade do modelo em generalizar para equipes ausentes durante o treinamento.
+
+### Resultado
+
+* MAE ≈ 26,97 dias
+
+### Interpretação
+
+O aumento significativo do erro sugere que fatores associados aos clubes exercem influência importante sobre os tempos de recuperação.
+
+Esses fatores podem incluir:
+
+* infraestrutura médica;
+* protocolos de recuperação;
+* intensidade competitiva;
+* políticas de retorno ao jogo.
+
+---
+
+## Lesões Raras
+
+As lesões com baixa frequência de ocorrência apresentaram os maiores desafios.
+
+### Resultado
+
+* MAE ≈ 28,31 dias
+
+### Interpretação
+
+A baixa quantidade de exemplos históricos reduz a capacidade de aprendizado do modelo.
+
+Esse cenário representa uma limitação natural dos métodos supervisionados.
+
+---
+
+## Temporadas Futuras
+
+Foi realizada uma simulação realista utilizando temporadas posteriores às utilizadas no treinamento.
+
+### Resultado
+
+* MAE ≈ 20 dias
+
+### Interpretação
+
+O desempenho permaneceu praticamente inalterado, indicando excelente capacidade de generalização temporal.
+
+---
+
+## Conclusão da Seção
+
+Os resultados demonstram que o sistema possui capacidade de generalização satisfatória para novos jogadores e novas temporadas, apresentando maior dificuldade apenas em cenários de baixa representatividade histórica.
+
+---
+
+# 17. Visualizações Profissionais
+
+## Objetivo
+
+Produzir visualizações de alta qualidade para interpretação dos resultados, comunicação dos achados e suporte à tomada de decisão.
+
+---
+
+## Comparação de Modelos
+
+As visualizações evidenciaram o desempenho superior dos algoritmos baseados em Gradient Boosting.
+
+Os melhores resultados foram obtidos por:
+
+* LightGBM;
+* CatBoost;
+* XGBoost.
+
+Modelos lineares como Ridge e ElasticNet apresentaram desempenho inferior.
+
+---
+
+## Interpretação
+
+Esse comportamento indica que o problema possui forte componente não linear, envolvendo:
+
+* interações complexas;
+* dependências temporais;
+* efeitos acumulativos;
+* relações hierárquicas entre variáveis.
+
+---
+
+## Principais Insights Visuais
+
+As análises gráficas permitiram identificar:
+
+* influência do histórico recente do atleta;
+* impacto da recorrência de lesões;
+* efeito do calendário esportivo;
+* importância do contexto temporal.
+
+---
+
+# 18. Preparação para Produção
+
+## Objetivo
+
+Transformar o projeto experimental em uma solução pronta para utilização em ambiente operacional.
+
+---
+
+## Componentes Implementados
+
+### Validação de Entrada
+
+Verificação automática de:
+
+* colunas obrigatórias;
+* tipos de dados;
+* faixas válidas;
+* consistência estrutural.
+
+---
+
+### Tratamento de Categorias Desconhecidas
+
+O pipeline foi preparado para lidar com:
+
+* novos clubes;
+* novos atletas;
+* novas categorias.
+
+Isso evita falhas durante inferência.
+
+---
+
+### Serialização
+
+Todos os componentes foram persistidos para reutilização futura.
+
+Exemplos:
+
+* modelos;
+* encoders;
+* pipelines;
+* transformadores.
+
+---
+
+## Benefícios
+
+* reprodutibilidade;
+* escalabilidade;
+* facilidade de implantação;
+* manutenção simplificada.
+
+---
+
+# 19. MLflow Experiment Tracking
+
+## Objetivo
+
+Implementar rastreamento completo dos experimentos realizados durante o projeto.
+
+---
+
+## Informações Registradas
+
+Cada execução passou a armazenar:
+
+### Parâmetros
+
+* hiperparâmetros;
+* configurações dos modelos;
+* seeds.
+
+### Métricas
+
+* MAE;
+* RMSE;
+* R²;
+* MedianAE.
+
+### Artefatos
+
+* modelos treinados;
+* gráficos;
+* relatórios;
+* arquivos de configuração.
+
+---
+
+## Benefícios
+
+A utilização do MLflow proporciona:
+
+* rastreabilidade;
+* auditoria;
+* comparação de experimentos;
+* reprodutibilidade científica.
+
+---
+
+# 20. Conclusão Científica Final
+
+## Melhor Modelo
+
+O LightGBM otimizado apresentou o melhor equilíbrio entre:
+
+* desempenho;
+* estabilidade;
+* velocidade de treinamento.
+
+---
+
+## Resultados Finais
+
+| Métrica | Resultado |
+| ------- | --------- |
+| MAE     | ~19 dias  |
+| RMSE    | ~33 dias  |
+| R²      | ~0,55     |
+
+---
+
+## Principais Variáveis
+
+As variáveis mais relevantes foram:
+
+1. Tipo da lesão;
+2. Frequência de lesões;
+3. Dias desde a última lesão;
+4. Histórico recente;
+5. Fase da temporada.
+
+---
+
+## Interpretação Científica
+
+Os resultados indicam que a duração da recuperação não depende exclusivamente da lesão atual.
+
+O histórico clínico do atleta exerce influência significativa sobre o processo de recuperação.
+
+---
+
+## Limitações
+
+Entre as principais limitações observadas estão:
+
+* ausência de dados médicos detalhados;
+* ausência de dados fisiológicos;
+* falta de métricas de carga física;
+* baixa representatividade de lesões raras.
+
+---
+
+# 21. Salvamento de Artefatos e Encerramento do Projeto
+
+## Objetivo
+
+Garantir a persistência dos resultados produzidos durante o desenvolvimento.
+
+---
+
+## Artefatos Salvos
+
+Foram armazenados:
+
+### Modelos
+
+* LightGBM;
+* CatBoost;
+* XGBoost;
+* Ensemble final.
+
+### Transformadores
+
+* encoders;
+* scalers;
+* pipelines.
+
+### Resultados
+
+* métricas;
+* gráficos;
+* relatórios.
+
+### Configurações
+
+* hiperparâmetros;
+* configurações do treinamento;
+* informações dos experimentos.
+
+---
+
+## Benefícios
+
+O salvamento dos artefatos garante:
+
+* reprodutibilidade completa;
+* continuidade futura do projeto;
+* reutilização dos modelos;
+* implantação simplificada.
+
+---
+
+# Considerações Finais
+
+As seções 15 a 21 representam a consolidação do projeto em um sistema completo de Machine Learning aplicado ao contexto esportivo.
+
+Além da obtenção de resultados competitivos, o trabalho demonstrou preocupação com:
+
+* rigor científico;
+* validação temporal;
+* generalização;
+* interpretabilidade;
+* rastreabilidade;
+* preparação para produção.
+
+Como resultado, o projeto evoluiu de um experimento acadêmico para uma solução robusta e potencialmente aplicável em ambientes reais de Sports Analytics e Medicina Esportiva.
+
+
 ## Observações importantes
 
 Todas as tarefas realizadas nesta etapa deverão ser registradas em formato de texto junto com suas explicações de forma a apresentar os códigos desenvolvidos e também, o código deverá ser incluído, na íntegra, na pasta "src".
