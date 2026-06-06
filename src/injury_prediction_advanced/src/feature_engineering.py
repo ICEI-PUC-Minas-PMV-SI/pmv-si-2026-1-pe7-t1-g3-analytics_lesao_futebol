@@ -143,6 +143,10 @@ class PlayerHistoryFeatures:
         logger.info("Computing player history features")
         df = df.copy()
 
+        # Ensure the target column exists for transform on new data
+        if config.TARGET_COLUMN not in df.columns:
+            df[config.TARGET_COLUMN] = np.nan
+
         # Ensure sorting
         df = df.sort_values(
             [config.PLAYER_COLUMN, config.DATE_FROM_COLUMN]
@@ -189,6 +193,8 @@ class PlayerHistoryFeatures:
             vals = grp[config.TARGET_COLUMN].values
             for i in range(3, len(idx)):
                 last3 = vals[i - 3 : i]
+                if np.isnan(last3).any():
+                    continue
                 x = np.arange(3, dtype=float)
                 slope = np.polyfit(x, last3, 1)[0]
                 df.loc[idx[i], "recent_severity_trend"] = slope
@@ -309,6 +315,7 @@ class TemporalFeatures:
         df["season_phase_code"] = df["season_phase"].map(
             {"early": 0, "mid": 1, "late": 2}
         )
+        df["season_ordinal"] = df["Season"].map(config.SEASON_ORDER).fillna(-1).astype(int)
 
         # Days to approximate season end (May 31)
         def _days_to_season_end(date: pd.Timestamp) -> int:
@@ -458,7 +465,10 @@ class StatisticalFeatures:
 
             for player, grp in df.groupby(config.PLAYER_COLUMN):
                 idx = grp.index.tolist()
-                vals = grp[config.TARGET_COLUMN].values
+                if config.TARGET_COLUMN in grp.columns:
+                    vals = grp[config.TARGET_COLUMN].values
+                else:
+                    vals = np.full(len(grp), np.nan)
                 for i in range(1, len(idx)):
                     start = max(0, i - n)
                     window_vals = vals[start:i]
@@ -471,7 +481,10 @@ class StatisticalFeatures:
         df["cumulative_days_injured"] = 0.0
         for player, grp in df.groupby(config.PLAYER_COLUMN):
             idx = grp.index.tolist()
-            vals = grp[config.TARGET_COLUMN].values
+            if config.TARGET_COLUMN in grp.columns:
+                vals = grp[config.TARGET_COLUMN].values
+            else:
+                vals = np.full(len(grp), np.nan)
             for i in range(1, len(idx)):
                 df.loc[idx[i], "cumulative_days_injured"] = vals[:i].sum()
         self.feature_names.append("cumulative_days_injured")
