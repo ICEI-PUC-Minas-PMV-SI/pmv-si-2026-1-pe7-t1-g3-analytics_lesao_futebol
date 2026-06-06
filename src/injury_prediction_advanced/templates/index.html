@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Previsão de Lesão</title>
+    <style>
+      body { font-family: Arial, sans-serif; background: #f5f7fb; color: #222; margin: 0; padding: 0; }
+      .container { max-width: 720px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+      h1 { margin-top: 0; }
+      label { display: block; margin: 12px 0 4px; font-weight: bold; }
+      input, select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; }
+      button { margin-top: 18px; padding: 12px 18px; border: none; border-radius: 10px; background: #1f6feb; color: white; font-size: 16px; cursor: pointer; }
+      button:hover { background: #1558d6; }
+      .result { margin-top: 22px; padding: 18px; border-radius: 10px; background: #eef4ff; }
+      .error { margin-top: 22px; padding: 18px; border-radius: 10px; background: #ffe9e9; color: #991b1b; }
+      .warning { margin-top: 18px; padding: 16px; border-radius: 10px; background: #fff4e5; color: #7a4e0b; border: 1px solid #f3c777; }
+      .warning ul { margin: 8px 0 0 18px; }
+      .optional-fields { display: none; margin-top: 18px; }
+      .toggle-optional { margin-top: 18px; width: auto; background: transparent; color: #1f6feb; border: 1px solid #1f6feb; padding: 10px 14px; border-radius: 10px; }
+      .toggle-optional:hover { background: #eef4ff; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Previsão de Duração de Lesão</h1>
+      <p>Envie os parâmetros e veja a previsão de dias de afastamento.</p>
+      <form id="injury-form">
+        <select id="Injury" name="Injury" required>
+          <option value="">Selecione</option>
+          {% for opt in injury_options %}
+            <option value="{{ opt.value }}">{{ opt.label }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="player_age">Idade do jogador</label>
+        <input id="player_age" name="player_age" type="number" min="15" max="45" placeholder="Exemplo: 25" required />
+
+        <label for="player_position">Posição</label>
+        <select id="player_position" name="player_position" required>
+          <option value="">Selecione a posição</option>
+          {% for opt in position_options %}
+            <option value="{{ opt.value }}">{{ opt.label }}</option>
+          {% endfor %}
+        </select>
+
+        <label for="league">Liga</label>
+        <select id="league" name="league" required>
+          <option value="">Selecione a liga</option>
+          <option value="La Liga">La Liga</option>
+          <option value="Premier League">Premier League</option>
+          <option value="Serie A">Serie A</option>
+          <option value="Bundesliga">Bundesliga</option>
+          <option value="Ligue 1">Ligue 1</option>
+        </select>
+
+        <label for="injury_from_parsed">Data de início</label>
+        <input id="injury_from_parsed" name="injury_from_parsed" type="date" required />
+        <p>Gostaria de fazer uma previsão mais precisa?</p>
+        <button type="button" id="toggle-optional" class="toggle-optional">Exibir campos opcionais</button>
+
+        <div id="optional-fields" class="optional-fields">
+          <label for="injury_until_parsed">Data de fim</label>
+          <input id="injury_until_parsed" name="injury_until_parsed" type="date"/>
+
+          <label for="club">Clube</label>
+          <select id="club" name="club">
+            <option value="">Selecione o clube</option>
+            {% for opt in club_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+          </select>
+
+          <label for="player_name">Nome do jogador</label>
+          <input id="player_name" name="player_name" placeholder="Exemplo: Lionel Messi"/>
+
+          <label for="Season">Temporada</label>
+          <select id="Season" name="Season">
+            <option value="">Selecione</option>
+            {% for opt in season_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit">Enviar</button>
+      </form>
+      <div id="message"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById('injury-form');
+      const message = document.getElementById('message');
+
+      const optionalFields = document.getElementById('optional-fields');
+      const toggleOptional = document.getElementById('toggle-optional');
+
+      toggleOptional.addEventListener('click', () => {
+        const visible = optionalFields.style.display === 'block';
+        optionalFields.style.display = visible ? 'none' : 'block';
+        toggleOptional.textContent = visible ? 'Mostrar campos opcionais' : 'Ocultar campos opcionais';
+      });
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        message.innerHTML = '';
+
+        const formData = new FormData(form);
+        const payload = {};
+        formData.forEach((value, key) => { payload[key] = value; });
+
+        try {
+          const response = await fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = await response.json();
+          if (!data.success) {
+            message.innerHTML = `<div class="error"><strong>Erro:</strong> ${data.error}</div>`;
+            return;
+          }
+          const result = data.result;
+          message.innerHTML = `
+            <div class="result">
+              <p><strong>Previsão de dias:</strong> ${result.prediction_days.toFixed(1)}</p>
+            </div>
+          `;
+        } catch (error) {
+          message.innerHTML = `<div class="error"><strong>Erro:</strong> ${error.message}</div>`;
+        }
+      });
+    </script>
+  </body>
+</html>
