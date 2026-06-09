@@ -11,3 +11,5 @@ __pycache__/
 # Python
 venv/
 .venv/
+src/injury_prediction_advanced/logs/
+src/injury_prediction_advanced/notebooks/catboost_info/
