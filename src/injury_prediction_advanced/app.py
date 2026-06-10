@@ -143,11 +143,13 @@ def parse_request_data(data: Dict[str, Any]) -> Tuple[pd.DataFrame, List[str]]:
 
 def get_labels():
     df = pd.read_csv(ROOT_DIR / "data" / "full_dataset_thesis - 2.csv",
-                     usecols=["Injury", "club", "Season", "player_position"])
+                     usecols=["Injury", "club", "Season", "player_position", "player_name", "league"])
     injury_options = sorted(df["Injury"].dropna().astype(str).unique())
     club_options = sorted(df["club"].dropna().astype(str).unique())
     season_options = sorted(df["Season"].dropna().astype(str).unique())
     position_options = sorted(df["player_position"].dropna().astype(str).unique())
+    player_options = sorted(df["player_name"].dropna().astype(str).unique())
+    league_options = sorted(df["league"].dropna().astype(str).unique())
 
     DICT_PATH = ROOT_DIR / "templates" / "dicionario.json"
     with open(DICT_PATH, encoding="utf-8") as f:
@@ -171,7 +173,7 @@ def get_labels():
         for value in sorted(df["player_position"].dropna().astype(str).unique())
     ]
 
-    return render_template("index.html", injury_options=injury_options, club_options=club_options, season_options=season_options, position_options=position_options)
+    return render_template("index.html", injury_options=injury_options, club_options=club_options, season_options=season_options, position_options=position_options, player_options=player_options, league_options=league_options)
 
 @app.route("/", methods=["GET"])
 def index():

@@ -230,18 +230,18 @@ class ProductionPipeline:
         """
         logger.info("Production predict: %d new samples", len(new_data))
 
-        # 1. Validate
-        warnings = self.validate_input(new_data)
-
-        # 2. Handle unknowns
+        # 1. Handle unknown categories first so fallbacks are applied
         new_data = self.handle_unknown_categories(new_data)
+
+        # 2. Validate the normalized input
+        warnings = self.validate_input(new_data)
 
         # 3. Feature engineering
         if self.feature_pipeline is not None:
             new_data = self.feature_pipeline.transform(new_data)
 
-        # 4. Predict
-        X = new_data[self.feature_names].fillna(0).values
+        # 4. Predict using the feature DataFrame (preserves column names)
+        X = new_data[self.feature_names].fillna(0)
         predictions = self.model.predict(X)
 
         # 5. Post-process: days cannot be negative

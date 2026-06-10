@@ -249,19 +249,20 @@
     },
 
     "POSITION_LABELS": {
-        "Attacking Midfield": "Meia-Atacante",
-        "Central Midfield": "Meio-Campo Central",
-        "Centre-Back": "Zagueiro",
-        "Centre-Forward": "Centroavante",
-        "Defensive Midfield": "Volante",
         "Goalkeeper": "Goleiro",
-        "Left Midfield": "Meia-Esquerda",
-        "Left-Back": "Lateral-Esquerdo",
-        "Left Winger": "Ponta-Esquerda",
-        "Right Midfield": "Meia-Direita",
+        "Centre-Back": "Zagueiro",
         "Right-Back": "Lateral-Direito",
+        "Left-Back": "Lateral-Esquerdo",
+        "Defensive Midfield": "Volante",
+        "Central Midfield": "Meio-Campo Central",
+        "Left Midfield": "Meia-Esquerda",
+        "Right Midfield": "Meia-Direita",
+        "Left Winger": "Ponta-Esquerda",
         "Right Winger": "Ponta-Direita",
-        "Second Striker": "Segundo Atacante"
+        "Attacking Midfield": "Meia-Atacante",
+        "Second Striker": "Segundo Atacante",
+        "Forward": "Atacante",
+        "Centre-Forward": "Centroavante"
     }
 
 }
