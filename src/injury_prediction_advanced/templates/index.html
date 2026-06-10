@@ -47,11 +47,9 @@
         <label for="league">Liga</label>
         <select id="league" name="league" required>
           <option value="">Selecione a liga</option>
-          <option value="La Liga">La Liga</option>
-          <option value="Premier League">Premier League</option>
-          <option value="Serie A">Serie A</option>
-          <option value="Bundesliga">Bundesliga</option>
-          <option value="Ligue 1">Ligue 1</option>
+          {% for opt in league_options %}
+            <option value="{{ opt }}">{{ opt }}</option>
+          {% endfor %}
         </select>
 
         <label for="injury_from_parsed">Data de início</label>
@@ -72,7 +70,12 @@
           </select>
 
           <label for="player_name">Nome do jogador</label>
-          <input id="player_name" name="player_name" placeholder="Exemplo: Lionel Messi"/>
+          <select id="player_name" name="player_name">
+            <option value="">Selecione o jogador</option>
+            {% for opt in player_options %}
+              <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+          </select>
 
           <label for="Season">Temporada</label>
           <select id="Season" name="Season">
