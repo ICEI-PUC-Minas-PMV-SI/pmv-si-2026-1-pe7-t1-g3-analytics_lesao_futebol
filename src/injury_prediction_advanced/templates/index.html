@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
 </head>
   <body>
+    <div class="logo-container">
+    <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="SportPredict"
+        class="logo">
+    </div>
     <div class="container">
       <h1>Previsão de Duração de Lesão</h1>
       <p>Envie os parâmetros e veja a previsão de dias de afastamento.</p>
@@ -109,12 +115,67 @@
             message.innerHTML = `<div class="error"><strong>Erro:</strong> ${data.error}</div>`;
             return;
           }
-          const result = data.result;
-          message.innerHTML = `
-            <div class="result">
-              <p><strong>Previsão de dias:</strong> ${result.prediction_days.toFixed(1)}</p>
+
+            const result = data.result;
+            const dias = result.prediction_days;
+
+            let severidade = "";
+            let classe = "";
+            let posicao = 0;
+
+            if (dias <= 14) {
+                severidade = "Leve";
+                classe = "leve";
+                posicao = 12.5;
+            } else if (dias <= 30) {
+                severidade = "Moderada";
+                classe = "moderada";
+                posicao = 37.5;
+            } else if (dias <= 90) {
+                severidade = "Grave";
+                classe = "grave";
+                posicao = 62.5;
+            } else {
+                severidade = "Muito Grave";
+                classe = "muito-grave";
+                posicao = 87.5;
+            }
+
+            const percentual = Math.min((dias / 120) * 100, 100);
+
+            message.innerHTML = `
+            <div class="result ${classe}">
+                <p><strong>Previsão:</strong> ${dias.toFixed(1)} dias</p>
+                <p><strong>Classificação:</strong> ${severidade}</p>
+
+                <div class="severity-container">
+                    <div class="severity-labels">
+                        <span>Leve</span>
+                        <span>Moderada</span>
+                        <span>Grave</span>
+                        <span>Muito Grave</span>
+                    </div>
+
+                    <div class="severity-bar">
+                        <div class="severity-marker" style="left:${posicao}%"></div>
+                    </div>
+                </div>
+
+                <div class="recovery-container">
+                    <div class="recovery-header">
+                        <span>Recuperação estimada</span>
+                        <span>${dias.toFixed(1)} dias</span>
+                    </div>
+
+                    <div class="recovery-bar">
+                        <div
+                            class="recovery-fill"
+                            style="width:${percentual}% ; background:white;">
+                        </div>
+                    </div>
+                </div>
             </div>
-          `;
+            `;
         } catch (error) {
           message.innerHTML = `<div class="error"><strong>Erro:</strong> ${error.message}</div>`;
         }
