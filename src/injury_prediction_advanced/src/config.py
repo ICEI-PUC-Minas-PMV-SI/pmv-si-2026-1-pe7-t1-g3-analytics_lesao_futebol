@@ -44,10 +44,6 @@ CATEGORICAL_COLUMNS: List[str] = [
     "Season",
 ]
 
-NUMERICAL_COLUMNS: List[str] = [
-    "player_age",
-]
-
 # Column mapping for season ordering
 SEASON_ORDER: Dict[str, int] = {
     "20/21": 0,
@@ -62,7 +58,7 @@ SEASON_ORDER: Dict[str, int] = {
 # =============================================================================
 ROLLING_WINDOWS_DAYS: List[int] = [7, 30, 90, 365]
 ROLLING_WINDOWS_INJURIES: List[int] = [3, 5, 10]
-QUANTILE_LIST: List[float] = [0.1, 0.25, 0.5, 0.75, 0.9]
+QUANTILE_LIST: List[float] = [0.1, 0.5, 0.9]
 
 # =============================================================================
 # Model Training
