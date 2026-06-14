@@ -30,17 +30,22 @@ logger = setup_logging("feature_engineering")
 # =============================================================================
 class TemporalValidator:
     """
-    Validates that no feature uses future information relative to the
-    injury start date of each record.
+    Temporal causality validator.
 
-    Usage
-    -----
-    >>> tv = TemporalValidator()
-    >>> tv.validate(df, feature_cols)
+    Classifica ocorrências em:
+    - violations: possíveis problemas de causalidade
+    - warnings: histórico prévio ou inconsistências de dados
     """
 
+    HISTORY_CONTEXT_FEATURES = {
+        "days_since_last_injury",
+        "avg_recovery_time_recent",
+        "reinjury_risk_score",
+    }
+
     def __init__(self) -> None:
-        self.violations: List[Dict] = []
+        self.violations = []
+        self.warnings = []
 
     def validate(
         self,
@@ -48,61 +53,96 @@ class TemporalValidator:
         feature_columns: List[str],
         date_col: str = config.DATE_FROM_COLUMN,
     ) -> bool:
-        """
-        Check that feature values are causally valid.
 
-        For each player, we verify that the value at row *i* can be
-        derived exclusively from rows with ``date < date_i``.
-
-        Parameters
-        ----------
-        df : pd.DataFrame
-            Dataset sorted by (player, date).
-        feature_columns : list of str
-            Columns to validate.
-        date_col : str
-            The reference date column.
-
-        Returns
-        -------
-        bool
-            True if no violations detected.
-        """
         self.violations = []
-        logger.info("Validating temporal causality for %d features", len(feature_columns))
+        self.warnings = []
+
+        logger.info(
+            "Validating temporal causality for %d features",
+            len(feature_columns),
+        )
 
         for col in feature_columns:
+
             if col not in df.columns:
                 continue
-            # For each player, the first injury should have NaN for
-            # history-based features.
+
             for player, grp in df.groupby(config.PLAYER_COLUMN):
+
+                grp = grp.sort_values(date_col)
+
                 if len(grp) < 2:
                     continue
+
                 first_val = grp[col].iloc[0]
+
+                # --------------------------------------------------
+                # CASO 1
+                # Features históricas derivadas
+                # --------------------------------------------------
+                if col in self.HISTORY_CONTEXT_FEATURES:
+
+                    if pd.notna(first_val) and first_val != 0:
+
+                        self.warnings.append(
+                            {
+                                "player": player,
+                                "feature": col,
+                                "first_value": first_val,
+                                "issue": (
+                                    "Historical context already present "
+                                    "in first dataset record"
+                                ),
+                            }
+                        )
+
+                    continue
+
+                # --------------------------------------------------
+                # CASO 2
+                # Demais features históricas
+                # --------------------------------------------------
                 if pd.notna(first_val) and first_val != 0:
+
                     self.violations.append(
                         {
                             "player": player,
                             "feature": col,
                             "first_value": first_val,
-                            "issue": "First injury record has non-null/non-zero historical feature",
+                            "issue": (
+                                "Potential temporal causality violation"
+                            ),
                         }
                     )
 
-        if self.violations:
+        # ----------------------------------------------------------
+        # LOGGING
+        # ----------------------------------------------------------
+
+        if self.warnings:
             logger.warning(
-                "Temporal causality: %d potential violations found", len(self.violations)
+                "Temporal validation: %d warnings detected",
+                len(self.warnings),
+            )
+
+        if self.violations:
+            logger.error(
+                "Temporal validation: %d violations detected",
+                len(self.violations),
             )
             return False
 
-        logger.info("Temporal causality: ALL features passed validation ✓")
+        logger.info(
+            "Temporal causality: ALL critical features passed validation ✓"
+        )
+
         return True
 
     def report(self) -> pd.DataFrame:
-        """Return a DataFrame of detected violations."""
         return pd.DataFrame(self.violations)
 
+    def warning_report(self) -> pd.DataFrame:
+        return pd.DataFrame(self.warnings)
 
 # =============================================================================
 # Melhoria 2 — Player History Features
