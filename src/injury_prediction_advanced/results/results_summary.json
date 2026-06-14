@@ -1,5 +1,6 @@
 {
-  "execution_date": "2026-06-13 23:45:19",
+  "execution_date": "2026-06-14 14:52:22",
+  "selection_metric": "MAE",
   "dataset": {
     "total_records": 15526,
     "train_records": 12247,
@@ -7,8 +8,16 @@
     "n_features": 46,
     "test_season": "24/25"
   },
-  "best_model": "LightGBM_Optuna",
+  "best_model": "[Baseline] LightGBM",
   "best_model_metrics": {
+    "MAE": 19.95283717299533,
+    "RMSE": 33.27876296282236,
+    "R2": 0.5486581464750601,
+    "MedianAE": 11.986116225660624
+  },
+  "best_model_file": "best_model.joblib",
+  "best_optimized_model": "LightGBM_Optuna",
+  "best_optimized_metrics": {
     "MAE": 20.06761975007197,
     "RMSE": 33.50917688601378,
     "R2": 0.5423865511838453,
@@ -16,6 +25,7 @@
     "MAPE": 1.1009595137306984,
     "MaxError": 251.0577612243243
   },
+  "ensemble_strategy": "WeightedAverage",
   "ensemble_metrics": {
     "MAE": 20.030034346631897,
     "RMSE": 33.331860663641194,
@@ -24,7 +34,6 @@
     "MAPE": 1.1062673064413937,
     "MaxError": 253.61844320980853
   },
-  "ensemble_strategy": "WeightedAverage",
   "feature_importance_top10": [
     {
       "feature": "Injury_target_enc",
