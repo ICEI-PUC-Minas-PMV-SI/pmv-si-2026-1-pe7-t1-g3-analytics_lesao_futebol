@@ -69,8 +69,8 @@ QUANTILE_LIST: List[float] = [0.1, 0.25, 0.5, 0.75, 0.9]
 # =============================================================================
 N_SPLITS_OUTER: int = 5
 N_SPLITS_INNER: int = 3
-OPTUNA_N_TRIALS: int = 100
-OPTUNA_TIMEOUT: int = 600  # seconds
+OPTUNA_N_TRIALS: int = 30
+OPTUNA_TIMEOUT: int = 300  # seconds
 EARLY_STOPPING_ROUNDS: int = 50
 BOOTSTRAP_N_ITERATIONS: int = 1000
 CONFIDENCE_LEVEL: float = 0.95
