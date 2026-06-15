@@ -221,127 +221,112 @@ Após a seleção dos melhores hiperparâmetros, os modelos foram retreinados ut
 
 | Modelo | MAE | RMSE | R² |
 |----------|---------|---------|---------|
-| LightGBM_Optuna | 20.08 | 33.50 | 0.5427 |
-| CatBoost_Optuna | 20.13 | 33.38 | 0.5458 |
-| XGBoost_Optuna | 19.94 | 33.71 | 0.5369 |
+| LightGBM_Optuna | 20.07 | 33.51 | 0.5424 |
+| CatBoost_Optuna | 20.13 | 33.34 | 0.5471 |
+| XGBoost_Optuna | 20.55 | 34.91 | 0.5369 |
 
 ---
 
 ### 7.3 Comparação com os Modelos Baseline
 
-| Modelo | MAE Baseline | MAE Otimizado | Variação |
-|----------|-------------|--------------|-----------|
-| LightGBM | 20.09 | 20.08 | +0.0% |
-| CatBoost | 20.20 | 20.13 | +0.3% |
-| XGBoost | 20.12 | 19.94 | +0.9% |
+| Modelo | MAE Baseline | MAE Otimizado | Diferença |
+|----------|---------:|---------:|---------:|
+| LightGBM | 19.95 | 20.07 | -0.6% |
+| CatBoost | 20.10 | 20.13 | -0.2% |
+| XGBoost | 20.21 | 20.55 | -1.7% |
 
-Os resultados demonstram que a otimização dos hiperparâmetros produziu melhorias modestas, com destaque para o XGBoost, que apresentou a maior redução no erro absoluto médio.
+### Discussão dos Resultados
+
+Durante a etapa de otimização, os modelos apresentaram excelentes resultados na validação cruzada interna, alcançando valores de MAE próximos de 18,8 dias.
+
+Entretanto, após o retreinamento utilizando todo o conjunto de treinamento e a avaliação no conjunto de teste correspondente à temporada 24/25, observou-se que as versões otimizadas não superaram os modelos baseline.
+
+O LightGBM Baseline permaneceu como o modelo com melhor desempenho entre todas as variantes avaliadas nesta etapa, apresentando MAE de 19,95 dias. As versões otimizadas de LightGBM, CatBoost e XGBoost obtiveram resultados ligeiramente inferiores.
+
+Esse comportamento sugere que as configurações padrão dos algoritmos já estavam adequadamente ajustadas ao problema estudado e que os ganhos observados durante a validação cruzada não foram totalmente generalizados para dados não vistos.
+
+Os resultados também reforçam uma das principais conclusões do projeto: os maiores ganhos de desempenho foram obtidos através da etapa de Feature Engineering e da construção de atributos temporais, enquanto a otimização de hiperparâmetros teve impacto limitado sobre a performance final dos modelos.
 
 ---
 
-## 8. Ensemble Avançado
+# 8. Ensemble Avançado
 
-Após a otimização dos modelos base, foram aplicadas estratégias de ensemble com o objetivo de melhorar a robustez e a performance preditiva do sistema. Os ensembles foram construídos utilizando os modelos otimizados de **LightGBM, CatBoost e XGBoost**.
+Após a otimização dos modelos base, foram aplicadas estratégias de ensemble com o objetivo de aumentar a robustez das previsões e investigar possíveis ganhos de desempenho através da combinação de diferentes algoritmos.
+
+Foram utilizados como modelos base:
+
+- LightGBM_Optuna
+- CatBoost_Optuna
+- XGBoost_Optuna
 
 ---
 
-### 8.1 Construção do Ensemble e Estratégias Avaliadas
+## 8.1 Construção do Ensemble e Estratégias Avaliadas
 
-O ensemble foi construído utilizando os três modelos otimizados como base:
-
-- LightGBM
-- CatBoost
-- XGBoost
+O ensemble foi construído utilizando os três modelos otimizados via Optuna.
 
 ```python
 ensemble_base = {
-    'LightGBM': lgbm_opt,
-    'CatBoost': cb_opt,
-    'XGBoost': xgb_opt,
+    "LightGBM": lgbm_opt,
+    "CatBoost": cb_opt,
+    "XGBoost": xgb_opt,
 }
-
-ensemble = AdvancedEnsemble(
-    base_models=ensemble_base,
-    random_state=RANDOM_STATE
-)
 ```
 
----
+Foram avaliadas três estratégias distintas:
 
-### Estratégias de Ensemble Avaliadas
+### Stacking
 
-Foram comparadas três abordagens distintas:
+Utiliza um meta-modelo (Ridge Regression) treinado sobre as previsões produzidas pelos modelos base utilizando GroupKFold.
 
-#### Stacking
-- Meta-learner (Ridge) treinado sobre previsões out-of-fold dos modelos base usando GroupKFold
+### Blending
 
-#### Blending
-- Meta-learner treinado sobre um conjunto de blend separado (20% do treino)
-  
-#### Weighted Average
-- Pesos otimizados via Nelder-Mead para combinação convexa dos modelos
----
+Treina um meta-modelo em um subconjunto separado do conjunto de treinamento.
 
-### Resultados da Comparação
+### Weighted Average
 
-| Estratégia | MAE | RMSE | R² |
-|------------|---------|---------|---------|
-| Stacking | 20.0188 | 33.3055 | 0.5479 |
-| Blending | 20.1453 | 33.3100 | 0.5478 |
-| Weighted Average | 19.9677 | 33.3770 | 0.5460 |
-
----
-
-
-A estratégia com melhor desempenho em termos de MAE (menor erro absoluto médio) foi Weighted Average.
-
-- MAE: 19.9677
+Combina as previsões dos modelos utilizando pesos otimizados por meio do algoritmo Nelder-Mead.
 
 ---
 
 ## 8.2 Predições do Melhor Ensemble
 
-Após a comparação das estratégias, o modelo final utilizado foi o ensemble selecionado automaticamente (Weighted Average no caso deste experimento).
+Após a comparação das estratégias avaliadas, a estratégia selecionada foi:
 
-A previsão final é calculada da seguinte forma:
+**Weighted Average**
 
-```python
-if best_ensemble_strategy == 'Stacking':
-    y_pred_ensemble = ensemble.predict_stacking(X_test)
-
-elif best_ensemble_strategy == 'Blending':
-    y_pred_ensemble = ensemble.predict_blending(X_test)
-
-else:
-    y_pred_ensemble = ensemble.predict_weighted_average(X_test)
-
-y_pred_ensemble = np.maximum(y_pred_ensemble, 0)
-```
-
----
-
-### Avaliação do Ensemble Final
+As métricas obtidas foram:
 
 | Métrica | Valor |
-|----------|---------|
-| MAE | 19.9677 |
-| RMSE | 33.3770 |
-| R² | 0.5460 |
-| MedianAE | 11.9326 |
-| MAPE | 1.0973 |
-| Max Error | 253.8652 |
+|----------|---------:|
+| MAE | 20.03 |
+| RMSE | 33.33 |
+| R² | 0.5472 |
+| MedianAE | 11.95 |
+| MAPE | 1.1063 |
+| Max Error | 253.62 |
 
 ---
 
-# Avaliação dos modelos criados
+## 8.3 Discussão dos Resultados do Ensemble
 
-## Métricas utilizadas
+O ensemble apresentou desempenho competitivo e bastante próximo dos melhores modelos individuais.
 
-Nesta seção, as métricas utilizadas para avaliar os modelos desenvolvidos deverão ser apresentadas (p. ex.: acurácia, precisão, recall, F1-Score, MSE etc.). A escolha de cada métrica deverá ser justificada, pois esta escolha é essencial para avaliar de forma mais assertiva a qualidade do modelo construído. 
+Entretanto, quando comparado ao benchmark completo do projeto, observou-se que o modelo LightGBM Baseline apresentou o menor erro absoluto médio (MAE), tornando-se o melhor modelo geral do experimento.
 
-## Discussão dos resultados obtidos
+| Modelo | MAE |
+|----------|---------:|
+| LightGBM (Baseline) | 19.95 |
+| Ensemble Weighted Average | 20.03 |
+| LightGBM_Optuna | 20.07 |
 
-Nesta seção, discuta os resultados obtidos por cada um dos modelos construídos na Etapa 03 e na Etapa 04, no contexto prático em que os dados se inserem, promovendo uma compreensão abrangente e aprofundada da qualidade de cada um deles. Lembre-se de relacionar os resultados obtidos ao problema identificado, a questão de pesquisa levantada e estabelecer relação com os objetivos previamente propostos. Não deixe de comparar os resultados obtidos por cada modelo com os demais.
+A diferença entre o melhor modelo individual e o ensemble foi de aproximadamente 0,08 dias de MAE, valor extremamente pequeno na escala do problema.
+
+Esse resultado sugere que os ganhos obtidos durante a etapa de Feature Engineering tiveram impacto mais significativo sobre o desempenho final do que a combinação de modelos ou a otimização de hiperparâmetros.
+
+Apesar disso, o ensemble continua sendo uma alternativa robusta, pois reduz a dependência de um único algoritmo e tende a apresentar maior estabilidade em cenários distintos.
+
+---
 
 # 9. Explicabilidade com SHAP
 
@@ -557,6 +542,8 @@ Os resultados demonstraram que:
 
 Dessa forma, a etapa de explicabilidade complementa a avaliação quantitativa dos modelos, fornecendo evidências adicionais sobre a confiabilidade e a coerência das previsões produzidas pelo sistema.
 
+---
+
 # 10. Error Analysis Profundo
 
 A avaliação de modelos preditivos não deve se restringir apenas às métricas globais de desempenho. Embora indicadores como MAE, RMSE e R² forneçam uma visão geral da qualidade do modelo, eles não permitem compreender em quais cenários o modelo apresenta melhor ou pior desempenho.
@@ -737,6 +724,8 @@ As principais dificuldades concentram-se em:
 - ligas de maior intensidade competitiva.
 
 Apesar dessas limitações, o comportamento observado é compatível com o estado da arte em problemas de regressão aplicados à medicina esportiva, reforçando a robustez do pipeline desenvolvido e apontando oportunidades claras para futuras melhorias metodológicas.
+
+---
 
 # 11. Calibração e Estimação de Incerteza
 
@@ -976,6 +965,8 @@ Os experimentos demonstraram que:
 
 Portanto, além de prever a duração das lesões, o sistema desenvolvido também é capaz de fornecer uma estimativa quantitativa da incerteza associada às previsões, aumentando sua utilidade prática para profissionais da medicina esportiva, analistas de desempenho e departamentos médicos de clubes de futebol.
 
+---
+
 # 12. Regressão Quantílica
 
 A regressão tradicional fornece apenas uma estimativa pontual para cada observação. Embora essa abordagem seja adequada para diversos problemas de regressão, ela não representa adequadamente cenários onde existe elevada variabilidade, assimetria e heterocedasticidade nos dados.
@@ -1199,7 +1190,9 @@ Os resultados demonstraram que:
 
 Dessa forma, o projeto deixou de fornecer apenas uma estimativa pontual da duração da lesão e passou a produzir cenários completos de recuperação, aumentando significativamente a utilidade prática do sistema para tomada de decisão em ambientes esportivos profissionais.
 
-## 13. Nested Cross-Validation (Melhoria 11)
+---
+
+## 13. Nested Cross-Validation
 
 A validação cruzada padrão pode **sobre-estimar** a performance quando hiperparâmetros são selecionados no mesmo conjunto de validação. A **Nested CV** resolve isso:
 
@@ -1236,39 +1229,54 @@ Os resultados por fold mostram consistência razoável entre as divisões:
 - **Test Set MAE:** 19.94  
 
 - **Nested CV R²:** 0.5257  
-- **Test Set R²:** 0.5369  
----
-
-## 14. Benchmark Experimental Completo (Melhoria 12)
-
-### Contexto
-
-Comparação sistemática de **todos os modelos e estratégias** testados neste notebook:
-- Modelos baseline (configuração padrão)
-- Modelos otimizados (hiperparâmetros via Optuna)
-- Estratégias de ensemble (Stacking, Blending, Weighted Average)
----
-
-### Resultados
-
-Os principais resultados observados foram:
-
-- **XGBoost otimizado (Optuna)** apresentou o menor MAE (~19.94)
-- **Weighted Average Ensemble** apresentou o melhor R² (~0.546)
-- Modelos como LightGBM e CatBoost também apresentaram desempenho competitivo
+- **Test Set R²:** 0.5369
 
 ---
-<img width="1348" height="449" alt="image" src="https://github.com/user-attachments/assets/3d542cf4-4cf7-4851-a348-198a3305a28a" />
 
+# 14. Benchmark Experimental Completo
 
+## Objetivo
 
-# Revisão do pipeline de pesquisa e análise de dados
+Foi realizada uma comparação sistemática entre todos os modelos treinados ao longo do projeto, incluindo:
 
-Nesta etapa, os alunos devem revisar o pipeline de pesquisa e análise de dados proposto na Etapa 03, avaliando criticamente cada uma de suas etapas, fluxos e decisões. O objetivo agora é identificar possíveis ajustes, melhorias ou generalizações que tornem o pipeline mais abrangente e adaptável, de forma que ele seja capaz de representar qualquer processo de construção de sistemas de aprendizado de máquina – independentemente da área de aplicação, tipo de dado ou técnica utilizada.
+- Modelos Baseline;
+- Modelos Otimizados via Optuna;
+- Estratégias de Ensemble.
 
-Lembre-se de que um pipeline bem estruturado deve contemplar, de forma flexível e modular, as principais fases da pesquisa e experimentação em ciência de dados e aprendizado de máquina, incluindo (mas não se limitando a): formulação do problema, coleta e preparação dos dados, análise exploratória, definição de métricas, seleção e validação de modelos, interpretação dos resultados e documentação.
+O objetivo foi identificar a solução com melhor capacidade preditiva considerando a métrica principal de avaliação (MAE).
 
-O resultado desta etapa deverá ser um pipeline revisado e justificado, acompanhado de uma breve descrição das alterações realizadas e dos motivos que levaram a cada mudança.
+---
+
+## Resultados
+
+### Ranking Final dos Modelos
+
+| Modelo | MAE | RMSE | R² |
+|----------|---------:|---------:|---------:|
+| LightGBM (Baseline) | 19.95 | 33.28 | 0.5487 |
+| Ensemble Weighted Average | 20.03 | 33.33 | 0.5472 |
+| LightGBM_Optuna | 20.07 | 33.51 | 0.5424 |
+| CatBoost | 20.10 | 33.15 | 0.5522 |
+| CatBoost_Optuna | 20.13 | 33.34 | 0.5471 |
+| XGBoost | 20.21 | 33.63 | 0.5390 |
+| RandomForest | 20.26 | 33.44 | 0.5443 |
+| GradientBoosting | 20.81 | 34.55 | 0.5134 |
+| Ridge | 21.55 | 35.32 | 0.4915 |
+| ElasticNet | 22.00 | 34.87 | 0.5044 |
+
+---
+
+## Principais Conclusões
+
+Os resultados demonstram que o modelo LightGBM Baseline apresentou o melhor desempenho global segundo a métrica principal do projeto (MAE).
+
+Curiosamente, as versões otimizadas via Optuna não superaram o modelo baseline, indicando que a configuração original do LightGBM já se encontrava bastante adequada ao problema estudado.
+
+Além disso, os ensembles apresentaram desempenho muito próximo do melhor modelo individual, porém sem ganhos suficientes para justificar o aumento de complexidade.
+
+Esse resultado reforça a importância da qualidade dos atributos construídos durante a etapa de Feature Engineering, que se mostrou mais relevante para o desempenho final do que ajustes adicionais de hiperparâmetros.
+
+---
 
 # 15. Análise Estatística dos Resultados
 
@@ -1566,52 +1574,65 @@ A utilização do MLflow proporciona:
 
 ## Melhor Modelo
 
-O LightGBM otimizado apresentou o melhor equilíbrio entre:
-
-* desempenho;
-* estabilidade;
-* velocidade de treinamento.
+O modelo LightGBM Baseline apresentou o melhor desempenho global do projeto, sendo selecionado como modelo final segundo a métrica principal de avaliação (MAE).
 
 ---
 
 ## Resultados Finais
 
-| Métrica | Resultado |
-| ------- | --------- |
-| MAE     | ~19 dias  |
-| RMSE    | ~33 dias  |
-| R²      | ~0,55     |
+| Métrica | Valor |
+|----------|---------:|
+| MAE | 19.95 dias |
+| RMSE | 33.28 dias |
+| R² | 0.5487 |
+| MedianAE | 11.99 dias |
 
 ---
 
-## Principais Variáveis
+## Principais Variáveis Explicativas
 
-As variáveis mais relevantes foram:
+A análise SHAP identificou como principais fatores associados ao tempo de recuperação:
 
-1. Tipo da lesão;
-2. Frequência de lesões;
-3. Dias desde a última lesão;
-4. Histórico recente;
-5. Fase da temporada.
+1. Injury_target_enc
+2. club_target_enc
+3. player_injury_rate_percentile
+4. Injury_freq
+5. days_to_season_end
+6. player_age
+7. days_since_last_injury
+8. rolling_mean_days_3
+
+Essas variáveis demonstram que o histórico médico do atleta, o tipo da lesão e fatores contextuais relacionados ao clube e à temporada exercem influência significativa sobre o tempo de afastamento.
 
 ---
 
-## Interpretação Científica
+## Principais Achados
 
-Os resultados indicam que a duração da recuperação não depende exclusivamente da lesão atual.
+Os resultados obtidos indicam que:
 
-O histórico clínico do atleta exerce influência significativa sobre o processo de recuperação.
+- o tipo da lesão é o principal fator determinante da duração da recuperação;
+- o histórico acumulado de lesões aumenta significativamente o poder preditivo do modelo;
+- variáveis temporais contribuem para capturar padrões sazonais importantes;
+- a utilização de técnicas avançadas de Feature Engineering gerou ganhos superiores aos obtidos apenas por otimização de hiperparâmetros.
 
 ---
 
 ## Limitações
 
-Entre as principais limitações observadas estão:
+Entre as principais limitações observadas destacam-se:
 
-* ausência de dados médicos detalhados;
-* ausência de dados fisiológicos;
-* falta de métricas de carga física;
-* baixa representatividade de lesões raras.
+- ausência de informações médicas detalhadas;
+- inexistência de métricas fisiológicas dos atletas;
+- baixa frequência de algumas lesões graves;
+- presença de eventos extremos com longos períodos de recuperação.
+
+---
+
+## Considerações Finais
+
+O projeto demonstrou que é possível prever a duração de lesões esportivas utilizando técnicas modernas de Machine Learning, alcançando desempenho competitivo e elevada interpretabilidade.
+
+Além das previsões pontuais, foram incorporadas análises de explicabilidade, quantificação de incerteza, regressão quantílica e validações temporais, tornando a solução metodologicamente robusta e potencialmente aplicável em cenários reais de Sports Analytics e Medicina Esportiva.
 
 ---
 
@@ -1619,68 +1640,86 @@ Entre as principais limitações observadas estão:
 
 ## Objetivo
 
-Garantir a persistência dos resultados produzidos durante o desenvolvimento.
+Garantir a persistência completa dos modelos treinados, métricas, configurações e resultados produzidos durante o desenvolvimento do projeto.
 
 ---
 
 ## Artefatos Salvos
 
-Foram armazenados:
-
 ### Modelos
 
-* LightGBM;
-* CatBoost;
-* XGBoost;
-* Ensemble final.
+Foram armazenados os seguintes modelos:
 
-### Transformadores
+- best_model.joblib
+- lgbm_optuna.joblib
+- catboost_optuna.joblib
+- xgboost_optuna.joblib
 
-* encoders;
-* scalers;
-* pipelines.
+O arquivo `best_model.joblib` corresponde automaticamente ao modelo com melhor desempenho no benchmark completo.
+
+No experimento final, o modelo salvo foi:
+
+```text
+[Baseline] LightGBM
+```
+
+---
 
 ### Resultados
 
-* métricas;
-* gráficos;
-* relatórios.
+Foram persistidos:
 
-### Configurações
+- results_summary.json
+- benchmark_completo.csv
+- feature_names.json
 
-* hiperparâmetros;
-* configurações do treinamento;
-* informações dos experimentos.
+---
+
+### Visualizações
+
+Foram armazenadas todas as figuras produzidas ao longo do projeto:
+
+- SHAP
+- Benchmark
+- Residual Analysis
+- Calibration
+- Quantile Regression
+- Feature Importance
+
+---
+
+### MLflow
+
+Também foram registrados:
+
+- parâmetros;
+- métricas;
+- artefatos;
+- configurações dos experimentos.
 
 ---
 
 ## Benefícios
 
-O salvamento dos artefatos garante:
+O salvamento sistemático dos artefatos garante:
 
-* reprodutibilidade completa;
-* continuidade futura do projeto;
-* reutilização dos modelos;
-* implantação simplificada.
+- reprodutibilidade completa;
+- auditoria dos experimentos;
+- reutilização dos modelos;
+- facilidade de implantação em produção;
+- rastreabilidade científica.
 
 ---
 
-# Considerações Finais
+## Encerramento
 
-As seções 15 a 21 representam a consolidação do projeto em um sistema completo de Machine Learning aplicado ao contexto esportivo.
+Ao final da execução, o projeto produz automaticamente:
 
-Além da obtenção de resultados competitivos, o trabalho demonstrou preocupação com:
+- melhor modelo global;
+- modelos otimizados;
+- métricas consolidadas;
+- resultados experimentais;
+- visualizações;
+- logs de execução.
 
-* rigor científico;
-* validação temporal;
-* generalização;
-* interpretabilidade;
-* rastreabilidade;
-* preparação para produção.
-
-Como resultado, o projeto evoluiu de um experimento acadêmico para uma solução robusta e potencialmente aplicável em ambientes reais de Sports Analytics e Medicina Esportiva.
-
-
-## Observações importantes
-
-Todas as tarefas realizadas nesta etapa deverão ser registradas em formato de texto junto com suas explicações de forma a apresentar os códigos desenvolvidos e também, o código deverá ser incluído, na íntegra, na pasta "src".
+Essa estrutura permite continuidade futura do projeto e facilita sua evolução para ambientes reais de produção.
