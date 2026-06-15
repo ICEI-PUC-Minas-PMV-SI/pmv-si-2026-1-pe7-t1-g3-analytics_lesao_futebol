@@ -997,7 +997,7 @@ $$
 
 onde:
 
-* $\(Q_{\tau}\$) representa o quantil (\tau);
+* \(Q_{\tau}\) representa o quantil (\tau);
 * (Y) corresponde ao tempo de recuperação;
 * (X) representa o conjunto de características do atleta e da lesão.
 
@@ -1034,8 +1034,9 @@ Dessa forma, foram treinados três modelos independentes, cada um especializado 
 A regressão quantílica utiliza a chamada **Pinball Loss**, definida por:
 
 $$
-L_{\tau}(y,\hat{y})=\begin{cases}
-\tau(y-\hat{y}), & y \ge \hat{y} \
+L_{\tau}(y,\hat{y})=
+\begin{cases}
+\tau(y-\hat{y}), & y \ge \hat{y} \\
 (\tau-1)(y-\hat{y}), & y < \hat{y}
 \end{cases}
 $$
