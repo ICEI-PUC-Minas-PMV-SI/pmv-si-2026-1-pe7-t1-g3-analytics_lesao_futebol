@@ -51,7 +51,7 @@ class QuantileRegression:
         random_state : int
             Seed.
         """
-        self.quantiles = quantiles or [0.1, 0.5, 0.9]
+        self.quantiles = quantiles or config.QUANTILE_LIST
         self.backend = backend
         self.random_state = random_state
         self.models: Dict[float, Any] = {}
