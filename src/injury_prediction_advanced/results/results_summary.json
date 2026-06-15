@@ -1,5 +1,5 @@
 {
-  "execution_date": "2026-06-14 14:52:22",
+  "execution_date": "2026-06-14 18:24:53",
   "selection_metric": "MAE",
   "dataset": {
     "total_records": 15526,
@@ -17,7 +17,7 @@
   },
   "best_model_file": "best_model.joblib",
   "best_optimized_model": "LightGBM_Optuna",
-  "best_optimized_metrics": {
+  "best_optimized_model_metrics": {
     "MAE": 20.06761975007197,
     "RMSE": 33.50917688601378,
     "R2": 0.5423865511838453,
