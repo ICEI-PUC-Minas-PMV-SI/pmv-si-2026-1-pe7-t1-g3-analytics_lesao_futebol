@@ -210,7 +210,10 @@ class PlayerHistoryFeatures:
                     continue
                 idx = grp.index.tolist()
                 dates = grp[config.DATE_FROM_COLUMN].values
-                vals = grp[config.TARGET_COLUMN].values
+                if config.TARGET_COLUMN in grp.columns:
+                    vals = grp[config.TARGET_COLUMN].values
+                else:
+                    vals = np.array([np.nan] * len(grp))
                 for i in range(1, len(idx)):
                     mask = (
                         (dates[:i] >= dates[i] - np.timedelta64(window, "D"))
@@ -226,7 +229,10 @@ class PlayerHistoryFeatures:
             if len(grp) < 4:
                 continue
             idx = grp.index.tolist()
-            vals = grp[config.TARGET_COLUMN].values
+            if config.TARGET_COLUMN in grp.columns:
+                vals = grp[config.TARGET_COLUMN].values
+            else:
+                vals = np.array([np.nan] * len(grp))
             for i in range(3, len(idx)):
                 last3 = vals[i - 3 : i]
                 x = np.arange(3, dtype=float)
@@ -252,7 +258,10 @@ class PlayerHistoryFeatures:
             if len(grp) < 2:
                 continue
             idx = grp.index.tolist()
-            vals = grp[config.TARGET_COLUMN].values
+            if config.TARGET_COLUMN in grp.columns:
+                vals = grp[config.TARGET_COLUMN].values
+            else:
+                vals = np.array([np.nan] * len(grp))
             for i in range(1, len(idx)):
                 start = max(0, i - 3)
                 df.loc[idx[i], "avg_recovery_time_recent"] = vals[start:i].mean()
@@ -498,7 +507,10 @@ class StatisticalFeatures:
 
             for player, grp in df.groupby(config.PLAYER_COLUMN):
                 idx = grp.index.tolist()
-                vals = grp[config.TARGET_COLUMN].values
+                if config.TARGET_COLUMN in grp.columns:
+                    vals = grp[config.TARGET_COLUMN].values
+                else:
+                    vals = np.array([np.nan] * len(grp))
                 for i in range(1, len(idx)):
                     start = max(0, i - n)
                     window_vals = vals[start:i]
@@ -511,7 +523,10 @@ class StatisticalFeatures:
         df["cumulative_days_injured"] = 0.0
         for player, grp in df.groupby(config.PLAYER_COLUMN):
             idx = grp.index.tolist()
-            vals = grp[config.TARGET_COLUMN].values
+            if config.TARGET_COLUMN in grp.columns:
+                vals = grp[config.TARGET_COLUMN].values
+            else:
+                vals = np.array([np.nan] * len(grp))
             for i in range(1, len(idx)):
                 df.loc[idx[i], "cumulative_days_injured"] = vals[:i].sum()
         self.feature_names.append("cumulative_days_injured")
@@ -683,6 +698,12 @@ class FeaturePipeline:
         """
         logger.info("=== Feature Pipeline: fit_transform (train) ===")
 
+        # Ensure season ordinal is present (may be created upstream during data loading)
+        if "season_ordinal" not in train_df.columns:
+            train_df["season_ordinal"] = train_df[config.SEASON_COLUMN].map(
+                config.SEASON_ORDER
+            ).fillna(-1).astype(int)
+
         # 1. Player history (uses only past data by construction)
         train_df = self.player_hist.transform(train_df)
 
@@ -758,6 +779,12 @@ class FeaturePipeline:
             Test data with all features.
         """
         logger.info("=== Feature Pipeline: transform (test) ===")
+
+        # Ensure season ordinal for inference
+        if "season_ordinal" not in test_df.columns:
+            test_df["season_ordinal"] = test_df[config.SEASON_COLUMN].map(
+                config.SEASON_ORDER
+            ).fillna(-1).astype(int)
 
         test_df = self.player_hist.transform(test_df)
         test_df = self.temporal.transform(test_df)
