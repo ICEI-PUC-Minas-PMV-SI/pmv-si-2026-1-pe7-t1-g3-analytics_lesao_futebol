@@ -166,7 +166,7 @@ A busca foi conduzida por meio do algoritmo **TPE (Tree-structured Parzen Estima
 
 ---
 
-### 7.1 Otimização com Optuna (Melhoria 6)
+### 7.1 Otimização com Optuna
 
 #### LightGBM
 
@@ -332,7 +332,7 @@ Apesar disso, o ensemble continua sendo uma alternativa robusta, pois reduz a de
 
 A interpretabilidade dos modelos é um requisito fundamental para aplicações de Machine Learning em contextos reais, especialmente em domínios sensíveis como medicina esportiva e gestão de atletas profissionais.
 
-Embora métricas como MAE, RMSE e R² permitam avaliar a qualidade preditiva dos modelos, elas não explicam **por que** determinada previsão foi produzida. Para suprir essa limitação, foi utilizada a biblioteca **SHAP (SHapley Additive exPlanations)**, que permite quantificar a contribuição individual de cada variável para as previsões do modelo.
+Embora métricas como MAE, RMSE e R² permitam avaliar a qualidade preditiva dos modelos, elas não explicam por que determinada previsão foi produzida. Para suprir essa limitação, foi utilizada a biblioteca **SHAP (SHapley Additive exPlanations)**, que permite quantificar a contribuição individual de cada variável para as previsões do modelo.
 
 O SHAP é baseado na Teoria dos Jogos Cooperativos e fornece explicações consistentes, locais e globais para modelos complexos, incluindo algoritmos baseados em árvores de decisão, como LightGBM, XGBoost e CatBoost.
 
@@ -342,13 +342,9 @@ O SHAP é baseado na Teoria dos Jogos Cooperativos e fornece explicações consi
 
 ### Escolha do Modelo para Explicabilidade
 
-A análise SHAP foi realizada utilizando o modelo **LightGBM_Optuna**, selecionado como o melhor modelo entre aqueles submetidos à otimização automática de hiperparâmetros via Optuna.
+A análise SHAP foi realizada utilizando o modelo **LightGBM Baseline**, identificado como o melhor modelo global do benchmark experimental do projeto.
 
-A utilização desse modelo teve como objetivo analisar o comportamento de um modelo ajustado por busca automatizada de hiperparâmetros, permitindo uma interpretação mais detalhada dos padrões aprendidos durante o processo de otimização.
-
-**Observação:** embora a análise SHAP tenha sido executada sobre o modelo **LightGBM_Optuna**, o melhor desempenho global do benchmark final do projeto foi obtido pelo modelo **LightGBM Baseline**, selecionado pela métrica principal de avaliação (MAE).
-
----
+A escolha desse modelo garante que as explicações produzidas estejam diretamente associadas à solução final selecionada para o problema de previsão da duração de lesões.
 
 ### Metodologia
 
@@ -379,25 +375,25 @@ $$
 
 onde:
 
-- $\(\phi_{ij} \$) representa a contribuição da variável \(j\) na observação \(i\);
-- $\(N\$) corresponde ao número de observações analisadas.
+* (\phi_{ij}) representa a contribuição da variável (j) na observação (i);
+* (N) corresponde ao número de observações analisadas.
 
 ---
 
 ### Ranking Global das Variáveis
 
-| Variável | Mean Absolute SHAP |
-|-----------|------------------:|
-| Injury_target_enc | 15.53 |
-| club_target_enc | 3.16 |
-| player_injury_rate_percentile | 2.97 |
-| Injury_freq | 2.12 |
-| days_to_season_end | 1.92 |
-| player_age | 1.10 |
-| days_since_last_injury | 1.02 |
-| rolling_mean_days_3 | 0.96 |
-| player_position_target_enc | 0.80 |
-| league_freq | 0.76 |
+| Variável                      | Mean Absolute SHAP |
+| ----------------------------- | -----------------: |
+| Injury_target_enc             |              16.99 |
+| club_target_enc               |               3.11 |
+| player_injury_rate_percentile |               2.89 |
+| days_to_season_end            |               1.91 |
+| days_since_last_injury        |               1.09 |
+| Injury_freq                   |               1.07 |
+| player_age                    |               1.06 |
+| rolling_mean_days_3           |               1.04 |
+| league_freq                   |               0.85 |
+| player_position_target_enc    |               0.78 |
 
 ---
 
@@ -407,10 +403,11 @@ Os resultados demonstram que as informações associadas ao histórico de lesõe
 
 As principais conclusões são:
 
-- O tipo da lesão é o fator mais relevante para a previsão do tempo de afastamento.
-- O histórico individual de lesões contribui significativamente para o desempenho do modelo.
-- Características do clube e da liga apresentam influência indireta na duração da recuperação.
-- Variáveis temporais ajudam a capturar padrões sazonais e contextuais.
+* O tipo da lesão é o fator mais relevante para a previsão do tempo de afastamento.
+* O histórico individual de lesões contribui significativamente para o desempenho do modelo.
+* Características do clube e da liga apresentam influência indireta na duração da recuperação.
+* Variáveis temporais ajudam a capturar padrões sazonais e contextuais.
+* A proximidade do encerramento da temporada também exerce influência relevante nas previsões.
 
 ---
 
@@ -422,16 +419,14 @@ Esse comportamento é esperado, pois diferentes tipos de lesão possuem tempos m
 
 Como boas práticas de Machine Learning, variáveis derivadas de Target Encoding exigem validação cuidadosa para evitar vazamento de informação. Neste projeto foram adotados mecanismos de codificação segura, incluindo:
 
-- separação temporal dos dados;
-- validação apropriada por grupos;
-- regularização durante o processo de encoding;
-- prevenção de acesso a informações futuras.
+* separação temporal dos dados;
+* validação apropriada por grupos;
+* regularização durante o processo de encoding;
+* prevenção de acesso a informações futuras.
 
 Além disso, a validação de causalidade temporal realizada posteriormente não identificou evidências de vazamento associadas ao processo de Target Encoding.
 
-Os alertas encontrados concentraram-se em features históricas relacionadas ao histórico médico do atleta, sendo posteriormente analisados e classificados como potenciais falsos positivos decorrentes da própria natureza da base de dados.
-
-Portanto, a elevada importância observada para **Injury_target_enc** é compatível com o forte sinal estatístico existente entre o tipo da lesão e o tempo de recuperação, não constituindo evidência isolada de leakage.
+Portanto, a elevada importância observada para **Injury_target_enc** é compatível com o forte sinal estatístico existente entre o tipo da lesão e o tempo de recuperação.
 
 ---
 
@@ -445,9 +440,9 @@ As principais visualizações geradas incluem:
 
 Permite visualizar simultaneamente:
 
-- magnitude da contribuição das variáveis;
-- direção do impacto sobre a previsão;
-- distribuição dos efeitos ao longo das observações.
+* magnitude da contribuição das variáveis;
+* direção do impacto sobre a previsão;
+* distribuição dos efeitos ao longo das observações.
 
 ### Bar Plot de Importância Global
 
@@ -468,13 +463,13 @@ Além da análise global, o SHAP permite explicar previsões individuais.
 Para uma observação específica, a previsão final pode ser representada por:
 
 $$
-f(x)=E[f(x)]+\sum_{j=1}^{p}\phi_j
+f(x)=E[f(x)] + \sum_{j=1}^{p}\phi_j
 $$
 
 onde:
 
-- $\(E[f(x)]\$) é o valor esperado da previsão;
-- $\(\phi_j\$) representa a contribuição da variável $\(j\$).
+* (E[f(x)]) é o valor esperado da previsão;
+* (\phi_j) representa a contribuição da variável (j).
 
 ---
 
@@ -482,18 +477,21 @@ onde:
 
 Em um caso representativo analisado, as principais contribuições observadas foram:
 
-| Variável | Contribuição SHAP |
-|-----------|-----------------:|
-| Injury_target_enc | +23.34 |
-| Injury_freq | +15.48 |
-| club_target_enc | -4.06 |
-| player_age | +2.17 |
+| Variável                   | Contribuição SHAP |
+| -------------------------- | ----------------: |
+| Injury_target_enc          |            +20.84 |
+| Injury_freq                |            +11.58 |
+| club_target_enc            |             -4.50 |
+| player_age                 |             +2.61 |
+| rolling_mean_days_3        |             -1.54 |
+| player_position_target_enc |             -1.51 |
 
 Nesse cenário:
 
-- o tipo da lesão aumentou significativamente a previsão de dias de afastamento;
-- o histórico do atleta indicou maior propensão a recuperações longas;
-- características do clube reduziram parcialmente a estimativa final.
+* o tipo da lesão aumentou significativamente a previsão de dias de afastamento;
+* o histórico do atleta indicou maior propensão a recuperações prolongadas;
+* características específicas do clube reduziram parcialmente a estimativa final;
+* fatores relacionados à posição do atleta também contribuíram para o ajuste da previsão.
 
 Essa análise permite compreender de forma transparente como a previsão foi construída.
 
@@ -501,19 +499,22 @@ Essa análise permite compreender de forma transparente como a previsão foi con
 
 ## 9.4 Análise de Casos Graves
 
-Foi realizada uma análise específica para observações associadas a longos períodos de recuperação.
+Foi realizada uma análise específica para observações associadas a longos períodos de recuperação (acima de 60 dias).
 
 O objetivo foi identificar quais fatores possuem maior influência na previsão de lesões graves.
 
 ### Ranking SHAP para Casos Graves
 
-| Variável | Mean SHAP |
-|-----------|----------:|
-| Injury_target_enc | 40.49 |
-| Injury_freq | 5.27 |
-| club_target_enc | 4.08 |
-| player_injury_rate_percentile | 4.01 |
-| days_since_last_injury | 3.42 |
+| Variável                      | Mean SHAP |
+| ----------------------------- | --------: |
+| Injury_target_enc             |     44.63 |
+| club_target_enc               |      4.04 |
+| player_injury_rate_percentile |      3.78 |
+| days_to_season_end            |      3.03 |
+| Injury_freq                   |      2.39 |
+| days_since_last_injury        |      2.08 |
+| player_age                    |      1.50 |
+| rolling_mean_days_3           |      1.45 |
 
 ---
 
@@ -521,209 +522,197 @@ O objetivo foi identificar quais fatores possuem maior influência na previsão 
 
 Os resultados demonstram que:
 
-- lesões graves são fortemente determinadas pelo tipo da lesão;
-- o histórico acumulado do atleta exerce papel relevante na recuperação;
-- fatores contextuais relacionados ao clube e à frequência de lesões amplificam o risco de afastamentos prolongados.
+* lesões graves são fortemente determinadas pelo tipo da lesão;
+* o histórico acumulado do atleta exerce papel ainda mais relevante em recuperações prolongadas;
+* fatores relacionados ao clube e ao contexto competitivo tornam-se mais importantes à medida que aumenta a severidade da lesão;
+* o histórico recente de afastamentos contribui para identificar atletas com maior risco de longos períodos de recuperação.
 
-Essa análise reforça a importância de incorporar informações históricas e contextuais ao processo de previsão da duração das lesões.
+Observa-se que a importância da variável **Injury_target_enc** aumenta substancialmente em comparação à análise global, indicando que o tipo da lesão se torna ainda mais determinante quando o afastamento é prolongado.
 
 ---
 
 ## Conclusão da Etapa de Explicabilidade
 
-A utilização do SHAP permitiu compreender de forma transparente os mecanismos internos do modelo, identificando as variáveis mais relevantes para a previsão da duração das lesões.
+A utilização do SHAP permitiu compreender de forma transparente os mecanismos internos do modelo LightGBM Baseline, identificado como a melhor solução global do projeto.
 
 Os resultados demonstraram que:
 
-- o tipo da lesão é o principal fator preditivo;
-- o histórico médico do atleta possui forte influência;
-- variáveis temporais e contextuais contribuem significativamente para o desempenho do modelo;
-- as explicações locais são consistentes com o conhecimento de domínio da medicina esportiva.
+* o tipo da lesão é o principal fator preditivo da duração da recuperação;
+* o histórico médico do atleta possui forte influência sobre as previsões;
+* variáveis temporais e contextuais contribuem significativamente para o desempenho do modelo;
+* lesões graves apresentam dependência ainda maior do histórico clínico e do tipo de lesão;
+* as explicações locais são consistentes com o conhecimento de domínio da medicina esportiva.
 
-Dessa forma, a etapa de explicabilidade complementa a avaliação quantitativa dos modelos, fornecendo evidências adicionais sobre a confiabilidade e a coerência das previsões produzidas pelo sistema.
-
----
-
-# 10. Error Analysis Profundo
-
-A avaliação de modelos preditivos não deve se restringir apenas às métricas globais de desempenho. Embora indicadores como MAE, RMSE e R² forneçam uma visão geral da qualidade do modelo, eles não permitem compreender em quais cenários o modelo apresenta melhor ou pior desempenho.
-
-Com esse objetivo, foi realizada uma análise aprofundada dos erros de predição, investigando o comportamento do modelo em diferentes grupos de atletas, tipos de lesão, posições em campo e ligas europeias. Além disso, foram analisados os casos com maiores erros absolutos e a distribuição dos resíduos gerados pelo modelo.
+Dessa forma, a etapa de explicabilidade complementa a avaliação quantitativa dos modelos, fornecendo evidências adicionais sobre a confiabilidade, coerência e interpretabilidade das previsões produzidas pelo sistema.
 
 ---
 
-## 10.1 Análise dos Maiores Erros
+# 10. Análise Profunda de Erros
 
-Para compreender as limitações do modelo, foi realizada uma análise dos 5% maiores erros absolutos observados no conjunto de teste.
+A avaliação de modelos preditivos não deve se limitar às métricas agregadas de desempenho. Mesmo modelos com bons resultados globais podem apresentar comportamentos distintos em diferentes subgrupos da população analisada.
 
-Os maiores erros encontrados foram:
+Com o objetivo de compreender melhor as limitações do modelo selecionado, foi realizada uma análise aprofundada dos erros utilizando o modelo **LightGBM Baseline**, identificado como o melhor modelo do benchmark experimental.
 
-| Lesão | Posição | Valor Real (dias) | Valor Predito (dias) | Erro Absoluto |
-|---------|---------|---------:|---------:|---------:|
-| muscular problems | Forward | 276.75 | 25.69 | 251.06 |
-| muscular problems | Attacking Midfield | 266.00 | 16.21 | 249.79 |
-| Injury to the ankle | Centre-Back | 276.75 | 29.61 | 247.14 |
-| Adductor pain | Right Winger | 261.00 | 17.64 | 243.36 |
-| ankle sprain | Left-Back | 261.00 | 26.82 | 234.18 |
+Foram investigados:
 
-Observa-se que os maiores erros ocorreram principalmente em lesões graves ou extremamente raras, caracterizadas por longos períodos de recuperação.
-
-O maior erro registrado foi de aproximadamente **251 dias**, em um caso classificado como *muscular problems*, cuja duração real foi de 276,75 dias enquanto o modelo estimou apenas 25,69 dias.
-
-Esses resultados evidenciam uma limitação comum em problemas de regressão: a dificuldade em prever eventos extremos pouco representados nos dados de treinamento.
+* os maiores erros de previsão;
+* o comportamento do erro por faixa etária;
+* diferenças entre posições dos atletas;
+* desempenho por tipo de lesão;
+* comportamento do modelo em diferentes ligas europeias.
 
 ---
 
-## 10.2 Análise de Erro por Faixa Etária
+## 10.1 Maiores Erros de Predição
 
-A Tabela a seguir apresenta o desempenho do modelo para diferentes grupos etários.
+Inicialmente foram analisados os 5% maiores erros absolutos observados no conjunto de teste.
 
-| Faixa Etária | Registros | MAE | MedianAE | RMSE |
-|---------|---------:|---------:|---------:|---------:|
-| U21 | 435 | 22.46 | 14.56 | 34.60 |
-| 22–25 | 972 | 19.70 | 12.70 | 32.14 |
-| 26–29 | 1089 | 19.82 | 11.37 | 33.82 |
-| 30–33 | 595 | 19.22 | 10.90 | 32.62 |
-| 34+ | 188 | 20.52 | 10.24 | 38.45 |
+O limiar correspondente ao percentil 95 dos erros absolutos foi de aproximadamente **65,6 dias**, resultando em 164 observações classificadas como erros extremos.
+
+### Exemplos dos Maiores Erros
+
+| Tipo de Lesão       | Posição            |   Real | Previsto | Erro Absoluto |
+| ------------------- | ------------------ | -----: | -------: | ------------: |
+| muscular problems   | Forward            | 276.75 |    21.99 |        254.76 |
+| muscular problems   | Attacking Midfield | 266.00 |    16.17 |        249.83 |
+| Injury to the ankle | Centre-Back        | 276.75 |    31.98 |        244.77 |
+| Adductor pain       | Right Winger       | 261.00 |    18.35 |        242.65 |
+| ankle sprain        | Left-Back          | 261.00 |    25.25 |        235.75 |
 
 ### Discussão
 
-Os jogadores mais jovens (U21) apresentaram o maior erro médio absoluto, sugerindo maior variabilidade na recuperação física e menor histórico disponível para construção das variáveis temporais.
+Observa-se que os maiores erros ocorreram principalmente em lesões com tempos de recuperação extremamente elevados.
 
-A faixa etária entre 30 e 33 anos apresentou o menor MAE, indicando maior estabilidade nos padrões de lesão e recuperação.
-
-Os atletas com mais de 34 anos apresentaram RMSE significativamente superior, evidenciando maior presença de casos extremos e recuperações mais imprevisíveis.
+Esses casos representam eventos raros e altamente variáveis, dificultando a modelagem estatística. Em geral, o modelo tende a subestimar afastamentos excepcionalmente longos, fenômeno comum em problemas de regressão com distribuições assimétricas e presença de outliers.
 
 ---
 
-## 10.3 Análise de Erro por Posição
+## 10.2 Erro por Faixa Etária
 
-A análise por posição em campo revelou diferenças relevantes na capacidade preditiva do modelo.
+Para investigar possíveis vieses relacionados à idade dos atletas, os erros foram segmentados em grupos etários.
 
-| Posição | Registros | MAE | MedianAE | RMSE |
-|---------|---------:|---------:|---------:|---------:|
-| Goalkeeper | 169 | 23.27 | 12.11 | 34.74 |
-| Left Midfield | 28 | 23.10 | 11.35 | 42.39 |
-| Left Winger | 258 | 21.67 | 13.21 | 36.12 |
-| Attacking Midfield | 223 | 21.15 | 9.88 | 39.11 |
-| Forward | 431 | 20.83 | 12.63 | 34.39 |
-| Defensive Midfield | 250 | 20.32 | 11.55 | 35.03 |
-| Right Winger | 226 | 20.09 | 13.82 | 32.32 |
-| Centre-Back | 685 | 19.93 | 12.60 | 32.95 |
-| Central Midfield | 421 | 19.79 | 11.59 | 33.40 |
-| Left-Back | 241 | 19.42 | 13.03 | 31.93 |
-| Right Midfield | 23 | 16.70 | 8.37 | 33.81 |
-| Right-Back | 297 | 16.58 | 11.33 | 26.05 |
-| Second Striker | 27 | 12.95 | 5.58 | 20.03 |
+| Faixa Etária | Casos |   MAE | MedianAE |  RMSE |
+| ------------ | ----: | ----: | -------: | ----: |
+| U21          |   435 | 22.31 |    14.55 | 34.52 |
+| 22–25        |   972 | 19.53 |    12.67 | 31.80 |
+| 26–29        |  1089 | 19.76 |    11.47 | 33.61 |
+| 30–33        |   595 | 19.09 |    11.00 | 32.33 |
+| 34+          |   188 | 20.53 |    11.04 | 38.45 |
 
 ### Discussão
 
-Os maiores erros foram observados entre goleiros e jogadores ofensivos, enquanto laterais e segundos atacantes apresentaram melhor desempenho preditivo.
+Os atletas mais jovens (U21) apresentaram os maiores erros médios de previsão.
 
-Esses resultados sugerem que fatores táticos, físicos e médicos específicos de cada posição influenciam diretamente a previsibilidade do tempo de recuperação.
+Esse comportamento pode estar associado à maior variabilidade fisiológica dos jogadores em início de carreira, bem como à menor quantidade de histórico disponível para construção das variáveis temporais.
 
-Também é importante considerar que algumas posições possuem menor quantidade de registros, aumentando a variabilidade das métricas observadas.
+Os atletas entre 30 e 33 anos apresentaram o menor MAE observado, indicando maior estabilidade das previsões nessa faixa etária.
 
 ---
 
-## 10.4 Análise de Erro por Tipo de Lesão
+## 10.3 Erro por Posição
 
-A análise por categoria médica revelou diferenças substanciais na dificuldade de previsão.
+A seguir foram avaliadas diferenças de desempenho entre posições de jogo.
 
-### Lesões com Maior Erro
-
-| Tipo de Lesão | Registros | MAE |
-|---------|---------:|---------:|
-| Cruciate ligament tear | 51 | 39.88 |
-| Knee injury | 127 | 37.20 |
-| Shoulder injury | 45 | 30.71 |
-| Ankle injury | 112 | 28.88 |
-| Injury to the ankle | 48 | 27.71 |
-| Foot injury | 60 | 27.68 |
-| Hamstring injury | 323 | 23.96 |
-
-### Lesões com Menor Erro
-
-| Tipo de Lesão | Registros | MAE |
-|---------|---------:|---------:|
-| flu | 50 | 3.69 |
-| Ill | 172 | 5.70 |
-| Muscle fatigue | 89 | 8.82 |
-| Knock | 100 | 12.02 |
-| muscular problems | 201 | 13.24 |
+| Posição            | Casos |   MAE |
+| ------------------ | ----: | ----: |
+| Left Midfield      |    28 | 23.55 |
+| Goalkeeper         |   169 | 22.60 |
+| Left Winger        |   258 | 21.59 |
+| Attacking Midfield |   223 | 21.09 |
+| Forward            |   431 | 20.53 |
+| Defensive Midfield |   250 | 20.46 |
+| Central Midfield   |   421 | 19.94 |
+| Centre-Back        |   685 | 19.88 |
+| Right Winger       |   226 | 19.82 |
+| Left-Back          |   241 | 19.34 |
+| Right Midfield     |    23 | 16.70 |
+| Right-Back         |   297 | 16.25 |
+| Second Striker     |    27 | 12.66 |
 
 ### Discussão
 
-Lesões graves envolvendo ligamentos, joelhos e articulações apresentaram os maiores erros de previsão.
+Os maiores erros ocorreram para jogadores das posições **Left Midfield** e **Goalkeeper**.
 
-Esse comportamento é esperado, pois tais lesões possuem elevada variabilidade clínica, diferentes protocolos de recuperação e forte influência de fatores individuais.
+Entretanto, algumas dessas posições apresentam poucos exemplos na base, tornando as estimativas mais instáveis.
 
-Por outro lado, condições leves como gripe, fadiga muscular e indisposição apresentam padrões de recuperação mais previsíveis, permitindo estimativas significativamente mais precisas.
+As posições defensivas apresentaram desempenho mais consistente, sugerindo padrões de lesão e recuperação mais previsíveis.
 
 ---
 
-## 10.5 Análise de Erro por Liga
+## 10.4 Erro por Tipo de Lesão
 
-Também foi avaliado o desempenho do modelo em diferentes ligas europeias.
+Uma das análises mais relevantes consiste na avaliação do desempenho por categoria de lesão.
 
-| Liga | Registros | MAE | MedianAE | RMSE |
-|---------|---------:|---------:|---------:|---------:|
-| Premier League | 669 | 26.23 | 18.01 | 38.55 |
-| Ligue 1 | 516 | 22.18 | 13.89 | 38.00 |
-| La Liga | 378 | 20.08 | 12.27 | 32.56 |
-| Bundesliga | 827 | 19.11 | 11.27 | 34.33 |
-| Serie A | 889 | 15.09 | 8.07 | 25.25 |
+### Top 20 Tipos de Lesão
+
+| Tipo de Lesão          | Casos |   MAE |
+| ---------------------- | ----: | ----: |
+| Knee injury            |   127 | 37.41 |
+| Cruciate ligament tear |    51 | 35.24 |
+| Shoulder injury        |    45 | 30.12 |
+| Ankle injury           |   112 | 28.57 |
+| Foot injury            |    60 | 27.82 |
+| Injury to the ankle    |    48 | 27.56 |
+| Hamstring injury       |   323 | 24.18 |
+| Calf injury            |    97 | 18.59 |
+| Fitness                |   119 | 18.10 |
+| Dead leg               |    68 | 17.95 |
+| Adductor injury        |    48 | 17.59 |
+| Thigh problems         |    87 | 16.95 |
+| Muscle injury          |   205 | 16.87 |
+| Adductor pain          |    77 | 16.77 |
+| Knee problems          |    65 | 15.80 |
+| muscular problems      |   201 | 13.16 |
+| Knock                  |   100 | 12.07 |
+| Muscle fatigue         |    89 |  8.25 |
+| Ill                    |   172 |  5.41 |
+| flu                    |    50 |  3.39 |
 
 ### Discussão
 
-A Premier League apresentou o maior erro médio absoluto, enquanto a Serie A apresentou o menor erro.
+As lesões relacionadas ao joelho apresentaram os maiores erros médios.
 
-Esses resultados sugerem que fatores contextuais relacionados ao calendário competitivo, intensidade física, estratégias médicas dos clubes e perfil das lesões influenciam diretamente a previsibilidade do tempo de recuperação.
+Lesões como **Knee Injury**, **Cruciate Ligament Tear** e **Shoulder Injury** possuem processos de recuperação altamente variáveis, frequentemente dependentes de fatores clínicos não disponíveis na base de dados.
 
-A diferença observada entre as ligas reforça a importância da inclusão de variáveis contextuais no processo de modelagem.
-
----
-
-## 10.6 Análise dos Resíduos
-
-Além das métricas agregadas, foi realizada uma análise visual dos resíduos produzidos pelo modelo.
-
-Os gráficos gerados incluíram:
-
-- Predicted vs True;
-- Residuals vs Predicted;
-- Residual Distribution;
-- Absolute Error vs True.
-
-### Principais Observações
-
-A distribuição dos resíduos encontra-se relativamente concentrada em torno de zero, indicando ausência de viés sistemático severo.
-
-O gráfico de resíduos versus valores preditos demonstra aumento gradual da dispersão para previsões mais elevadas, caracterizando um padrão de heterocedasticidade.
-
-Observa-se ainda que os maiores erros concentram-se em lesões com longa duração, especialmente acima de 120 dias de afastamento.
-
-O gráfico de erro absoluto versus valor real mostra crescimento quase linear da magnitude dos erros à medida que aumenta a duração da lesão, evidenciando a dificuldade do modelo em extrapolar eventos raros e severos.
-
-Esses resultados são compatíveis com o comportamento esperado de modelos de regressão aplicados a problemas com distribuição altamente assimétrica.
+Por outro lado, condições menos severas e mais padronizadas, como **flu**, **illness** e **muscle fatigue**, apresentaram erros significativamente menores.
 
 ---
 
-## 10.7 Conclusão da Análise de Erros
+## 10.5 Erro por Liga
 
-A análise aprofundada dos erros permitiu identificar os principais pontos fortes e limitações do modelo desenvolvido.
+Por fim, foi realizada uma análise segmentada pelas principais ligas europeias.
 
-Os resultados demonstraram que o modelo apresenta boa capacidade de generalização para a maioria dos cenários observados no conjunto de dados, mantendo erros relativamente estáveis entre diferentes grupos de atletas.
+| Liga           | Casos |   MAE |
+| -------------- | ----: | ----: |
+| Premier League |   669 | 25.69 |
+| Ligue 1        |   516 | 22.14 |
+| La Liga        |   378 | 20.01 |
+| Bundesliga     |   827 | 19.19 |
+| Serie A        |   889 | 15.05 |
 
-As principais dificuldades concentram-se em:
+### Discussão
 
-- lesões extremamente graves;
-- casos raros com longos períodos de recuperação;
-- atletas muito jovens;
-- atletas veteranos com histórico complexo;
-- ligas de maior intensidade competitiva.
+A Premier League apresentou os maiores erros médios observados.
 
-Apesar dessas limitações, o comportamento observado é compatível com o estado da arte em problemas de regressão aplicados à medicina esportiva, reforçando a robustez do pipeline desenvolvido e apontando oportunidades claras para futuras melhorias metodológicas.
+Uma possível explicação está relacionada à maior intensidade competitiva e ao ritmo físico característico da competição, fatores que podem aumentar a variabilidade dos tempos de recuperação.
+
+Em contraste, a Serie A apresentou o menor MAE entre as ligas analisadas, indicando maior previsibilidade dos padrões de lesão observados nessa competição.
+
+---
+
+## 10.6 Conclusão da Análise de Erros
+
+A análise detalhada dos erros permitiu identificar cenários nos quais o modelo apresenta maior dificuldade de generalização.
+
+Os principais achados foram:
+
+* lesões graves e de longa duração concentram os maiores erros de previsão;
+* atletas muito jovens apresentam maior variabilidade nos tempos de recuperação;
+* lesões relacionadas ao joelho representam os casos mais difíceis de modelar;
+* diferenças entre ligas sugerem influência do contexto competitivo sobre a previsibilidade dos afastamentos;
+* a maioria dos erros extremos está associada a eventos raros e pouco representados no conjunto de treinamento.
+
+Esses resultados demonstram que o modelo apresenta desempenho consistente na maior parte dos casos, mas ainda enfrenta desafios em situações excepcionais caracterizadas por elevada complexidade clínica e grande variabilidade individual.
 
 ---
 
@@ -782,7 +771,7 @@ No projeto foram treinados:
 20 modelos bootstrap
 ```
 
-utilizando o melhor modelo otimizado como estimador base.
+utilizando o modelo LightGBM Baseline como estimador base.
 
 ### Construção dos Intervalos
 
@@ -801,26 +790,26 @@ Para um nível de confiança nominal de 95%, foram obtidos os seguintes resultad
 
 | Métrica                    |     Valor |
 | -------------------------- | --------: |
-| Cobertura Empírica         |     22,9% |
-| Largura Média do Intervalo | 14,4 dias |
+| Cobertura Empírica         |     44,3% |
+| Largura Média do Intervalo | 25,7 dias |
 
-Exemplos observados:
+### Exemplos Observados
 
 | Valor Real | Intervalo Previsto |
 | ---------: | ------------------ |
-|         23 | [52, 67, 84]       |
-|         74 | [56, 73, 86]       |
-|         13 | [17, 22, 28]       |
-|         11 | [29, 34, 40]       |
-|         89 | [27, 42, 57]       |
+|         23 | [22, 47, 83]       |
+|         74 | [43, 63, 111]      |
+|         13 | [8, 20, 31]        |
+|         11 | [23, 34, 46]       |
+|         89 | [20, 43, 69]       |
 
-Observa-se que diversos valores reais ficaram fora dos intervalos estimados.
+Observa-se que diversos valores reais permanecem fora dos intervalos estimados, mesmo após o aumento da largura média dos intervalos.
 
 ### Interpretação
 
-Embora os intervalos produzidos sejam relativamente estreitos, a cobertura observada foi extremamente inferior à cobertura nominal esperada.
+Embora os intervalos produzidos sejam relativamente estreitos, a cobertura observada foi substancialmente inferior à cobertura nominal esperada.
 
-Para um intervalo de 95%, esperava-se que aproximadamente 95% dos valores reais estivessem contidos nos intervalos gerados. Entretanto, apenas 22,9% das observações foram efetivamente capturadas.
+Para um intervalo de 95%, esperava-se que aproximadamente 95% dos valores reais estivessem contidos nos intervalos gerados. Entretanto, apenas 44,3% das observações foram efetivamente capturadas.
 
 Esse resultado indica que o modelo apresenta excesso de confiança quando a incerteza é estimada exclusivamente via Bootstrap.
 
@@ -832,34 +821,28 @@ Esse resultado indica que o modelo apresenta excesso de confiança quando a ince
 
 Para corrigir as limitações observadas nos intervalos bootstrap, foi implementado o método de Conformal Prediction.
 
-A abordagem utiliza os resíduos observados no conjunto de calibração para construir intervalos estatisticamente válidos.
+A abordagem utiliza os resíduos observados em um conjunto de calibração para construir intervalos estatisticamente válidos.
 
 Os resíduos são definidos por:
 
-$$
-s_i = |y_i - \hat{y_i}|
-$$
-
 A partir desses resíduos é calculado um quantil de calibração:
-
-$$
-q = Quantile_{1-\alpha}(s)
-$$
 
 Os intervalos finais são então construídos como:
 
-$$
-[\hat{y}-q,\ \hat{y}+q]
-$$
-
 ### Resultados Obtidos
 
-Para um nível nominal de 95%:
+Para um nível nominal de 95%, foram obtidos:
 
 | Métrica                    |     Valor |
 | -------------------------- | --------: |
-| Cobertura Empírica         |     93,2% |
-| Largura Média do Intervalo | 86,7 dias |
+| Cobertura Empírica         |     92,8% |
+| Largura Média do Intervalo | 83,2 dias |
+
+O quantil conformal calculado foi:
+
+```text
+q = 54,02 dias
+```
 
 ### Interpretação
 
@@ -867,9 +850,9 @@ Diferentemente do Bootstrap, o método conformal produziu cobertura muito próxi
 
 A diferença entre cobertura nominal e cobertura observada foi de apenas:
 
-$$
-95% - 93,2% = 1,8%
-$$
+```text
+95,0% − 92,8% = 2,2%
+```
 
 Esse resultado demonstra que os intervalos conformais são significativamente mais confiáveis para representar a incerteza do modelo.
 
@@ -877,7 +860,7 @@ Esse resultado demonstra que os intervalos conformais são significativamente ma
 
 ## 11.4 Calibration Analysis
 
-A qualidade dos intervalos foi avaliada através de uma análise de calibração.
+A qualidade dos intervalos bootstrap foi avaliada através de uma análise de calibração.
 
 O objetivo consiste em comparar:
 
@@ -898,7 +881,7 @@ O objetivo consiste em comparar:
 
 ### Curva de Calibração
 
-A curva de calibração revelou que a cobertura empírica permaneceu sistematicamente abaixo da cobertura nominal em todos os níveis analisados.
+A análise revelou que a cobertura empírica permaneceu sistematicamente abaixo da cobertura nominal em todos os níveis avaliados.
 
 Esse comportamento evidencia que os intervalos bootstrap não representam adequadamente a variabilidade real observada nos dados.
 
@@ -910,22 +893,22 @@ A comparação direta dos métodos evidencia diferenças substanciais.
 
 | Método                     | Cobertura | Largura Média |
 | -------------------------- | --------: | ------------: |
-| Bootstrap (95%)            |     22,9% |     14,4 dias |
-| Conformal Prediction (95%) |     93,2% |     86,7 dias |
+| Bootstrap (95%)            |     44,3% |     25,7 dias |
+| Conformal Prediction (95%) |     92,8% |     83,2 dias |
 
 ### Principais Diferenças
 
 **Bootstrap**
 
-* Intervalos estreitos;
-* Menor utilidade para quantificação de risco;
+* Intervalos relativamente estreitos;
+* Menor capacidade de capturar eventos extremos;
 * Cobertura insuficiente;
 * Excesso de confiança.
 
 **Conformal Prediction**
 
 * Intervalos mais amplos;
-* Cobertura próxima ao valor esperado;
+* Cobertura próxima ao valor nominal;
 * Melhor representação da incerteza;
 * Garantias estatísticas de calibração.
 
@@ -935,18 +918,18 @@ A comparação direta dos métodos evidencia diferenças substanciais.
 
 Os resultados obtidos revelaram uma característica importante do problema estudado.
 
-Embora o modelo apresente bom desempenho preditivo em termos de MAE e RMSE, sua capacidade de estimar incerteza através de Bootstrap mostrou-se limitada.
+Embora o modelo apresente bom desempenho preditivo em termos de MAE e RMSE, sua capacidade de estimar incerteza exclusivamente através de Bootstrap mostrou-se limitada.
 
-A baixa cobertura observada sugere que a distribuição das lesões possui:
+A cobertura observada de apenas 44,3% sugere que a distribuição das lesões apresenta:
 
 * elevada assimetria;
 * presença de eventos extremos;
 * caudas longas;
-* poucos casos graves e muitos casos leves.
+* grande variabilidade entre atletas e tipos de lesão.
 
 Nessas condições, os modelos bootstrap tendem a produzir previsões excessivamente semelhantes, reduzindo artificialmente a largura dos intervalos.
 
-Por outro lado, o método Conformal Prediction conseguiu corrigir esse comportamento, produzindo intervalos compatíveis com a variabilidade observada nos dados.
+Por outro lado, o método Conformal Prediction conseguiu corrigir esse comportamento, produzindo cobertura empírica de 92,8%, muito próxima do alvo nominal de 95%.
 
 Esse resultado reforça a importância de avaliar não apenas a precisão das previsões, mas também sua confiabilidade estatística.
 
@@ -959,11 +942,12 @@ A etapa de calibração e estimativa de incerteza elevou significativamente o ri
 Os experimentos demonstraram que:
 
 * o modelo apresenta boa capacidade preditiva para estimativas pontuais;
-* os intervalos bootstrap são excessivamente otimistas e mal calibrados;
+* os intervalos bootstrap permanecem subcalibrados e excessivamente otimistas;
 * o método Conformal Prediction produz intervalos significativamente mais confiáveis;
-* a cobertura empírica de 93,2% aproxima-se adequadamente do alvo nominal de 95%.
+* a cobertura empírica de 92,8% aproxima-se adequadamente do alvo nominal de 95%.
 
 Portanto, além de prever a duração das lesões, o sistema desenvolvido também é capaz de fornecer uma estimativa quantitativa da incerteza associada às previsões, aumentando sua utilidade prática para profissionais da medicina esportiva, analistas de desempenho e departamentos médicos de clubes de futebol.
+
 
 ---
 
@@ -1193,151 +1177,391 @@ Dessa forma, o projeto deixou de fornecer apenas uma estimativa pontual da dura�
 
 ---
 
-## 13. Nested Cross-Validation
+# 13. Nested Cross-Validation
 
-A validação cruzada padrão pode **sobre-estimar** a performance quando hiperparâmetros são selecionados no mesmo conjunto de validação. A **Nested CV** resolve isso:
+A avaliação de modelos de Machine Learning utilizando apenas uma única divisão treino-teste pode produzir estimativas excessivamente otimistas ou dependentes da partição utilizada.
 
-- **Loop externo** (5 folds): Avaliação de performance imparcial
-- **Loop interno** (3 folds): Seleção de hiperparâmetros
-- **GroupKFold** em ambos os loops: Previne leakage por jogador
+Para aumentar o rigor metodológico da avaliação, foi implementado um procedimento de **Nested Cross-Validation**, considerado uma das abordagens mais robustas para estimativa do desempenho de modelos preditivos.
 
-Resultado: estimativa **não-enviesada** da performance de generalização.
----
-
-### Resultados
-
-Os resultados por fold mostram consistência razoável entre as divisões:
-
-- Fold 0: MAE = 19.17 | R² = 0.496  
-- Fold 1: MAE = 18.82 | R² = 0.487  
-- Fold 2: MAE = 19.01 | R² = 0.542  
-- Fold 3: MAE = 18.18 | R² = 0.577  
-- Fold 4: MAE = 19.12 | R² = 0.527  
+A técnica foi aplicada utilizando o modelo **LightGBM Baseline**, identificado como o melhor modelo do benchmark experimental.
 
 ---
 
-### Média geral da Nested CV
+## 13.1 Motivação
 
-- **MAE médio:** 18.86 ± 0.40  
-- **RMSE médio:** 32.48 ± 1.67  
-- **R² médio:** 0.5257 ± 0.036  
+Em problemas envolvendo dados históricos de atletas, diferentes divisões dos dados podem produzir resultados distintos devido à variabilidade natural das lesões e dos perfis dos jogadores.
+
+A Nested Cross-Validation permite reduzir esse risco ao avaliar o modelo em múltiplas partições independentes dos dados.
+
+Além disso, essa abordagem fornece uma estimativa mais robusta da capacidade de generalização do modelo.
 
 ---
 
-### Comparação com Test Set
+## 13.2 Configuração Experimental
 
-- **Nested CV MAE:** 18.86  
-- **Test Set MAE:** 19.94  
+Foi utilizado o seguinte protocolo:
 
-- **Nested CV R²:** 0.5257  
-- **Test Set R²:** 0.5369
+| Parâmetro         | Valor             |
+| ----------------- | ----------------- |
+| Modelo            | LightGBM Baseline |
+| Outer Folds       | 5                 |
+| Inner Folds       | 3                 |
+| Estratégia        | GroupKFold        |
+| Métrica Principal | MAE               |
+
+A utilização de GroupKFold garante que registros pertencentes ao mesmo jogador não sejam distribuídos simultaneamente entre treino e validação.
+
+---
+
+## 13.3 Resultados por Fold
+
+| Fold |   MAE |  RMSE |     R² |
+| ---- | ----: | ----: | -----: |
+| 0    | 20.18 | 34.47 | 0.4649 |
+| 1    | 19.95 | 32.90 | 0.4485 |
+| 2    | 19.73 | 33.45 | 0.5254 |
+| 3    | 19.13 | 31.12 | 0.5451 |
+| 4    | 19.94 | 35.13 | 0.5044 |
+
+---
+
+## 13.4 Resultado Consolidado
+
+A média dos resultados obtidos nos cinco folds foi:
+
+| Métrica | Resultado       |
+| ------- | --------------- |
+| MAE     | 19.79 ± 0.40    |
+| RMSE    | 33.41 ± 1.55    |
+| R²      | 0.4977 ± 0.0405 |
+
+O baixo desvio padrão observado para o MAE indica que o desempenho do modelo permaneceu estável ao longo das diferentes partições dos dados.
+
+---
+
+## 13.5 Comparação com o Holdout Final
+
+Os resultados da Nested Cross-Validation foram comparados com aqueles obtidos no conjunto de teste final utilizado ao longo do projeto.
+
+| Métrica |       Nested CV | Holdout |
+| ------- | --------------: | ------: |
+| MAE     |    19.79 ± 0.40 |   19.95 |
+| R²      | 0.4977 ± 0.0405 |  0.5487 |
+
+Observa-se que o MAE obtido pela validação aninhada foi extremamente próximo ao MAE observado no conjunto de teste final.
+
+A diferença foi inferior a 0,2 dias, sugerindo forte consistência entre as diferentes estratégias de avaliação.
+
+---
+
+## 13.6 Discussão dos Resultados
+
+Os resultados obtidos demonstram que o modelo apresenta boa capacidade de generalização.
+
+A proximidade entre os valores de MAE obtidos na Nested Cross-Validation e no conjunto holdout sugere que o desempenho observado não depende de uma divisão específica dos dados.
+
+Além disso, a baixa variabilidade entre os folds indica que o modelo se comporta de forma consistente para diferentes subconjuntos de jogadores.
+
+Embora o valor médio de R² tenha sido ligeiramente inferior ao observado no conjunto de teste final, essa diferença é esperada devido à maior variabilidade dessa métrica em problemas de regressão com elevada dispersão da variável-alvo.
+
+De forma geral, não foram observados indícios relevantes de overfitting.
+
+---
+
+## 13.7 Conclusão
+
+A utilização da Nested Cross-Validation aumentou o rigor estatístico da avaliação realizada no projeto.
+
+Os experimentos demonstraram que:
+
+* o desempenho do modelo é consistente entre diferentes partições dos dados;
+* o erro médio permanece estável ao longo dos folds;
+* os resultados obtidos no conjunto holdout são compatíveis com os resultados da validação aninhada;
+* não foram identificadas evidências significativas de sobreajuste.
+
+Dessa forma, a Nested Cross-Validation fornece evidências adicionais de que o modelo desenvolvido possui capacidade real de generalização para novos casos de lesão.
 
 ---
 
 # 14. Benchmark Experimental Completo
 
-## Objetivo
+Após a execução de todas as etapas de modelagem, otimização, ensemble, explicabilidade e validação estatística, foi realizado um benchmark consolidado contendo todos os modelos avaliados ao longo do projeto.
 
-Foi realizada uma comparação sistemática entre todos os modelos treinados ao longo do projeto, incluindo:
+O objetivo desta etapa foi comparar, em um único ambiente experimental, os modelos baseline, os modelos otimizados via Optuna e o melhor ensemble construído.
 
-- Modelos Baseline;
-- Modelos Otimizados via Optuna;
-- Estratégias de Ensemble.
-
-O objetivo foi identificar a solução com melhor capacidade preditiva considerando a métrica principal de avaliação (MAE).
+A métrica principal utilizada para ranqueamento foi o **MAE (Mean Absolute Error)**, por representar diretamente o erro médio em dias de recuperação.
 
 ---
 
-## Resultados
+## 14.1 Modelos Avaliados
 
-### Ranking Final dos Modelos
+Foram incluídos no benchmark:
 
-| Modelo | MAE | RMSE | R² |
-|----------|---------:|---------:|---------:|
-| LightGBM (Baseline) | 19.95 | 33.28 | 0.5487 |
-| Ensemble Weighted Average | 20.03 | 33.33 | 0.5472 |
-| LightGBM_Optuna | 20.07 | 33.51 | 0.5424 |
-| CatBoost | 20.10 | 33.15 | 0.5522 |
-| CatBoost_Optuna | 20.13 | 33.34 | 0.5471 |
-| XGBoost | 20.21 | 33.63 | 0.5390 |
-| RandomForest | 20.26 | 33.44 | 0.5443 |
-| GradientBoosting | 20.81 | 34.55 | 0.5134 |
-| Ridge | 21.55 | 35.32 | 0.4915 |
-| ElasticNet | 22.00 | 34.87 | 0.5044 |
+### Modelos Baseline
+
+* Random Forest
+* Gradient Boosting
+* Ridge Regression
+* Elastic Net
+* CatBoost
+* XGBoost
+* LightGBM
+
+### Modelos Otimizados
+
+* LightGBM_Optuna
+* CatBoost_Optuna
+* XGBoost_Optuna
+
+### Ensemble
+
+* Weighted Average (melhor estratégia identificada)
 
 ---
 
-## Principais Conclusões
+## 14.2 Resultados Consolidados
 
-Os resultados demonstram que o modelo LightGBM Baseline apresentou o melhor desempenho global segundo a métrica principal do projeto (MAE).
+| Modelo                      |       MAE |      RMSE |         R² |  MedianAE |
+| --------------------------- | --------: | --------: | ---------: | --------: |
+| **[Baseline] LightGBM**     | **19.95** | **33.28** | **0.5487** | **11.99** |
+| [Ensemble] WeightedAverage  |     20.03 |     33.33 |     0.5472 |     11.95 |
+| [Optuna] LightGBM_Optuna    |     20.07 |     33.51 |     0.5424 |     12.10 |
+| [Baseline] CatBoost         |     20.10 |     33.15 |     0.5522 |     12.36 |
+| [Optuna] CatBoost_Optuna    |     20.13 |     33.34 |     0.5471 |     12.10 |
+| [Baseline] XGBoost          |     20.21 |     33.63 |     0.5390 |     12.22 |
+| [Baseline] RandomForest     |     20.26 |     33.44 |     0.5443 |     12.28 |
+| [Optuna] XGBoost_Optuna     |     20.55 |     34.91 |     0.5033 |     11.47 |
+| [Baseline] GradientBoosting |     20.81 |     34.55 |     0.5134 |     12.21 |
+| [Baseline] Ridge            |     21.55 |     35.32 |     0.4915 |     13.31 |
+| [Baseline] ElasticNet       |     22.00 |     34.87 |     0.5044 |     14.62 |
 
-Curiosamente, as versões otimizadas via Optuna não superaram o modelo baseline, indicando que a configuração original do LightGBM já se encontrava bastante adequada ao problema estudado.
+---
 
-Além disso, os ensembles apresentaram desempenho muito próximo do melhor modelo individual, porém sem ganhos suficientes para justificar o aumento de complexidade.
+## 14.3 Ranking Final
 
-Esse resultado reforça a importância da qualidade dos atributos construídos durante a etapa de Feature Engineering, que se mostrou mais relevante para o desempenho final do que ajustes adicionais de hiperparâmetros.
+A classificação final dos três melhores modelos foi:
+
+| Posição | Modelo                    |   MAE |
+| ------- | ------------------------- | ----: |
+| 🥇 1º   | LightGBM Baseline         | 19.95 |
+| 🥈 2º   | Ensemble Weighted Average | 20.03 |
+| 🥉 3º   | LightGBM_Optuna           | 20.07 |
+
+A diferença entre o primeiro e o segundo colocado foi de apenas:
+
+```text
+0,08 dias
+```
+
+enquanto a diferença entre o primeiro e o terceiro colocado foi de aproximadamente:
+
+```text
+0,11 dias
+```
+
+Essas diferenças são extremamente pequenas do ponto de vista prático.
+
+---
+
+## 14.4 Impacto da Otimização de Hiperparâmetros
+
+Um dos resultados mais relevantes do benchmark foi observar que a otimização automática de hiperparâmetros não produziu melhorias significativas sobre os modelos baseline.
+
+Por exemplo:
+
+| Modelo   | Baseline | Optuna |
+| -------- | -------: | -----: |
+| LightGBM |    19.95 |  20.07 |
+| CatBoost |    20.10 |  20.13 |
+| XGBoost  |    20.21 |  20.55 |
+
+Em todos os casos, o desempenho após a otimização permaneceu muito próximo ou ligeiramente inferior ao desempenho originalmente obtido pelos modelos baseline.
+
+Esse comportamento sugere que os hiperparâmetros iniciais já se encontravam próximos de uma configuração adequada para o problema estudado.
+
+---
+
+## 14.5 Impacto do Ensemble
+
+O ensemble baseado em Weighted Average apresentou desempenho competitivo:
+
+| Modelo            |   MAE |
+| ----------------- | ----: |
+| LightGBM Baseline | 19.95 |
+| Weighted Average  | 20.03 |
+
+A diferença observada foi inferior a 0,1 dia.
+
+Esse resultado indica que a combinação de modelos conseguiu manter desempenho semelhante ao melhor modelo individual, porém sem produzir ganhos relevantes de precisão.
+
+Apesar disso, o ensemble continua sendo uma alternativa interessante por oferecer maior robustez ao combinar previsões de múltiplos algoritmos.
+
+---
+
+## 14.6 Discussão dos Resultados
+
+O benchmark revelou um resultado particularmente interessante.
+
+Embora tenham sido implementadas técnicas avançadas de:
+
+* otimização via Optuna;
+* ensembles;
+* validação robusta;
+* explicabilidade;
+* calibração de incerteza;
+
+o melhor desempenho foi obtido por um modelo LightGBM baseline.
+
+Esse comportamento sugere que os maiores ganhos de desempenho do projeto não foram produzidos pela complexidade adicional dos algoritmos, mas sim pela qualidade das variáveis construídas durante a etapa de engenharia de atributos.
+
+Em outras palavras, o sucesso do modelo parece estar mais associado à representação adequada do problema do que à utilização de técnicas de modelagem cada vez mais sofisticadas.
+
+---
+
+## 14.7 Conclusão
+
+O benchmark experimental consolidou o **LightGBM Baseline** como o melhor modelo do projeto.
+
+Os resultados demonstraram que:
+
+* o LightGBM Baseline apresentou o menor MAE entre todos os modelos avaliados;
+* os ensembles produziram desempenho competitivo, porém não superior;
+* a otimização via Optuna não gerou ganhos relevantes de precisão;
+* o Feature Engineering foi o principal responsável pelo desempenho alcançado;
+* o modelo vencedor apresentou resultados consistentes nas etapas de validação, explicabilidade e análise de erros.
+
+Dessa forma, o LightGBM Baseline foi selecionado como modelo final do sistema e posteriormente salvo como artefato principal para utilização em produção.
 
 ---
 
 # 15. Análise Estatística dos Resultados
 
-## Objetivo
+Após a avaliação dos modelos por meio das métricas tradicionais de regressão, foi realizada uma análise estatística complementar com o objetivo de quantificar a incerteza associada aos resultados obtidos e avaliar a robustez das diferenças observadas entre os modelos avaliados.
 
-Após a etapa de treinamento e otimização dos modelos, foi realizada uma análise estatística aprofundada dos resultados com o objetivo de verificar a robustez metodológica do pipeline, identificar possíveis inconsistências temporais e avaliar a confiabilidade das variáveis derivadas utilizadas durante o processo de modelagem.
-
-Essa etapa é fundamental em projetos de séries temporais e Sports Analytics, pois permite identificar potenciais casos de Data Leakage, inconsistências históricas e problemas de qualidade dos dados que poderiam comprometer a validade científica dos resultados.
+Embora métricas como MAE, RMSE e R² permitam comparar o desempenho médio dos modelos, elas não fornecem informações sobre a variabilidade dessas estimativas. Por esse motivo, foram utilizados intervalos de confiança obtidos por Bootstrap e testes estatísticos de comparação entre modelos.
 
 ---
 
-## Validação Temporal das Features
+## 15.1 Intervalos de Confiança por Bootstrap
 
-Foram selecionadas as principais variáveis históricas derivadas durante o processo de Feature Engineering para análise individual.
+Para estimar a variabilidade das métricas de desempenho, foi aplicada a técnica de Bootstrap com 1000 reamostragens sobre o conjunto de teste.
 
-O fluxo de validação consistiu em:
+O procedimento consiste em:
 
-1. Seleção das features temporais críticas;
-2. Ordenação cronológica dos eventos por atleta;
-3. Verificação da consistência temporal das variáveis;
-4. Identificação de possíveis violações;
-5. Análise das ocorrências encontradas.
+1. Reamostrar aleatoriamente o conjunto de teste com reposição;
+2. Recalcular a métrica de interesse para cada amostra bootstrap;
+3. Construir a distribuição empírica da métrica;
+4. Extrair os percentis correspondentes ao intervalo de confiança desejado.
 
----
-
-## Resultados Obtidos
-
-A validação identificou:
-
-| Métrica                       | Resultado              |
-| ----------------------------- | ---------------------- |
-| Features analisadas           | 17                     |
-| Possíveis violações temporais | 258                    |
-| Feature mais crítica          | days_since_last_injury |
-
-A principal variável envolvida foi a feature **Dias desde a última lesão**, responsável por representar o intervalo entre uma lesão atual e a lesão imediatamente anterior do atleta.
+Essa abordagem permite estimar a estabilidade dos resultados sem assumir distribuições paramétricas específicas.
 
 ---
 
-## Interpretação dos Casos Detectados
+### Intervalo de Confiança para o MAE
 
-A existência de valores negativos nessa variável não implica necessariamente em Data Leakage.
+Utilizando o modelo LightGBM Baseline, identificado como o melhor modelo do benchmark experimental, foi obtido o seguinte intervalo de confiança para o erro absoluto médio:
 
-Diversos cenários clínicos podem justificar esse comportamento:
+| Métrica | Estimativa |          IC 95% |
+| ------- | ---------: | --------------: |
+| MAE     |      19.95 | [19.07 ; 20.86] |
 
-* recaídas durante recuperação;
-* múltiplas lesões simultâneas;
-* procedimentos cirúrgicos durante afastamento;
-* mudanças de status médico;
-* histórico incompleto do atleta no dataset.
-
-Além disso, a primeira lesão registrada no conjunto de dados não corresponde necessariamente à primeira lesão da carreira do jogador.
+O intervalo relativamente estreito indica que o erro médio do modelo permanece estável sob diferentes reamostragens dos dados.
 
 ---
 
-## Conclusões da Seção
+### Intervalo de Confiança para o R²
 
-A análise demonstrou que o pipeline possui mecanismos avançados de validação temporal e preocupação explícita com rigor metodológico.
+Também foi calculado o intervalo de confiança para o coeficiente de determinação.
 
-A identificação automática de inconsistências representa uma importante camada de qualidade frequentemente ausente em projetos convencionais de Machine Learning.
+| Métrica | Estimativa |            IC 95% |
+| ------- | ---------: | ----------------: |
+| R²      |     0.5487 | [0.4993 ; 0.5976] |
+
+Os resultados demonstram que o modelo mantém capacidade explicativa consistente mesmo quando submetido a diferentes amostras bootstrap.
+
+---
+
+## 15.2 Comparação Estatística entre Modelos
+
+Além da avaliação individual do melhor modelo, foram calculados intervalos de confiança para todos os modelos baseline avaliados.
+
+### Intervalos de Confiança do MAE
+
+| Modelo           |   MAE | Limite Inferior | Limite Superior |
+| ---------------- | ----: | --------------: | --------------: |
+| LightGBM         | 19.95 |           19.07 |           20.86 |
+| CatBoost         | 20.10 |           19.23 |           20.97 |
+| XGBoost          | 20.21 |           19.33 |           21.09 |
+| RandomForest     | 20.26 |           19.36 |           21.15 |
+| GradientBoosting | 20.81 |           19.88 |           21.73 |
+| Ridge            | 21.55 |           20.64 |           22.49 |
+| ElasticNet       | 22.00 |           21.12 |           22.89 |
+
+---
+
+### Interpretação
+
+Observa-se uma forte sobreposição entre os intervalos de confiança dos principais modelos baseados em árvores.
+
+Por exemplo:
+
+* LightGBM: [19.07 ; 20.86]
+* CatBoost: [19.23 ; 20.97]
+* XGBoost: [19.33 ; 21.09]
+
+Essa sobreposição sugere que as diferenças observadas entre os melhores modelos são relativamente pequenas quando considerada a variabilidade amostral dos dados.
+
+Embora o LightGBM tenha obtido o menor MAE observado no benchmark, a vantagem estatística sobre os demais modelos é modesta.
+
+---
+
+## 15.3 Teste Estatístico entre Modelos
+
+Como demonstração adicional de inferência estatística, foi realizado um teste t pareado entre dois modelos baseline avaliados durante os experimentos.
+
+### Resultados
+
+| Estatística              |  Valor |
+| ------------------------ | -----: |
+| t-statistic              | -3.303 |
+| p-value                  | 0.0010 |
+| Significativo (α = 0.05) |    Sim |
+
+O teste indicou diferença estatisticamente significativa entre os modelos comparados.
+
+Entretanto, esse resultado deve ser interpretado com cautela, pois o experimento foi aplicado apenas a um par específico de modelos e não representa uma comparação exaustiva entre todos os participantes do benchmark.
+
+---
+
+## 15.4 Discussão dos Resultados
+
+Os resultados obtidos fornecem evidências adicionais sobre a robustez do modelo selecionado.
+
+A análise bootstrap demonstrou que:
+
+* o MAE apresenta baixa variabilidade;
+* o desempenho do LightGBM permanece estável sob diferentes reamostragens;
+* os intervalos de confiança são compatíveis com os resultados observados no benchmark e na Nested Cross-Validation.
+
+Além disso, a forte sobreposição dos intervalos de confiança dos melhores modelos sugere que parte das diferenças observadas no ranking pode estar associada à variabilidade natural dos dados.
+
+Esse resultado reforça uma conclusão importante do projeto: os ganhos obtidos não decorreram exclusivamente da escolha do algoritmo, mas principalmente da qualidade das variáveis construídas durante a etapa de Feature Engineering.
+
+---
+
+## 15.5 Conclusão
+
+A análise estatística complementou a avaliação tradicional dos modelos, fornecendo uma visão mais abrangente sobre a confiabilidade dos resultados.
+
+Os experimentos demonstraram que:
+
+* o LightGBM apresentou o menor MAE observado no benchmark;
+* os intervalos de confiança confirmam a estabilidade do modelo;
+* os melhores algoritmos apresentaram desempenhos muito próximos entre si;
+* a variabilidade observada é relativamente pequena quando comparada à magnitude dos erros médios;
+* os resultados obtidos são consistentes com as análises anteriores de benchmark, Nested Cross-Validation e explicabilidade.
+
+Dessa forma, as evidências estatísticas reforçam a escolha do LightGBM Baseline como modelo final do projeto e aumentam a confiança na capacidade de generalização das previsões produzidas.
 
 ---
 
@@ -1345,85 +1569,158 @@ A identificação automática de inconsistências representa uma importante cama
 
 ## Objetivo
 
-Enquanto a avaliação tradicional mede o desempenho geral do modelo, a avaliação por cenário real busca verificar sua capacidade de generalização em situações semelhantes às encontradas em ambiente de produção.
+Embora métricas agregadas como MAE, RMSE e R² sejam fundamentais para avaliar o desempenho global de um modelo, elas não necessariamente refletem seu comportamento em situações reais encontradas durante a operação do sistema.
 
-Foram definidos quatro cenários principais:
+Por esse motivo, foi realizada uma avaliação baseada em cenários práticos de utilização, com o objetivo de investigar a capacidade de generalização do modelo em condições mais desafiadoras do que aquelas observadas durante o treinamento.
 
-* Jogadores nunca vistos;
-* Clubes nunca vistos;
-* Lesões raras;
-* Temporadas futuras.
+Foram considerados quatro cenários representativos:
 
----
+* Jogadores nunca vistos durante o treinamento;
+* Clubes nunca vistos durante o treinamento;
+* Lesões raras com baixa frequência histórica;
+* Dados de temporadas futuras.
 
-## Jogadores Nunca Vistos
-
-O modelo foi avaliado utilizando atletas que não estavam presentes durante o treinamento.
-
-### Resultado
-
-* MAE ≈ 21,76 dias
-
-### Interpretação
-
-O aumento relativamente pequeno do erro demonstra que o sistema consegue utilizar informações contextuais e históricas para realizar previsões mesmo sem conhecer previamente o atleta.
+Essa abordagem permite avaliar não apenas a precisão do modelo, mas também sua robustez diante de situações comuns em ambientes reais de análise esportiva.
 
 ---
 
-## Clubes Nunca Vistos
+## 16.1 Jogadores Nunca Vistos
 
-Foi avaliada a capacidade do modelo em generalizar para equipes ausentes durante o treinamento.
+Neste cenário foram avaliados apenas atletas que não possuíam registros no conjunto de treinamento.
 
-### Resultado
+O objetivo foi verificar se o modelo consegue realizar previsões adequadas mesmo sem histórico prévio do jogador.
 
-* MAE ≈ 26,97 dias
+### Resultados
 
-### Interpretação
+| Métrica  |  Valor |
+| -------- | -----: |
+| MAE      |  21.67 |
+| RMSE     |  35.04 |
+| R²       | 0.6218 |
+| MedianAE |  13.71 |
 
-O aumento significativo do erro sugere que fatores associados aos clubes exercem influência importante sobre os tempos de recuperação.
+### Discussão
 
-Esses fatores podem incluir:
+Comparado ao desempenho geral do modelo (MAE = 19.95), observa-se um aumento moderado do erro.
 
-* infraestrutura médica;
+Apesar da ausência de histórico individual, o modelo manteve desempenho satisfatório, indicando que as variáveis contextuais relacionadas à lesão, posição, idade, clube e liga conseguem compensar parcialmente a falta de informações específicas do atleta.
+
+Esse resultado demonstra boa capacidade de generalização para novos jogadores, cenário bastante comum em aplicações reais envolvendo transferências, promoções de atletas das categorias de base e novas contratações.
+
+---
+
+## 16.2 Clubes Nunca Vistos
+
+Neste experimento foram selecionados clubes que não estavam presentes durante o treinamento.
+
+O objetivo foi avaliar a capacidade de generalização do modelo para equipes inéditas.
+
+### Resultados
+
+| Métrica  |  Valor |
+| -------- | -----: |
+| MAE      |  26.47 |
+| RMSE     |  45.86 |
+| R²       | 0.4688 |
+| MedianAE |  14.87 |
+
+### Discussão
+
+Esse cenário apresentou uma deterioração mais significativa do desempenho.
+
+O aumento do MAE sugere que fatores associados ao clube exercem influência importante na duração das lesões.
+
+Entre esses fatores podem estar:
+
+* qualidade da estrutura médica;
 * protocolos de recuperação;
 * intensidade competitiva;
-* políticas de retorno ao jogo.
+* carga de jogos;
+* perfil físico dos atletas;
+* estratégias de retorno ao jogo.
+
+Os resultados indicam que informações relacionadas ao clube possuem valor preditivo relevante e que a expansão da base de treinamento para incluir um maior número de equipes pode contribuir para aumentar a capacidade de generalização do sistema.
 
 ---
 
-## Lesões Raras
+## 16.3 Lesões Raras
 
-As lesões com baixa frequência de ocorrência apresentaram os maiores desafios.
+As lesões raras foram definidas como aquelas com menos de cinco ocorrências históricas na base de dados.
 
-### Resultado
+### Resultados
 
-* MAE ≈ 28,31 dias
+| Métrica  |  Valor |
+| -------- | -----: |
+| MAE      |  28.43 |
+| RMSE     |  42.71 |
+| R²       | 0.2814 |
+| MedianAE |  17.80 |
 
-### Interpretação
+### Discussão
 
-A baixa quantidade de exemplos históricos reduz a capacidade de aprendizado do modelo.
+Este foi o cenário mais desafiador de todo o experimento.
 
-Esse cenário representa uma limitação natural dos métodos supervisionados.
+O aumento expressivo do erro era esperado, uma vez que algoritmos supervisionados dependem diretamente da disponibilidade de exemplos representativos durante o treinamento.
 
----
+Quando determinadas lesões possuem poucas observações históricas, o modelo dispõe de informações insuficientes para aprender adequadamente seus padrões de recuperação.
 
-## Temporadas Futuras
+Esse resultado evidencia uma limitação inerente ao problema e não necessariamente uma deficiência do algoritmo utilizado.
 
-Foi realizada uma simulação realista utilizando temporadas posteriores às utilizadas no treinamento.
-
-### Resultado
-
-* MAE ≈ 20 dias
-
-### Interpretação
-
-O desempenho permaneceu praticamente inalterado, indicando excelente capacidade de generalização temporal.
+Uma possível estratégia futura para mitigar esse efeito consiste na ampliação da base histórica ou na utilização de abordagens hierárquicas capazes de agrupar lesões clinicamente semelhantes.
 
 ---
 
-## Conclusão da Seção
+## 16.4 Temporada Futura
 
-Os resultados demonstram que o sistema possui capacidade de generalização satisfatória para novos jogadores e novas temporadas, apresentando maior dificuldade apenas em cenários de baixa representatividade histórica.
+O cenário temporal foi construído utilizando registros da temporada 2024/2025, mantidos totalmente separados durante o treinamento.
+
+Essa configuração simula uma situação real de implantação do sistema, na qual o modelo é utilizado para realizar previsões sobre eventos futuros.
+
+### Resultados
+
+| Métrica  |  Valor |
+| -------- | -----: |
+| MAE      |  19.95 |
+| RMSE     |  33.28 |
+| R²       | 0.5487 |
+| MedianAE |  11.99 |
+
+### Discussão
+
+O desempenho observado foi praticamente idêntico ao obtido no conjunto de teste geral.
+
+Esse resultado representa uma importante evidência de validade temporal, indicando que o modelo foi capaz de manter sua capacidade preditiva mesmo quando aplicado a dados efetivamente futuros.
+
+A estabilidade observada sugere que as variáveis construídas durante a etapa de Feature Engineering capturaram padrões relativamente consistentes ao longo do tempo, reduzindo o risco de sobreajuste a temporadas específicas.
+
+---
+
+## 16.5 Comparação Consolidada dos Cenários
+
+A Tabela a seguir resume os resultados obtidos em todos os cenários avaliados.
+
+| Cenário          |   MAE |  RMSE |     R² |
+| ---------------- | ----: | ----: | -----: |
+| Geral (Test Set) | 19.95 | 33.28 | 0.5487 |
+| Jogador Novo     | 21.67 | 35.04 | 0.6218 |
+| Clube Novo       | 26.47 | 45.86 | 0.4688 |
+| Lesão Rara       | 28.43 | 42.71 | 0.2814 |
+| Temporada 24/25  | 19.95 | 33.28 | 0.5487 |
+
+---
+
+## 16.6 Conclusão
+
+A avaliação por cenários reais demonstrou que o modelo LightGBM mantém desempenho consistente em situações próximas às encontradas em produção.
+
+Os principais achados desta etapa foram:
+
+* boa capacidade de generalização para atletas nunca vistos;
+* forte estabilidade temporal ao prever dados da temporada futura;
+* maior sensibilidade à ausência de informações relacionadas aos clubes;
+* dificuldade adicional na modelagem de lesões raras devido à baixa representatividade histórica.
+
+De forma geral, os resultados indicam que o modelo possui potencial para utilização prática em ambientes de Sports Analytics, apresentando desempenho robusto mesmo quando submetido a cenários mais desafiadores do que aqueles utilizados durante o treinamento.
 
 ---
 
@@ -1431,43 +1728,109 @@ Os resultados demonstram que o sistema possui capacidade de generalização sati
 
 ## Objetivo
 
-Produzir visualizações de alta qualidade para interpretação dos resultados, comunicação dos achados e suporte à tomada de decisão.
+Além da avaliação quantitativa dos modelos, foram produzidas visualizações analíticas com o objetivo de facilitar a interpretação dos resultados, identificar padrões relevantes nos dados e comunicar os principais achados do projeto de forma clara e intuitiva.
+
+As visualizações geradas contemplam tanto aspectos relacionados ao desempenho dos modelos quanto análises de comportamento das variáveis mais relevantes para a previsão da duração das lesões.
+
+Essa etapa contribui para aumentar a transparência do processo de modelagem e fornecer evidências visuais que complementam as métricas estatísticas apresentadas nas seções anteriores.
 
 ---
 
-## Comparação de Modelos
+## 17.1 Learning Curves
 
-As visualizações evidenciaram o desempenho superior dos algoritmos baseados em Gradient Boosting.
+As curvas de aprendizado foram utilizadas para analisar o comportamento do modelo LightGBM à medida que o volume de dados de treinamento aumenta.
 
-Os melhores resultados foram obtidos por:
+A Figura correspondente apresenta a evolução simultânea do erro de treinamento (Train MAE) e do erro de validação (Validation MAE) para diferentes tamanhos do conjunto de treinamento.
+
+### Resultados Observados
+
+Os resultados indicaram que:
+
+* o erro de treinamento aumenta gradualmente conforme novos dados são incorporados;
+* o erro de validação diminui de forma consistente;
+* a distância entre as curvas reduz-se progressivamente com o aumento da amostra.
+
+Nos primeiros experimentos, utilizando aproximadamente 800 observações, o modelo apresentou:
+
+* Train MAE ≈ 2,5 dias;
+* Validation MAE ≈ 24,2 dias.
+
+Com a utilização de todo o conjunto de treinamento, os resultados convergiram para aproximadamente:
+
+* Train MAE ≈ 9,6 dias;
+* Validation MAE ≈ 19,9 dias.
+
+### Interpretação
+
+O comportamento observado é característico de modelos que inicialmente apresentam tendência ao sobreajuste quando treinados com poucos dados, mas que passam a generalizar melhor à medida que novas observações são incorporadas.
+
+A redução gradual do erro de validação sugere que o modelo continua se beneficiando do aumento da base histórica, indicando potencial para ganhos adicionais de desempenho caso novos dados sejam disponibilizados futuramente.
+
+Além disso, a ausência de crescimento do erro de validação nas maiores amostras sugere que não há evidências relevantes de underfitting ou degradação da capacidade preditiva.
+
+---
+
+## 17.2 Comparação da Importância das Variáveis
+
+Foi realizada uma análise comparativa da importância das variáveis utilizando os três principais modelos baseados em Gradient Boosting avaliados no benchmark:
 
 * LightGBM;
 * CatBoost;
 * XGBoost.
 
-Modelos lineares como Ridge e ElasticNet apresentaram desempenho inferior.
+O objetivo foi verificar se diferentes algoritmos convergem para um conjunto semelhante de fatores explicativos.
 
----
+### Resultados Observados
 
-## Interpretação
+Os três modelos identificaram a variável **Injury_target_enc** como o fator mais relevante para a previsão da duração das lesões.
 
-Esse comportamento indica que o problema possui forte componente não linear, envolvendo:
+Além disso, observou-se elevada consistência entre os algoritmos na identificação das seguintes variáveis como importantes:
 
-* interações complexas;
-* dependências temporais;
-* efeitos acumulativos;
-* relações hierárquicas entre variáveis.
+* Injury_target_enc;
+* Injury_freq;
+* club_target_enc;
+* days_since_last_injury;
+* player_injury_rate_percentile;
+* cumulative_days_injured;
+* days_to_season_end.
+
+### Interpretação
+
+A convergência observada entre diferentes algoritmos aumenta a confiabilidade das conclusões obtidas, indicando que os principais padrões identificados não dependem exclusivamente de um modelo específico.
+
+Os resultados reforçam as evidências obtidas na análise SHAP, demonstrando que:
+
+* o tipo da lesão é o principal determinante da duração da recuperação;
+* o histórico médico do atleta possui forte capacidade preditiva;
+* características temporais e contextuais contribuem significativamente para o desempenho do modelo;
+* informações relacionadas ao clube e ao calendário esportivo influenciam o tempo de afastamento.
 
 ---
 
 ## Principais Insights Visuais
 
-As análises gráficas permitiram identificar:
+A análise conjunta das visualizações produzidas ao longo do projeto permitiu identificar diversos padrões relevantes para o problema estudado.
 
-* influência do histórico recente do atleta;
-* impacto da recorrência de lesões;
-* efeito do calendário esportivo;
-* importância do contexto temporal.
+Entre os principais achados destacam-se:
+
+* forte influência do histórico de lesões na duração da recuperação;
+* impacto significativo da frequência de lesões anteriores;
+* relevância do tipo da lesão como principal fator preditivo;
+* contribuição das características do clube e da liga;
+* influência de fatores temporais relacionados ao calendário esportivo;
+* existência de comportamentos distintos entre lesões leves e lesões graves.
+
+Esses resultados demonstram que a duração das lesões não depende de um único fator isolado, mas sim da interação entre características médicas, históricas, temporais e contextuais.
+
+---
+
+## Conclusão da Seção
+
+As visualizações produzidas complementam as análises quantitativas apresentadas ao longo do projeto, fornecendo evidências visuais sobre o comportamento dos modelos e das variáveis explicativas.
+
+As curvas de aprendizado demonstraram que o modelo LightGBM apresenta boa capacidade de generalização e potencial para melhorias adicionais com a incorporação de novos dados. Já a comparação das importâncias das variáveis confirmou a relevância do histórico médico do atleta e do tipo da lesão como os principais determinantes da duração do afastamento.
+
+Em conjunto, essas análises fortalecem a interpretação dos resultados e aumentam a confiabilidade das conclusões obtidas pelo sistema desenvolvido.
 
 ---
 
@@ -1475,54 +1838,168 @@ As análises gráficas permitiram identificar:
 
 ## Objetivo
 
-Transformar o projeto experimental em uma solução pronta para utilização em ambiente operacional.
+Após a construção, validação e interpretação dos modelos preditivos, foi realizada uma etapa dedicada à preparação para produção, com o objetivo de transformar o protótipo experimental em uma solução capaz de operar de forma segura, reproduzível e escalável em ambientes reais.
+
+Essa etapa contempla aspectos relacionados à persistência dos modelos, validação de dados de entrada, tratamento de situações não previstas durante o treinamento e geração de artefatos necessários para implantação do sistema.
+
+O foco principal consiste em garantir que o modelo possa ser utilizado futuramente em aplicações práticas sem depender do ambiente de desenvolvimento utilizado durante os experimentos.
 
 ---
 
-## Componentes Implementados
+## 18.1 Construção do Pipeline de Produção
 
-### Validação de Entrada
+Foi desenvolvido um pipeline unificado contendo todos os componentes necessários para execução das previsões.
 
-Verificação automática de:
+O pipeline integra:
 
-* colunas obrigatórias;
-* tipos de dados;
-* faixas válidas;
-* consistência estrutural.
+* modelo preditivo treinado;
+* transformações de atributos;
+* validações de entrada;
+* tratamento de categorias;
+* geração de metadados;
+* mecanismos de monitoramento.
 
----
+A estrutura foi encapsulada em uma classe específica denominada **ProductionPipeline**, responsável por centralizar todo o fluxo de inferência.
 
-### Tratamento de Categorias Desconhecidas
-
-O pipeline foi preparado para lidar com:
-
-* novos clubes;
-* novos atletas;
-* novas categorias.
-
-Isso evita falhas durante inferência.
+Essa abordagem reduz a possibilidade de divergências entre o ambiente de treinamento e o ambiente de produção.
 
 ---
 
-### Serialização
+## 18.2 Persistência e Versionamento
 
-Todos os componentes foram persistidos para reutilização futura.
+Após a construção do pipeline, todos os componentes foram serializados e armazenados para reutilização futura.
 
-Exemplos:
+### Artefatos Persistidos
 
-* modelos;
-* encoders;
-* pipelines;
-* transformadores.
+Entre os artefatos salvos destacam-se:
+
+* modelos treinados;
+* pipeline completo de produção;
+* transformadores de atributos;
+* codificadores categóricos;
+* listas de variáveis utilizadas;
+* resultados experimentais;
+* métricas de avaliação.
+
+O pipeline completo foi salvo com sucesso no formato:
+
+```text
+production_pipeline.joblib
+```
+
+Além disso, o sistema incorpora controle de versão dos artefatos, permitindo rastrear futuras atualizações e facilitar a manutenção da solução.
 
 ---
 
-## Benefícios
+## 18.3 Teste de Inferência
 
-* reprodutibilidade;
-* escalabilidade;
+Após a persistência do pipeline, foi realizado um teste de carregamento e execução utilizando exemplos reais do conjunto de teste.
+
+O processo validou:
+
+1. carregamento correto dos artefatos;
+2. reconstrução completa do pipeline;
+3. geração de previsões;
+4. retorno de metadados associados às inferências.
+
+### Exemplo de Inferência
+
+| Valor Real | Valor Previsto |
+| ---------: | -------------: |
+|         23 |           59.7 |
+|         74 |           72.4 |
+|         13 |           22.9 |
+|         11 |           28.7 |
+|         89 |           42.1 |
+
+O objetivo desse teste não foi avaliar a precisão do modelo — já analisada nas etapas anteriores — mas verificar a integridade operacional do pipeline após sua serialização e recarga.
+
+Os resultados confirmaram que o sistema permanece funcional mesmo após o processo completo de persistência.
+
+---
+
+## 18.4 Validação Automática de Entradas
+
+Uma das funcionalidades implementadas foi a validação automática dos dados recebidos pelo sistema.
+
+Essa camada de proteção verifica:
+
+* presença das colunas obrigatórias;
+* tipos de dados esperados;
+* consistência estrutural;
+* categorias desconhecidas;
+* possíveis inconsistências de entrada.
+
+Esse mecanismo reduz significativamente o risco de falhas durante a utilização do modelo em ambientes reais.
+
+---
+
+## 18.5 Tratamento de Categorias Desconhecidas
+
+Em aplicações reais é comum que novos valores categóricos surjam após o treinamento do modelo.
+
+Para lidar com esse cenário, foi implementado um mecanismo de detecção automática de categorias não observadas anteriormente.
+
+Durante os testes foram identificados os seguintes exemplos:
+
+```text
+club: West Ham United
+Season: 24/25
+```
+
+Essas categorias não estavam presentes no conjunto de treinamento original.
+
+Mesmo assim, o pipeline permaneceu operacional, emitindo alertas informativos sem interromper a geração das previsões.
+
+Esse comportamento é particularmente importante em aplicações esportivas, onde novos clubes, temporadas e atletas surgem continuamente.
+
+---
+
+## 18.6 Metadados e Monitoramento
+
+Além das previsões, o pipeline retorna informações auxiliares para monitoramento do processo de inferência.
+
+Entre os metadados produzidos estão:
+
+* número de amostras processadas;
+* média das previsões;
+* mediana das previsões;
+* desvio-padrão das previsões;
+* alertas gerados durante a execução.
+
+Essas informações podem ser utilizadas futuramente para:
+
+* monitoramento de qualidade;
+* detecção de drift;
+* auditoria de previsões;
+* acompanhamento operacional do sistema.
+
+---
+
+## 18.7 Benefícios para Implantação
+
+A estrutura desenvolvida oferece diversas vantagens para utilização em ambiente produtivo.
+
+Entre os principais benefícios destacam-se:
+
+* reprodutibilidade dos resultados;
 * facilidade de implantação;
-* manutenção simplificada.
+* redução de erros operacionais;
+* escalabilidade da solução;
+* simplificação da manutenção;
+* maior robustez frente a dados não previstos.
+
+Além disso, a centralização de todo o fluxo em um único pipeline reduz significativamente a complexidade necessária para integração com APIs, dashboards ou sistemas corporativos.
+
+---
+
+## Conclusão da Seção
+
+A etapa de preparação para produção demonstrou que o modelo desenvolvido não se limita a um experimento acadêmico isolado, mas possui estrutura técnica compatível com futuras aplicações práticas.
+
+Os testes realizados confirmaram a capacidade do sistema de carregar artefatos persistidos, executar inferências, validar entradas, identificar categorias desconhecidas e gerar metadados operacionais de forma automática.
+
+Dessa forma, o projeto avança além da simples construção de modelos preditivos, incorporando elementos fundamentais para sua utilização em cenários reais de Sports Analytics e apoio à tomada de decisão em departamentos médicos e técnicos do futebol profissional.
 
 ---
 
