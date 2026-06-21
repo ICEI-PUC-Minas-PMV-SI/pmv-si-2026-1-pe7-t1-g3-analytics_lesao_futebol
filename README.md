@@ -51,13 +51,13 @@ Certifique-se de ter o Python 3.10 ou 3.11 instalado em sua máquina.
 1. **Clonar o Repositório:**
    
    ```bash
-      git clone [https://github.com/pucminas/seu-repositorio.git](https://github.com/pucminas/seu-repositorio.git)
-      cd seu-repositorio
+   git clone [https://github.com/pucminas/seu-repositorio.git](https://github.com/pucminas/seu-repositorio.git)
+   cd seu-repositorio
 
 2. **Criar e Ativar Ambiente Virtual (Recomendado):**
 
    ```bash
-      python -m venv venv
+   python -m venv venv
    
   ### No Windows:
      venv\Scripts\activate
@@ -68,7 +68,7 @@ Certifique-se de ter o Python 3.10 ou 3.11 instalado em sua máquina.
 3. **Rodando a Aplicação:**
    
    ```bash
-     waitress-serve --listen=0.0.0.0:5000 wsgi:app
+   waitress-serve --listen=0.0.0.0:5000 wsgi:app
 
 ---
 
