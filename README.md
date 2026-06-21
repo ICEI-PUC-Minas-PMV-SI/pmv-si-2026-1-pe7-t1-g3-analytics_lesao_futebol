@@ -25,6 +25,8 @@ O objetivo principal do projeto é de conseguir prever a probabilidade da ocorr�
 
 * Neil Paiva Tizzo
 
+---
+
 # Planejamento
 
 | Etapa         | Atividades |
@@ -35,31 +37,41 @@ O objetivo principal do projeto é de conseguir prever a probabilidade da ocorr�
 | ETAPA 4         |[Preparação dos dados, construção, avaliação e comparação dos modelos propostos](docs/construindo-modelos.md) |
 | ETAPA 5         |[Implantação e apresentação da solução](docs/implantação-apresentacao.md) <br>  |
 
-## 🚀 Instruções de Utilização da API de Produção
+---
+
+# 🚀 Instruções de Utilização da API de Produção
 
 Este repositório contém o pipeline de produção modularizado para predição do tempo de recuperação de lesões (em dias) utilizando Machine Learning. Siga os passos abaixo para executar a aplicação localmente utilizando o gateway de produção.
 
-### 📋 Pré-requisitos
+#### 📋 Pré-requisitos
 Certifique-se de ter o Python 3.10 ou 3.11 instalado em sua máquina.
 
-### 🔧 Instalação e Configuração
+## 🔧 Instalação e Configuração
 
 1. **Clonar o Repositório:**
+   
    ```bash
-   git clone [https://github.com/pucminas/seu-repositorio.git](https://github.com/pucminas/seu-repositorio.git)
-   cd seu-repositorio
+      git clone [https://github.com/pucminas/seu-repositorio.git](https://github.com/pucminas/seu-repositorio.git)
+      cd seu-repositorio
 
 2. **Criar e Ativar Ambiente Virtual (Recomendado):**
-   python -m venv venv
+
+   ```bash
+      python -m venv venv
+   
   ### No Windows:
-  venv\Scripts\activate
+     venv\Scripts\activate
+  
   ### No Linux/Mac:
-  source venv/bin/activate
+     source venv/bin/activate
 
 3. **Rodando a Aplicação:**
-  waitress-serve --listen=0.0.0.0:5000 wsgi:app
+   
+   ```bash
+     waitress-serve --listen=0.0.0.0:5000 wsgi:app
 
-  
+---
+
 # Código
 
 <li><a href="src/injury_prediction_advanced"> Código Fonte</a></li>
