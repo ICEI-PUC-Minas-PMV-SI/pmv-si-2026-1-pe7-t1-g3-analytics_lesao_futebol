@@ -1,29 +1,30 @@
-cff-version: 1.0.1
-message: Please cite this software using these metadata.
-title:
+cff-version: 1.2.0
+message: "Please cite this software using these metadata."
+title: "Sistema Inteligente de Predição de Duração de Lesões no Futebol Europeu"
 authors:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - family-names:
-    given-names:
-  - name-suffix: Professor XXXX
-    affiliation: PUC Minas
-    family-names:
-    given-names:
+  - family-names: "Prado"
+    given-names: "Lucas"
+  - family-names: "Peres"
+    given-names: "Lucas"
+  - family-names: "Lima"
+    given-names: "André"
+  - family-names: "Andrade"
+    given-names: "Ricardo"
+  - family-names: "Costa"
+    given-names: "Beatriz"
+    affiliation: "PUC Minas"
+  - family-names: "Tizzo"
+    given-names: "Neil"
+    name-suffix: "Professor"
+    affiliation: "PUC Minas"
 keywords:
-  -
-  -
-repository-code:
-license: CC-BY-4.0
-version: 1.0.0
-date-released: 2023-06-30
+  - "Machine Learning"
+  - "Sports Analytics"
+  - "LightGBM"
+  - "Feature Engineering"
+  - "Regressão Quantílica"
+  - "Conformal Prediction"
+repository-code: "https://github.com/pucminas/"
+license: "CC-BY-4.0"
+version: "1.0.0"
+date-released: 2026-06-21
