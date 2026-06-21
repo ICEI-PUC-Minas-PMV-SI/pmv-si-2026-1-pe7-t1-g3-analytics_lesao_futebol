@@ -68,15 +68,10 @@ lightgbm==4.3.0
 scikit-learn==1.3.2
 pandas==2.1.4
 waitress==3.0.0
+```
 
+--- 
 
-# Apresentação da solução
+### Apresentação da Solução
 
-Nesta seção, deve ser produzido um vídeo de até 15 minutos apresentando o escopo geral do projeto, um resumo das etapas desenvolvidas, a demonstração da solução publicada e as conclusões finais, destacando aprendizados, impacto e possibilidades de melhorias.
-
-# É IMPRESCINDÍVEL: 
-* Atualizar o arquivo **CITATION.cff** disponível no diretório raiz do repositório
-* Atualizar as **Instruções de utilização** no arquivo read.me
-
-
-
+<li><a href="presentation/README.md"> Apresentação da solução</a></li>
