@@ -62,7 +62,7 @@ Certifique-se de ter o Python 3.10 ou 3.11 instalado em sua máquina.
   
 # Código
 
-<li><a href="src/README.md"> Código Fonte</a></li>
+<li><a href="src/injury_prediction_advanced"> Código Fonte</a></li>
 
 # Apresentação
 
