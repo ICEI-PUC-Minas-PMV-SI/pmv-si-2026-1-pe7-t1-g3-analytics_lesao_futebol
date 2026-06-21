@@ -51,9 +51,9 @@ Certifique-se de ter o Python 3.10 ou 3.11 instalado em sua máquina.
 
 2. **Criar e Ativar Ambiente Virtual (Recomendado):**
    python -m venv venv
-  # No Windows:
+  ### No Windows:
   venv\Scripts\activate
-  # No Linux/Mac:
+  ### No Linux/Mac:
   source venv/bin/activate
 
 3. **Rodando a Aplicação:**
